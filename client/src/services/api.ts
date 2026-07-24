@@ -1,4 +1,4 @@
-const API_BASE = 'http://localhost:4000/api';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api';
 
 export async function registerDevice(deviceIdentity: string, publicKey: string) {
   const res = await fetch(`${API_BASE}/auth/register-device`, {

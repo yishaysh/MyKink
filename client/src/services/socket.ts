@@ -11,7 +11,8 @@ class SocketClient {
     }
 
     try {
-      this.ws = new WebSocket('ws://localhost:4000/v1/sync');
+      const wsUrl = import.meta.env.VITE_WS_BASE_URL || 'ws://localhost:4000/v1/sync';
+      this.ws = new WebSocket(wsUrl);
 
       this.ws.onopen = () => {
         console.log('⚡ Connected to MyKink WebSocket sync server');
