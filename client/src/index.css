@@ -1,77 +1,89 @@
 @import "https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css";
 
 :root {
-  --bg-gradient: linear-gradient(135deg, #0b0d19 0%, #150d2a 50%, #0d1627 100%);
-  --glass-bg: rgba(23, 22, 45, 0.7);
-  --glass-border: rgba(255, 255, 255, 0.12);
-  --glass-glow: rgba(236, 72, 153, 0.2);
-  --neon-pink: #ec4899;
-  --neon-purple: #a855f7;
-  --neon-cyan: #06b6d4;
+  --bg-gradient: linear-gradient(135deg, #0f0a1c 0%, #1a0e2e 50%, #12091f 100%);
+  --glass-bg: rgba(28, 18, 48, 0.75);
+  --glass-border: rgba(244, 114, 182, 0.15);
+  --glass-glow: rgba(244, 63, 94, 0.25);
+  --rose-gold: #fb7185;
+  --velvet-accent: #e11d48;
+  --warm-gold: #f59e0b;
 }
 
 body {
   margin: 0;
   padding: 0;
   background: var(--bg-gradient);
-  color: #f1f5f9;
-  font-family: 'Heebo', 'Inter', system-ui, -apple-system, sans-serif;
+  color: #f8fafc;
+  font-family: 'Heebo', system-ui, -apple-system, sans-serif;
   min-height: 100vh;
   overflow-x: hidden;
 }
 
-/* Glassmorphism Card Utility */
+/* Warm Velvet Glass Card */
 .glass-card {
   background: var(--glass-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--glass-border);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
-  border-radius: 1.25rem;
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
+  border-radius: 1.5rem;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glass-card:hover {
-  border-color: rgba(236, 72, 153, 0.3);
-  box-shadow: 0 12px 40px 0 var(--glass-glow);
+  border-color: rgba(251, 113, 133, 0.35);
+  box-shadow: 0 15px 45px -10px var(--glass-glow);
 }
 
-/* Glow Text & Buttons */
-.glow-pink-text {
-  text-shadow: 0 0 12px rgba(236, 72, 153, 0.6);
-}
-
-.btn-neon {
-  background: linear-gradient(135deg, #ec4899 0%, #a855f7 100%);
+/* Velvet Rose Gold Button */
+.btn-rose {
+  background: linear-gradient(135deg, #f43f5e 0%, #e11d48 50%, #be123c 100%);
   color: white;
   font-weight: 700;
-  border-radius: 9999px;
-  box-shadow: 0 4px 20px rgba(236, 72, 153, 0.4);
+  border-radius: 1.25rem;
+  box-shadow: 0 4px 20px rgba(244, 63, 94, 0.35);
   transition: all 0.25s ease;
 }
 
-.btn-neon:hover {
+.btn-rose:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(236, 72, 153, 0.7);
+  box-shadow: 0 8px 25px rgba(244, 63, 94, 0.55);
 }
 
-.btn-neon:active {
+.btn-rose:active {
   transform: translateY(0);
 }
 
-/* Swiper Card Animation */
-.swipe-card-enter {
-  animation: cardIn 0.35s ease-out forwards;
+/* Soft Secondary Button */
+.btn-soft {
+  background: rgba(255, 255, 255, 0.07);
+  color: #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 1.25rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
 }
 
-@keyframes cardIn {
+.btn-soft:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: white;
+  border-color: rgba(251, 113, 133, 0.3);
+}
+
+/* Swiper Card Animation */
+.card-appear {
+  animation: slideFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideFadeIn {
   from {
     opacity: 0;
-    transform: scale(0.92) translateY(20px);
+    transform: translateY(16px) scale(0.96);
   }
   to {
     opacity: 1;
-    transform: scale(1) translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
@@ -82,14 +94,14 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, 0.6);
+  background: rgba(15, 10, 28, 0.8);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(236, 72, 153, 0.5);
+  background: rgba(244, 63, 94, 0.4);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(236, 72, 153, 0.8);
+  background: rgba(244, 63, 94, 0.7);
 }

@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Header } from './components/Header';
+import { Onboarding } from './components/Onboarding';
 import { PairingModal } from './components/PairingModal';
-import { SwipeDeck, CatalogQuestion } from './components/SwipeDeck';
+import { SwipeDeck } from './components/SwipeDeck';
 import { MatchesView, SharedMatchItem } from './components/MatchesView';
 import { DaresView, ChallengeItem } from './components/DaresView';
-import { IntimacyTracker, IntimacyLogItem } from './components/IntimacyTracker';
 import { AICoachView } from './components/AICoachView';
-import { E2EEChatView } from './components/E2EEChatView';
 
 import {
   registerDevice,
@@ -17,14 +16,12 @@ import {
   fetchMatches,
   fetchDares,
   createDare,
-  logIntimacy,
-  fetchIntimacyLogs
+  CatalogQuestion
 } from './services/api';
 import { getOrCreateDeviceId, getOrCreatePublicKey, computeAnswerHash, encryptPayload } from './services/crypto';
-import { socketClient } from './services/socket';
 
 export const App: React.FC = () => {
-  const [activeTab, setActiveTab] = useState('swipe');
+  const [activeTab, setActiveTab] = useState<string>('onboarding');
   const [isPairingModalOpen, setIsPairingModalOpen] = useState(false);
 
   // User & Couple state
@@ -40,10 +37,8 @@ export const App: React.FC = () => {
   const [selectedIntensity, setSelectedIntensity] = useState('ALL');
   const [matches, setMatches] = useState<SharedMatchItem[]>([]);
   const [challenges, setChallenges] = useState<ChallengeItem[]>([]);
-  const [intimacyLogs, setIntimacyLogs] = useState<IntimacyLogItem[]>([]);
-  const [intimacyMetrics, setIntimacyMetrics] = useState({ totalSessions: 0, avgDuration: 0, avgMood: '5.0' });
 
-  // 1. Initialize User & Device Registration
+  // 1. Initialize User & Device Registration + Deep Link check
   useEffect(() => {
     async function init() {
       try {
@@ -55,10 +50,19 @@ export const App: React.FC = () => {
           setUserId(res.user.id);
           if (res.user.coupleId) {
             setCoupleId(res.user.coupleId);
+            setIsPartnerConnected(true);
+            setActiveTab('swipe');
           }
         }
+
+        // Deep link ?pair=ABC123 auto pairing check
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlPair = urlParams.get('pair');
+        if (urlPair && res.user?.id) {
+          handleJoinCouple(urlPair);
+        }
       } catch (e) {
-        console.error('Initialization error:', e);
+        console.error('Init error:', e);
       }
     }
     init();
@@ -73,34 +77,19 @@ export const App: React.FC = () => {
           setQuestions(res.questions);
         }
       } catch (e) {
-        console.error('Fetch questions error:', e);
+        console.error('Questions load error:', e);
       }
     }
     loadQ();
   }, [selectedCategory, selectedIntensity]);
 
-  // 3. Sync WebSockets & Load Couple Data when linked
+  // 3. Load Matches & Dares when coupled
   useEffect(() => {
-    if (userId && coupleId) {
-      socketClient.connect(userId, coupleId);
-
-      const unsub = socketClient.subscribe((packet) => {
-        if (packet.type === 'MATCH_DISCOVERED') {
-          reloadMatches();
-        } else if (packet.type === 'CHALLENGE_ISSUED') {
-          reloadChallenges();
-        } else if (packet.type === 'COUPLE_LINKED') {
-          setIsPartnerConnected(true);
-        }
-      });
-
+    if (coupleId) {
       reloadMatches();
       reloadChallenges();
-      reloadIntimacy();
-
-      return () => unsub();
     }
-  }, [userId, coupleId]);
+  }, [coupleId]);
 
   const reloadMatches = async () => {
     if (!coupleId) return;
@@ -108,9 +97,7 @@ export const App: React.FC = () => {
       const res = await fetchMatches(coupleId);
       if (res.success) {
         setMatches(res.matches);
-        if (res.matches.length > 0) {
-          setIsPartnerConnected(true);
-        }
+        if (res.matches.length > 0) setIsPartnerConnected(true);
       }
     } catch (e) {
       console.error(e);
@@ -129,25 +116,12 @@ export const App: React.FC = () => {
     }
   };
 
-  const reloadIntimacy = async () => {
-    if (!coupleId) return;
-    try {
-      const res = await fetchIntimacyLogs(coupleId);
-      if (res.success) {
-        setIntimacyLogs(res.logs);
-        setIntimacyMetrics(res.metrics);
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
   // Handlers for Pairing
   const handleCreateCouple = async () => {
     if (!userId) return;
     try {
       const res = await createCouple(userId);
-      if (res.success) {
+      if (res.success && res.couple) {
         setCoupleId(res.couple.id);
         setPairCode(res.couple.pairCode);
         setCoupleSalt(res.couple.coupleSalt);
@@ -161,29 +135,28 @@ export const App: React.FC = () => {
     if (!userId) return;
     try {
       const res = await joinCouple(userId, code);
-      if (res.success) {
+      if (res.success && res.couple) {
         setCoupleId(res.couple.id);
         setPairCode(res.couple.pairCode);
         setCoupleSalt(res.couple.coupleSalt);
         setIsPairingModalOpen(false);
         setIsPartnerConnected(true);
+        setActiveTab('swipe');
+      } else {
+        alert(res.error || 'קוד צימוד לא נמצא');
       }
     } catch (e) {
-      alert('קוד צימוד לא נמצא או שפג תוקפו');
+      console.error(e);
     }
   };
 
   // Handler for Swiping Card Answer
   const handleAnswer = async (questionId: string, value: 'YES' | 'MAYBE' | 'NO') => {
     if (!userId) return;
-
-    // Compute client-side SHA-256 hash for double-blind privacy
     const answerHash = await computeAnswerHash(questionId, value, coupleSalt);
     const encryptedVal = encryptPayload(value);
 
     await submitAnswer(userId, questionId, encryptedVal, answerHash, value);
-
-    // Refresh matches list
     if (coupleId) reloadMatches();
   };
 
@@ -194,21 +167,8 @@ export const App: React.FC = () => {
     reloadChallenges();
   };
 
-  // Handler for Intimacy Log
-  const handleLogIntimacy = async (
-    activityType: string,
-    duration: number,
-    location: string,
-    protection: boolean,
-    mood: number
-  ) => {
-    if (!coupleId) return;
-    await logIntimacy(coupleId, activityType, duration, location, protection, mood);
-    reloadIntimacy();
-  };
-
   return (
-    <div className="min-h-screen pb-12">
+    <div className="min-h-screen pb-16">
       {/* Header Bar */}
       <Header
         activeTab={activeTab}
@@ -220,6 +180,15 @@ export const App: React.FC = () => {
 
       {/* Main Tab Views */}
       <main className="mt-4">
+        {activeTab === 'onboarding' && (
+          <Onboarding
+            pairCode={pairCode}
+            onCreateCouple={handleCreateCouple}
+            onJoinCouple={handleJoinCouple}
+            onStartSwiping={() => setActiveTab('swipe')}
+          />
+        )}
+
         {activeTab === 'swipe' && (
           <SwipeDeck
             questions={questions}
@@ -228,6 +197,7 @@ export const App: React.FC = () => {
             setSelectedCategory={setSelectedCategory}
             selectedIntensity={selectedIntensity}
             setSelectedIntensity={setSelectedIntensity}
+            onGoToMatches={() => setActiveTab('matches')}
           />
         )}
 
@@ -237,17 +207,7 @@ export const App: React.FC = () => {
           <DaresView challenges={challenges} onCreateDare={handleCreateDare} />
         )}
 
-        {activeTab === 'intimacy' && (
-          <IntimacyTracker
-            logs={intimacyLogs}
-            metrics={intimacyMetrics}
-            onLogSession={handleLogIntimacy}
-          />
-        )}
-
         {activeTab === 'ai' && <AICoachView coupleId={coupleId} />}
-
-        {activeTab === 'chat' && <E2EEChatView userId={userId} coupleId={coupleId} />}
       </main>
 
       {/* Pairing Modal */}
