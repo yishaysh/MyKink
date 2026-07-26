@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import http from 'http';
@@ -376,6 +377,12 @@ app.post('/api/ai/aria-advice', async (req, res) => {
   } catch (e: any) {
     res.status(500).json({ error: e.message });
   }
+});
+
+// Global Express error handler middleware
+app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+  console.error('🔥 Serverless API Error:', err);
+  res.status(500).json({ success: false, error: err?.message || String(err) });
 });
 
 // Start Server if not running in Vercel serverless environment
