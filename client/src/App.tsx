@@ -24,6 +24,14 @@ export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('onboarding');
   const [isPairingModalOpen, setIsPairingModalOpen] = useState(false);
 
+  // User Profile state
+  const [userProfile, setUserProfile] = useState<{
+    alias: string;
+    role: string;
+    categories: string[];
+    intensity: string;
+  } | null>(null);
+
   // User & Couple state
   const [userId, setUserId] = useState<string | null>(null);
   const [coupleId, setCoupleId] = useState<string | null>(null);
@@ -38,10 +46,17 @@ export const App: React.FC = () => {
   const [matches, setMatches] = useState<SharedMatchItem[]>([]);
   const [challenges, setChallenges] = useState<ChallengeItem[]>([]);
 
-  // 1. Initialize User Registration + Deep Link check
+  // 1. Initialize User Registration, Saved Profile & Deep Link check
   useEffect(() => {
     async function init() {
       try {
+        const savedProf = localStorage.getItem('mykink_user_profile');
+        if (savedProf) {
+          const parsed = JSON.parse(savedProf);
+          setUserProfile(parsed);
+          setActiveTab('swipe');
+        }
+
         const deviceId = getOrCreateDeviceId();
         const pubKey = getOrCreatePublicKey();
         const res = await registerDevice(deviceId, pubKey);
@@ -51,7 +66,6 @@ export const App: React.FC = () => {
           if (res.user.coupleId) {
             setCoupleId(res.user.coupleId);
             setIsPartnerConnected(true);
-            setActiveTab('swipe');
           }
         }
 
@@ -141,13 +155,23 @@ export const App: React.FC = () => {
         setCoupleSalt(res.couple.coupleSalt || 'Salt_Default123');
         setIsPairingModalOpen(false);
         setIsPartnerConnected(true);
-        setActiveTab('swipe');
       } else {
         alert(res.error || 'Pair code not found');
       }
     } catch (e) {
       console.error(e);
     }
+  };
+
+  const handleCompleteOnboarding = (profile: {
+    alias: string;
+    role: string;
+    categories: string[];
+    intensity: string;
+  }) => {
+    setUserProfile(profile);
+    localStorage.setItem('mykink_user_profile', JSON.stringify(profile));
+    setActiveTab('swipe');
   };
 
   // Handler for Swiping Card Answer
@@ -176,6 +200,7 @@ export const App: React.FC = () => {
         pairCode={pairCode}
         openPairingModal={() => setIsPairingModalOpen(true)}
         isPartnerConnected={isPartnerConnected}
+        userAlias={userProfile?.alias}
       />
 
       {/* Main Tab Views */}
@@ -185,7 +210,7 @@ export const App: React.FC = () => {
             pairCode={pairCode}
             onCreateCouple={handleCreateCouple}
             onJoinCouple={handleJoinCouple}
-            onStartSwiping={() => setActiveTab('swipe')}
+            onCompleteOnboarding={handleCompleteOnboarding}
           />
         )}
 

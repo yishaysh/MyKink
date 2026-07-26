@@ -1,6 +1,6 @@
 @import "https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css";
 
-/* Stitch DESIGN.md - Midnight Velvet System Tokens */
+/* Stitch DESIGN.md - Midnight Velvet Solid System Tokens */
 :root {
   --bg-surface: #141218;
   --bg-surface-lowest: #0f0d13;
@@ -27,7 +27,7 @@
 body {
   margin: 0;
   padding: 0;
-  background-color: var(--bg-surface);
+  background-color: #141218;
   color: #e7e0e9;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   min-height: 100vh;
@@ -38,20 +38,17 @@ h1, h2, h3, h4, .font-headline {
   font-family: 'Hanken Grotesk', sans-serif;
 }
 
-/* Glassmorphism Surface Cards (24px corner radius per DESIGN.md) */
-.glass-card {
-  background: rgba(33, 31, 37, 0.75);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(232, 180, 184, 0.12);
-  box-shadow: 0 12px 36px 0 rgba(0, 0, 0, 0.45);
-  border-radius: 1.5rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+/* 100% Solid Card Container (Zero Transparency / Zero Blur) */
+.solid-card {
+  background-color: #211f25;
+  border: 1px solid #36343a;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  border-radius: 1.5rem; /* 24px per Stitch DESIGN.md */
+  transition: border-color 0.2s ease, transform 0.2s ease;
 }
 
-.glass-card:hover {
-  border-color: rgba(232, 180, 184, 0.25);
-  box-shadow: 0 16px 40px 0 rgba(232, 180, 184, 0.15);
+.solid-card:hover {
+  border-color: rgba(232, 180, 184, 0.35);
 }
 
 /* Soft Rose Gold Pill Button */
@@ -60,44 +57,58 @@ h1, h2, h3, h4, .font-headline {
   color: #48272a;
   font-weight: 700;
   border-radius: 9999px;
-  box-shadow: 0 4px 20px rgba(232, 180, 184, 0.25);
-  transition: all 0.25s ease;
+  box-shadow: 0 4px 16px rgba(232, 180, 184, 0.3);
+  transition: all 0.2s ease;
 }
 
 .btn-rose:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(232, 180, 184, 0.45);
+  box-shadow: 0 6px 24px rgba(232, 180, 184, 0.5);
 }
 
 .btn-rose:active {
   transform: translateY(0);
 }
 
-/* Champagne Ghost Button */
+/* Champagne Ghost / Solid Button */
 .btn-soft {
-  background: rgba(255, 255, 255, 0.05);
+  background-color: #2b292f;
   color: #d1c5b2;
-  border: 1px solid rgba(209, 197, 178, 0.25);
+  border: 1px solid #504444;
   border-radius: 9999px;
   font-weight: 600;
   transition: all 0.2s ease;
 }
 
 .btn-soft:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background-color: #36343a;
   color: #ffffff;
-  border-color: rgba(209, 197, 178, 0.45);
+  border-color: #e8b4b8;
+}
+
+/* Custom Input Field */
+.input-solid {
+  background-color: #141218;
+  border: 1px solid #36343a;
+  color: #ffffff;
+  border-radius: 1rem;
+  transition: border-color 0.2s ease;
+}
+
+.input-solid:focus {
+  border-color: #e8b4b8;
+  outline: none;
 }
 
 /* Card Entry Animation */
 .card-appear {
-  animation: slideFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: slideFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 @keyframes slideFadeIn {
   from {
     opacity: 0;
-    transform: translateY(16px) scale(0.96);
+    transform: translateY(12px) scale(0.97);
   }
   to {
     opacity: 1;
@@ -116,10 +127,6 @@ h1, h2, h3, h4, .font-headline {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(232, 180, 184, 0.4);
+  background: #e8b4b8;
   border-radius: 9999px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(232, 180, 184, 0.7);
 }

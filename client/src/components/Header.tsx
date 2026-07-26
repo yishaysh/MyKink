@@ -1,5 +1,5 @@
 import React from 'react';
-import { Heart, ShieldCheck, Sparkles, Flame, Bot, Share2 } from 'lucide-react';
+import { Heart, ShieldCheck, Sparkles, Flame, Bot, Share2, User } from 'lucide-react';
 
 interface HeaderProps {
   activeTab: string;
@@ -7,6 +7,7 @@ interface HeaderProps {
   pairCode: string | null;
   openPairingModal: () => void;
   isPartnerConnected: boolean;
+  userAlias?: string;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -14,7 +15,8 @@ export const Header: React.FC<HeaderProps> = ({
   setActiveTab,
   pairCode,
   openPairingModal,
-  isPartnerConnected
+  isPartnerConnected,
+  userAlias
 }) => {
   const tabs = [
     { id: 'swipe', label: 'Discovery', icon: Heart },
@@ -25,12 +27,12 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <>
-      {/* Top Header Bar */}
-      <header className="sticky top-0 z-40 bg-[#141218]/90 backdrop-blur-xl border-b border-[#e8b4b8]/10 px-4 py-3">
+      {/* Top Solid Header Bar */}
+      <header className="sticky top-0 z-40 bg-[#141218] border-b border-[#36343a] px-4 py-3 shadow-md">
         <div className="max-w-md md:max-w-5xl mx-auto flex items-center justify-between gap-2">
           {/* Brand Logo & Title */}
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#e8b4b8] to-[#ffd2d5] flex items-center justify-center shadow-lg shadow-[#e8b4b8]/20 shrink-0">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#e8b4b8] to-[#ffd2d5] flex items-center justify-center shadow-md shadow-[#e8b4b8]/20 shrink-0">
               <Heart className="w-5 h-5 text-[#48272a] fill-[#48272a]" />
             </div>
             <div>
@@ -45,7 +47,7 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
 
           {/* Desktop Navigation Tabs */}
-          <nav className="hidden md:flex items-center gap-1 bg-[#211f25]/90 p-1 rounded-full border border-[#36343a]">
+          <nav className="hidden md:flex items-center gap-1 bg-[#211f25] p-1 rounded-full border border-[#36343a]">
             {tabs.map((t) => {
               const Icon = t.icon;
               const isActive = activeTab === t.id;
@@ -55,7 +57,7 @@ export const Header: React.FC<HeaderProps> = ({
                   onClick={() => setActiveTab(t.id)}
                   className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold transition ${
                     isActive
-                      ? 'btn-rose shadow-md shadow-[#e8b4b8]/20'
+                      ? 'btn-rose shadow-sm'
                       : 'text-slate-400 hover:text-slate-200 hover:bg-[#2b292f]'
                   }`}
                 >
@@ -66,11 +68,18 @@ export const Header: React.FC<HeaderProps> = ({
             })}
           </nav>
 
-          {/* Pair Code Button */}
+          {/* User Alias Badge & Pair Code Button */}
           <div className="flex items-center gap-2">
+            {userAlias && (
+              <span className="hidden sm:flex items-center gap-1 px-3 py-1 rounded-full bg-[#211f25] border border-[#36343a] text-xs font-semibold text-[#e8b4b8]">
+                <User className="w-3.5 h-3.5" />
+                <span>{userAlias}</span>
+              </span>
+            )}
+
             <button
               onClick={openPairingModal}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#211f25] border border-[#36343a] hover:border-[#e8b4b8]/40 text-xs font-semibold text-slate-200 transition shadow-sm"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#211f25] border border-[#36343a] hover:border-[#e8b4b8] text-xs font-semibold text-slate-200 transition shadow-sm"
             >
               <Share2 className="w-3.5 h-3.5 text-[#e8b4b8]" />
               <span className="font-mono text-[11px]">{pairCode || 'Pair'}</span>
@@ -79,8 +88,8 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       </header>
 
-      {/* Mobile Bottom Navigation Bar (Fixed for Mobile Screens) */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#141218]/95 backdrop-blur-2xl border-t border-[#e8b4b8]/15 px-3 py-2">
+      {/* Mobile Bottom Navigation Bar (Solid 100% Opaque) */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#1d1b21] border-t border-[#36343a] px-3 py-2 shadow-2xl">
         <nav className="max-w-md mx-auto grid grid-cols-4 gap-1">
           {tabs.map((t) => {
             const Icon = t.icon;
@@ -91,7 +100,7 @@ export const Header: React.FC<HeaderProps> = ({
                 onClick={() => setActiveTab(t.id)}
                 className={`flex flex-col items-center justify-center py-2 px-1 rounded-2xl transition ${
                   isActive
-                    ? 'bg-[#e8b4b8]/15 text-[#e8b4b8] font-bold border border-[#e8b4b8]/30 shadow-sm'
+                    ? 'bg-[#2b292f] text-[#e8b4b8] font-bold border border-[#e8b4b8]/40 shadow-sm'
                     : 'text-slate-400 hover:text-slate-200'
                 }`}
               >

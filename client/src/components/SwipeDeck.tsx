@@ -41,13 +41,13 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
   };
 
   return (
-    <div className="max-w-lg mx-auto px-4 py-6">
+    <div className="max-w-lg mx-auto px-4 py-4">
       {/* Category & Intensity Filters */}
-      <div className="glass-card p-4 mb-6 space-y-3">
+      <div className="solid-card p-4 mb-4 space-y-3">
         <div className="flex items-center justify-between text-xs text-slate-300 font-bold">
           <div className="flex items-center gap-1.5 text-[#e8b4b8]">
             <Filter className="w-4 h-4" />
-            <span>Filter by Category & Intensity:</span>
+            <span>Filter Category & Intensity:</span>
           </div>
         </div>
 
@@ -69,7 +69,7 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
         </div>
 
         {/* Intensity Pills */}
-        <div className="flex flex-wrap gap-1.5 pt-2 border-t border-[#2b292f]">
+        <div className="flex flex-wrap gap-1.5 pt-2 border-t border-[#36343a]">
           {intensities.map((lvl) => (
             <button
               key={lvl}
@@ -77,7 +77,7 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
               className={`px-3 py-0.5 rounded-full text-[11px] font-medium transition ${
                 selectedIntensity === lvl
                   ? 'bg-[#d1c5b2] text-[#363022] font-bold'
-                  : 'bg-[#1d1b21] text-slate-400 hover:text-slate-200'
+                  : 'bg-[#141218] text-slate-400 hover:text-slate-200'
               }`}
             >
               {lvl === 'ALL' ? 'All Intensity Levels' : lvl}
@@ -88,25 +88,25 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
 
       {/* Main Preference Swiper Card */}
       {!isFinished ? (
-        <div className="glass-card p-6 md:p-8 text-center relative min-h-[400px] flex flex-col justify-between card-appear">
+        <div className="solid-card p-6 sm:p-8 text-center relative min-h-[400px] flex flex-col justify-between card-appear">
           {/* Top Metadata */}
           <div>
             <div className="flex items-center justify-between text-xs text-slate-400 mb-4">
-              <span className="px-3 py-1 rounded-full bg-[#1d1b21] text-[#e8b4b8] border border-[#36343a] font-semibold text-[11px]">
+              <span className="px-3 py-1 rounded-full bg-[#141218] text-[#e8b4b8] border border-[#36343a] font-semibold text-[11px]">
                 {currentQ.category}
               </span>
               <span className="flex items-center gap-1 font-semibold text-[#d1c5b2]">
                 <Flame className="w-3.5 h-3.5 text-[#e8b4b8]" />
                 {currentQ.intensityLevel}
               </span>
-              <span className="font-mono text-slate-500 text-[11px]">
+              <span className="font-mono text-slate-400 text-[11px]">
                 {currentIndex + 1} / {questions.length}
               </span>
             </div>
 
             {/* Asymmetric Role Badge */}
             {currentQ.roleType !== 'SYMMETRIC' && (
-              <div className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#e8b4b8]/10 border border-[#e8b4b8]/30 text-[#e8b4b8] text-xs font-semibold mb-4">
+              <div className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#2b292f] border border-[#e8b4b8]/40 text-[#e8b4b8] text-xs font-semibold mb-4">
                 <span>Role: {currentQ.roleType === 'GIVER' ? 'Giver / Dominant' : 'Receiver / Submissive'}</span>
               </div>
             )}
@@ -115,7 +115,7 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
             <h3 className="text-2xl font-bold text-white mb-3 tracking-tight font-headline">
               {currentQ.title}
             </h3>
-            <p className="text-sm text-slate-300 leading-relaxed max-w-sm mx-auto">
+            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-sm mx-auto">
               {currentQ.description || 'Would you like to explore this fantasy together?'}
             </p>
           </div>
@@ -127,11 +127,11 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
           </div>
 
           {/* Voting Buttons */}
-          <div className="grid grid-cols-3 gap-3 pt-3 border-t border-[#2b292f]">
+          <div className="grid grid-cols-3 gap-3 pt-3 border-t border-[#36343a]">
             {/* NO */}
             <button
               onClick={() => handleVote('NO')}
-              className="flex flex-col items-center justify-center p-3 rounded-2xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 transition group"
+              className="flex flex-col items-center justify-center p-3 rounded-2xl bg-[#141218] hover:bg-[#2b292f] text-rose-400 border border-rose-500/30 transition group"
             >
               <ThumbsDown className="w-5 h-5 mb-1 group-hover:scale-110 transition-transform" />
               <span className="text-xs font-bold">NO 🔒</span>
@@ -140,7 +140,7 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
             {/* MAYBE */}
             <button
               onClick={() => handleVote('MAYBE')}
-              className="flex flex-col items-center justify-center p-3 rounded-2xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/20 transition group"
+              className="flex flex-col items-center justify-center p-3 rounded-2xl bg-[#141218] hover:bg-[#2b292f] text-amber-300 border border-amber-500/30 transition group"
             >
               <HelpCircle className="w-5 h-5 mb-1 group-hover:scale-110 transition-transform" />
               <span className="text-xs font-bold">MAYBE 🤔</span>
@@ -149,7 +149,7 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
             {/* YES */}
             <button
               onClick={() => handleVote('YES')}
-              className="flex flex-col items-center justify-center p-3 rounded-2xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 transition group"
+              className="flex flex-col items-center justify-center p-3 rounded-2xl bg-[#141218] hover:bg-[#2b292f] text-emerald-400 border border-emerald-500/30 transition group"
             >
               <Heart className="w-5 h-5 mb-1 fill-emerald-400/20 group-hover:scale-110 transition-transform" />
               <span className="text-xs font-bold">YES! 💖</span>
@@ -158,8 +158,8 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
         </div>
       ) : (
         /* Finished State */
-        <div className="glass-card p-8 text-center space-y-4">
-          <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-[#e8b4b8] to-[#ffd2d5] flex items-center justify-center mx-auto text-[#48272a] shadow-lg shadow-[#e8b4b8]/30">
+        <div className="solid-card p-8 text-center space-y-4">
+          <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-[#e8b4b8] to-[#ffd2d5] flex items-center justify-center mx-auto text-[#48272a] shadow-md shadow-[#e8b4b8]/30">
             <Heart className="w-8 h-8 fill-[#48272a]" />
           </div>
           <h3 className="text-2xl font-bold text-white font-headline">Quiz Completed!</h3>
