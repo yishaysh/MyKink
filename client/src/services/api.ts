@@ -44,7 +44,7 @@ function generateUUID(): string {
   });
 }
 
-// Google OAuth Sign In
+// Google OAuth Sign In with Graceful Error Protection
 export async function signInWithGoogle() {
   try {
     const { data, error } = await supabase.auth.signInWithOAuth({
@@ -53,8 +53,17 @@ export async function signInWithGoogle() {
         redirectTo: window.location.origin
       }
     });
-    return { success: !error, data, error };
+
+    if (error) {
+      alert(
+        'Google OAuth Provider is not enabled yet in Supabase Dashboard.\n\nTo enable:\n1. Open Supabase Dashboard -> Authentication -> Providers -> Google\n2. Toggle Google to Enabled and add Client ID & Secret.\n3. Add Redirect URL: https://my-kink.vercel.app'
+      );
+      return { success: false, error };
+    }
+
+    return { success: true, data };
   } catch (e) {
+    console.warn('Google auth error:', e);
     return { success: false, error: e };
   }
 }
