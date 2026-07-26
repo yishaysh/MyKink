@@ -326,37 +326,172 @@ export const translations: Record<Language, TranslationDictionary> = {
   }
 };
 
-// Hebrew translations mapping for question titles and descriptions
-const questionTranslationsHe: Record<string, { title: string; description: string; category: string }> = {
-  q1: {
-    title: 'עיסוי כיסוי עיניים ממושך',
-    description: 'שימוש בשמני גוף ניחוחים וכיסוי עיניים ממשי למשך 20 דקות של גירוי חושי מתמשך.',
-    category: 'חושים ומגע'
+// Comprehensive Hebrew Translation Dictionary for QuestionCatalog
+const catalogTranslationsHeByTitle: Record<string, { title: string; description: string; category?: string }> = {
+  "Blindfolded Touch & Sensation Play": {
+    title: "משחקי תחושות וכיסוי עיניים",
+    description: "חקירת מגע וחושים כאשר אחד מבני הזוג ממוסך עיניים עם שמנים, קרח, נוצות או משי.",
+    category: "חושים ומגע"
   },
-  q2: {
-    title: 'משחקי טמפרטורה איטיים',
-    description: 'שילוב בין נשימות חמות, קוביות קרח ומגע נוצה עדין באזורים רגישים.',
-    category: 'חושים ומגע'
+  "Temperature Play (Warm Wax & Ice)": {
+    title: "משחקי טמפרטורה (שעווה חמה וקרח)",
+    description: "שילוב בין נטיפות שעוות עיסוי חמה לבין קוביות קרח צוננות על עור חשוף.",
+    category: "חושים ומגע"
   },
-  q3: {
-    title: 'קשירת פרקי ידיים עדינה',
-    description: 'שימוש בסרטי משי רכים או צמידי סאטן לעגינה עדינה של בן/בת הזוג למיטה.',
-    category: 'BDSM וקשירות'
+  "Feather Tease & Tickle": {
+    title: "דגדוג ומגע נוצה מענג",
+    description: "שימוש בנוצות רכות וצמר גפן לגירוי עדין ואיטי של אזורים ארוגניים.",
+    category: "חושים ומגע"
   },
-  q4: {
-    title: 'מפגש אנונימי בבר מלון',
-    description: 'הגעה בנפרד לבר, התחזות לזרים מסקרנים החולקים משקה ופלרטוט.',
-    category: 'משחקי תפקידים'
+  "Silk & Satin Restraints": {
+    title: "קשירות משי וסאטן רכות",
+    description: "עטיפה ועגינה של פרקי הידיים בסרטי סאטן נעימים למיטה.",
+    category: "BDSM וקשירות"
   },
-  q5: {
-    title: 'צעצוע אינטימי בשלט רחוק',
-    description: 'לבישת צעצוע אינטימי נשלט מרחוק במהלך ארוחה רומנטית או טיול יחדיו.',
-    category: 'צעצועים'
+  "Leather Cuffs & Anchoring": {
+    title: "צמידי עור ועגינה יציבה",
+    description: "שימוש בצמידי עור איכותיים לקיבוע ידיים או רגליים במהלך המשחק.",
+    category: "BDSM וקשירות"
   },
-  q6: {
-    title: 'סשן מראות רומנטי',
-    description: 'הצבת מראות גוף סביב חדר המיטות להעצמת הגירוי הויזואלי והתשוקה.',
-    category: 'חושים ומגע'
+  "Light Whip & Crop Tease": {
+    title: "מצלף משי וגירוי קל",
+    description: "נגיעות קלות וטפיחות מעוררות עם מצלף עור או מברשת רכה.",
+    category: "BDSM וקשירות"
+  },
+  "Shibari Rope Bondage": {
+    title: "אמנות קשרים ושיבארי (Shibari)",
+    description: "קשירה אמנותית של הגוף בחבלי יוטה או כותנה רכים לחוויית התמסרות עמוקה.",
+    category: "BDSM וקשירות"
+  },
+  "Sensual Spanking": {
+    title: "מכות ישבן תשוקתיות (Spanking)",
+    description: "טפיחות כף יד קלות עד איתנות על הישבן במהלך התשוקה.",
+    category: "BDSM וקשירות"
+  },
+  "Edge & Orgasm Control": {
+    title: "שליטה באורגזמה והארכת גירוי (Edging)",
+    description: "הבאת בן/בת הזוג לסף השיא מספר פעמים לפני שחרור מלא.",
+    category: "BDSM וקשירות"
+  },
+  "Strangers at a Hotel Bar Roleplay": {
+    title: "מפגש זרים בבר מלון",
+    description: "התחזות לשני זרים מסקרנים הנפגשים בבר מלון ומתחילים ברומן אנונימי.",
+    category: "משחקי תפקידים"
+  },
+  "Doctor & Patient Inspection Roleplay": {
+    title: "משחק תפקידים: רופא ומטופלת",
+    description: "תרחיש בדיקה רפואית שובבה ומלאת פנטזיה.",
+    category: "משחקי תפקידים"
+  },
+  "French Maid / Manor Master Roleplay": {
+    title: "משחק תפקידים: חדרנית ואדון האחוזה",
+    description: "תרחיש קלאסי של שליטה, שירותיות וציות להוראות.",
+    category: "משחקי תפקידים"
+  },
+  "Secret Agents / Heist Partner Scenario": {
+    title: "משחק תפקידים: סוכנים חסויים במבצע",
+    description: "תרחיש סוכנים חשאיים החוגגים ניצחון במשימה מסוכנת.",
+    category: "משחקי תפקידים"
+  },
+  "Erotic Fantasy Story Co-writing": {
+    title: "כתיבת וקריאת סיפור אירוטי משותף",
+    description: "יצירה וקריאה של סיפור תשוקתי מותאם אישית יחד במיטה.",
+    category: "משחקי תפקידים"
+  },
+  "Remote-Controlled Toy in Public": {
+    title: "צעצוע אינטימי בשלט רחוק בציבור",
+    description: "לבישת רוטט נשלט מרחוק דרך אפליקציה במהלך מסעדה או טיול.",
+    category: "צעצועים"
+  },
+  "Wand Massager Exploration": {
+    title: "עיסוי עוצמתי עם Wand Massager",
+    description: "שילוב מעסה רוטט בעל עוצמה גבוהה לגירוי ממושך.",
+    category: "צעצועים"
+  },
+  "Suction & Nipple Stimulators": {
+    title: "מעסי יניקה וגירוי פטמות",
+    description: "שימוש בפעמוני יניקה או בצבטים רוטטים עדינים.",
+    category: "צעצועים"
+  },
+  "Electro-Stimulation (E-Stim Lite)": {
+    title: "גירוי חשמלי עדין (E-Stim)",
+    description: "שימוש בפולסים חשמליים מיקרוסקופיים לחוויה תחושתית חדשה.",
+    category: "צעצועים"
+  },
+  "Watching Erotic Films / Audio Together": {
+    title: "צפייה או האזנה לתוכן אירוטי זוגי",
+    description: "הנאה משותפת מתכנים אירוטיים או פודקאסטים תשוקתיים.",
+    category: "פנטזיות פתוחות"
+  },
+  "Flirting with Couples Online (Fantasy Only)": {
+    title: "פלרטוט זוגי ברשת (לצורך פנטזיה בלבד)",
+    description: "חקר פורומים או אפליקציות זוגיות לקבלת רעיונות והשראה בלבד.",
+    category: "פנטזיות פתוחות"
+  },
+  "Hotwife / Hall Pass Discussion": {
+    title: "שיחה על פנטזיית יחסים פתוחים",
+    description: "דיבור פתוח על תרחישים היפותטיים בסביבה בטוחה וללא שיפוטיות.",
+    category: "פנטזיות פתוחות"
+  },
+  "Being Spanked (Receiver)": {
+    title: "קבלת טפיחות ישבן (נשלט/ת)",
+    description: "רצון שבן/בת הזוג יעניקו לי טפיחות ישבן במהלך המשחק.",
+    category: "BDSM וקשירות"
+  },
+  "Spanking Partner (Giver)": {
+    title: "מתן טפיחות ישבן (שולט/ת)",
+    description: "רצון להעניק לבן/בת הזוג טפיחות ישבן עדינות או איתנות.",
+    category: "BDSM וקשירות"
+  },
+  "Surrendering Control (Submissive / Receiver)": {
+    title: "התמסרות ושחרור שליטה מלא (נשלט/ת)",
+    description: "רצון להשתחרר משליטה, להתמסר ולמלא את הוראות בן/בת הזוג.",
+    category: "BDSM וקשירות"
+  },
+  "Dominant Control (Dominant / Giver)": {
+    title: "לקיחת שליטה דומיננטית (שולט/ת)",
+    description: "רצון לקחת שליטה מלאה בסשן ולהנחות את בן/בת הזוג.",
+    category: "BDSM וקשירות"
+  },
+  "Being Tied Up (Bondage Receiver)": {
+    title: "להיות קשור/ה (מקבל/ת)",
+    description: "רצון שבן/בת הזוג יקשרו אותי בבטחה בחבלים או ברצועות.",
+    category: "BDSM וקשירות"
+  },
+  "Tying Up Partner (Shibari / Bondage Giver)": {
+    title: "לקשור את בן/בת הזוג (מעניק/ת)",
+    description: "רצון לקשור את בן/בת הזוג בחבלי משי רכים או ברצועות עור.",
+    category: "BDSM וקשירות"
+  },
+  "Wearing Collar & Leash (Submissive Pet)": {
+    title: "ענידת קולר ורצועה (נשלט/ת)",
+    description: "רצון שבן/בת הזוג יענדו לי קולר ויובילו אותי ברצועה.",
+    category: "BDSM וקשירות"
+  },
+  "Wearing Collar & Leash (Dominant Owner)": {
+    title: "ענידת קולר ורצועה (שולט/ת)",
+    description: "רצון להעניק לבן/בת הזוג קולר ולהנחות אותם ברצועה.",
+    category: "BDSM וקשירות"
+  },
+  "Receiving Deep Body Massage": {
+    title: "קבלת עיסוי גוף מענג",
+    description: "רצון שבן/בת הזוג יעניקו לי עיסוי מפנק ללא הפרעות.",
+    category: "חושים ומגע"
+  },
+  "Giving Deep Body Massage": {
+    title: "מתן עיסוי גוף מפנק",
+    description: "רצון להעניק לבן/בת הזוג עיסוי עמוק ומפנק במשך 30 דקות.",
+    category: "חושים ומגע"
+  },
+  "Being Hand-Fed Blindfolded": {
+    title: "אכילה מידי בן/בת הזוג בכיסוי עיניים",
+    description: "רצון שבן/בת הזוג יאכילו אותי במעפים טעימים בעיניים מכוסות.",
+    category: "חושים ומגע"
+  },
+  "Feed Partner Exotic Treats Blindfolded": {
+    title: "האכלת בן/בת הזוג בכיסוי עיניים",
+    description: "רצון להאכיל את בן/בת הזוג בעיניים מכוסות בפירות, שוקולד או יין.",
+    category: "חושים ומגע"
   }
 };
 
@@ -365,17 +500,18 @@ export function translateQuestion(
   lang: Language
 ) {
   if (lang === 'he') {
-    const heTrans = questionTranslationsHe[q.id];
-    if (heTrans) {
+    // Check translation by Exact Title match
+    const byTitle = catalogTranslationsHeByTitle[q.title];
+    if (byTitle) {
       return {
         ...q,
-        title: heTrans.title,
-        description: heTrans.description,
-        category: heTrans.category
+        title: byTitle.title,
+        description: byTitle.description,
+        category: byTitle.category || q.category
       };
     }
 
-    // Dynamic category translation fallback
+    // Dynamic Category Translate
     const categoryMap: Record<string, string> = {
       Sensual: 'חושים ומגע',
       BDSM: 'BDSM וקשירות',
