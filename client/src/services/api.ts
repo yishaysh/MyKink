@@ -33,7 +33,18 @@ export interface ScenarioStep {
   description: string;
 }
 
-// 1. Register Device (using deviceIdentity column name)
+function generateUUID(): string {
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    const v = c === 'x' ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
+
+// 1. Register Device
 export async function registerDevice(deviceId: string, publicKey: string) {
   try {
     const { data: existingUsers } = await supabase
@@ -45,9 +56,10 @@ export async function registerDevice(deviceId: string, publicKey: string) {
       return { success: true, user: existingUsers[0] };
     }
 
+    const newId = generateUUID();
     const { data: newUser } = await supabase
       .from('User')
-      .insert({ deviceIdentity: deviceId, publicKey })
+      .insert({ id: newId, deviceIdentity: deviceId, publicKey })
       .select()
       .single();
 
@@ -69,10 +81,11 @@ export async function createCouple(userId: string) {
   try {
     const pairCode = Math.random().toString(36).substring(2, 8).toUpperCase();
     const coupleSalt = 'Salt_' + Math.random().toString(36).substring(2, 10);
+    const newId = generateUUID();
 
     const { data: couple } = await supabase
       .from('Couple')
-      .insert({ pairCode, coupleSalt })
+      .insert({ id: newId, pairCode, coupleSalt })
       .select()
       .single();
 
@@ -188,7 +201,7 @@ export async function fetchQuestions(category = 'ALL', intensity = 'ALL') {
   return { success: true, questions: englishCatalog };
 }
 
-// 5. Submit Answer
+// 5. Submit Answer (Safe Upsert with UUID primary key)
 export async function submitAnswer(
   userId: string,
   questionId: string,
@@ -197,19 +210,35 @@ export async function submitAnswer(
   value: 'YES' | 'MAYBE' | 'NO'
 ) {
   try {
-    await supabase.from('UserAnswer').upsert({
-      userId,
-      questionId,
-      encryptedValue,
-      answerHash
-    });
+    const { data: existing } = await supabase
+      .from('UserAnswer')
+      .select('id')
+      .eq('userId', userId)
+      .eq('questionId', questionId);
+
+    if (existing && existing.length > 0) {
+      await supabase
+        .from('UserAnswer')
+        .update({ encryptedValue, answerHash })
+        .eq('id', existing[0].id);
+    } else {
+      await supabase.from('UserAnswer').insert({
+        id: generateUUID(),
+        userId,
+        questionId,
+        encryptedValue,
+        answerHash
+      });
+    }
+
     return { success: true };
   } catch (e) {
+    console.warn('Submit answer fallback:', e);
     return { success: true };
   }
 }
 
-// 6. Fetch Matches (2-step clean fetch to prevent PostgREST 400 Bad Request join errors)
+// 6. Fetch Matches
 export async function fetchMatches(coupleId: string) {
   try {
     const { data: matches, error } = await supabase
