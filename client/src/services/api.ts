@@ -36,7 +36,7 @@ export interface ScenarioStep {
 // 1. Register Device (using deviceIdentity column name)
 export async function registerDevice(deviceId: string, publicKey: string) {
   try {
-    const { data: existingUsers, error: selectErr } = await supabase
+    const { data: existingUsers } = await supabase
       .from('User')
       .select('*')
       .eq('deviceIdentity', deviceId);
@@ -45,8 +45,7 @@ export async function registerDevice(deviceId: string, publicKey: string) {
       return { success: true, user: existingUsers[0] };
     }
 
-    // Insert new user
-    const { data: newUser, error: insertErr } = await supabase
+    const { data: newUser } = await supabase
       .from('User')
       .insert({ deviceIdentity: deviceId, publicKey })
       .select()
@@ -59,7 +58,6 @@ export async function registerDevice(deviceId: string, publicKey: string) {
     console.warn('User registration fallback mode:', e);
   }
 
-  // Local fallback user object
   return {
     success: true,
     user: { id: deviceId, deviceIdentity: deviceId, coupleId: null }
@@ -136,7 +134,6 @@ export async function fetchQuestions(category = 'ALL', intensity = 'ALL') {
     console.warn('Using English Catalog Fallback');
   }
 
-  // English Default Catalog
   const englishCatalog: CatalogQuestion[] = [
     {
       id: 'q1',
@@ -212,16 +209,28 @@ export async function submitAnswer(
   }
 }
 
-// 6. Fetch Matches
+// 6. Fetch Matches (2-step clean fetch to prevent PostgREST 400 Bad Request join errors)
 export async function fetchMatches(coupleId: string) {
   try {
-    const { data: matches } = await supabase
+    const { data: matches, error } = await supabase
       .from('SharedMatch')
-      .select('*, question:QuestionCatalog(*)')
+      .select('*')
       .eq('coupleId', coupleId);
 
-    if (matches && matches.length > 0) {
-      return { success: true, matches };
+    if (!error && matches && matches.length > 0) {
+      const qIds = matches.map((m) => m.questionId).filter(Boolean);
+      const { data: qList } = await supabase
+        .from('QuestionCatalog')
+        .select('*')
+        .in('id', qIds);
+
+      const qMap = new Map((qList || []).map((q) => [q.id, q]));
+      const enrichedMatches: SharedMatchItem[] = matches.map((m) => ({
+        ...m,
+        question: qMap.get(m.questionId)
+      }));
+
+      return { success: true, matches: enrichedMatches };
     }
   } catch (e) {
     console.warn('Match fetch fallback');
