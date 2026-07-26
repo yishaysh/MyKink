@@ -1,77 +1,95 @@
 @import "https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css";
 
+/* Stitch DESIGN.md - Midnight Velvet Design System Tokens */
 :root {
-  --bg-gradient: linear-gradient(135deg, #0f0a1c 0%, #1a0e2e 50%, #12091f 100%);
-  --glass-bg: rgba(28, 18, 48, 0.75);
-  --glass-border: rgba(244, 114, 182, 0.15);
-  --glass-glow: rgba(244, 63, 94, 0.25);
-  --rose-gold: #fb7185;
-  --velvet-accent: #e11d48;
-  --warm-gold: #f59e0b;
+  --bg-surface: #141218;
+  --bg-surface-lowest: #0f0d13;
+  --bg-surface-low: #1d1b21;
+  --bg-surface-container: #211f25;
+  --bg-surface-high: #2b292f;
+  --bg-surface-highest: #36343a;
+  --bg-surface-bright: #3b383f;
+  
+  --color-primary: #ffd2d5;
+  --color-primary-container: #e8b4b8;
+  --color-on-primary: #48272a;
+  
+  --color-secondary: #d1c5b2;
+  --color-secondary-container: #4e4637;
+  
+  --color-tertiary: #fad0f8;
+  --color-tertiary-container: #dcb5db;
+  
+  --color-outline: #9d8d8e;
+  --color-outline-variant: #504444;
 }
 
 body {
   margin: 0;
   padding: 0;
-  background: var(--bg-gradient);
-  color: #f8fafc;
-  font-family: 'Heebo', system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-surface);
+  color: #e7e0e9;
+  font-family: 'Inter', 'Heebo', system-ui, -apple-system, sans-serif;
   min-height: 100vh;
   overflow-x: hidden;
 }
 
-/* Warm Velvet Glass Card */
+h1, h2, h3, h4, .font-headline {
+  font-family: 'Hanken Grotesk', 'Heebo', sans-serif;
+}
+
+/* Glassmorphism Surface Cards */
 .glass-card {
-  background: var(--glass-bg);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--glass-border);
-  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
-  border-radius: 1.5rem;
+  background: rgba(33, 31, 37, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(232, 180, 184, 0.12);
+  box-shadow: 0 12px 36px 0 rgba(0, 0, 0, 0.45);
+  border-radius: 1.5rem; /* 24px per DESIGN.md */
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glass-card:hover {
-  border-color: rgba(251, 113, 133, 0.35);
-  box-shadow: 0 15px 45px -10px var(--glass-glow);
+  border-color: rgba(232, 180, 184, 0.25);
+  box-shadow: 0 16px 40px 0 rgba(232, 180, 184, 0.15);
 }
 
-/* Velvet Rose Gold Button */
+/* Soft Rose Gold Pill Button */
 .btn-rose {
-  background: linear-gradient(135deg, #f43f5e 0%, #e11d48 50%, #be123c 100%);
-  color: white;
+  background: linear-gradient(135deg, #e8b4b8 0%, #ffd2d5 100%);
+  color: #48272a;
   font-weight: 700;
-  border-radius: 1.25rem;
-  box-shadow: 0 4px 20px rgba(244, 63, 94, 0.35);
+  border-radius: 9999px; /* Pill shape per DESIGN.md */
+  box-shadow: 0 4px 20px rgba(232, 180, 184, 0.25);
   transition: all 0.25s ease;
 }
 
 .btn-rose:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(244, 63, 94, 0.55);
+  box-shadow: 0 8px 30px rgba(232, 180, 184, 0.45);
 }
 
 .btn-rose:active {
   transform: translateY(0);
 }
 
-/* Soft Secondary Button */
+/* Champagne Ghost Button */
 .btn-soft {
-  background: rgba(255, 255, 255, 0.07);
-  color: #e2e8f0;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 1.25rem;
+  background: rgba(255, 255, 255, 0.05);
+  color: #d1c5b2;
+  border: 1px solid rgba(209, 197, 178, 0.25);
+  border-radius: 9999px;
   font-weight: 600;
   transition: all 0.2s ease;
 }
 
 .btn-soft:hover {
-  background: rgba(255, 255, 255, 0.14);
-  color: white;
-  border-color: rgba(251, 113, 133, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border-color: rgba(209, 197, 178, 0.45);
 }
 
-/* Swiper Card Animation */
+/* Card Entry Animation */
 .card-appear {
   animation: slideFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
@@ -94,14 +112,14 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(15, 10, 28, 0.8);
+  background: #0f0d13;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(244, 63, 94, 0.4);
+  background: rgba(232, 180, 184, 0.4);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(244, 63, 94, 0.7);
+  background: rgba(232, 180, 184, 0.7);
 }
