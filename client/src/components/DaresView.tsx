@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { Flame, Clock, Award, Plus, CheckCircle2, AlertCircle } from 'lucide-react';
 import { ChallengeItem } from '../services/api';
+import { Language, translations } from '../services/i18n';
 
 interface DaresViewProps {
   challenges: ChallengeItem[];
   onCreateDare: (title: string, description: string, hours: number) => void;
+  lang: Language;
 }
 
-export const DaresView: React.FC<DaresViewProps> = ({ challenges, onCreateDare }) => {
+export const DaresView: React.FC<DaresViewProps> = ({ challenges, onCreateDare, lang }) => {
+  const t = translations[lang];
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -28,149 +31,154 @@ export const DaresView: React.FC<DaresViewProps> = ({ challenges, onCreateDare }
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-6">
+    <div className="max-w-xl mx-auto px-4 py-4 space-y-4">
       {/* Top Banner: Rewards Ledger */}
-      <div className="glass-card p-6 mb-6 flex flex-col md:flex-row items-center justify-between gap-4 border border-[#36343a]">
+      <div className="solid-card p-5 space-y-4 text-center">
+        <div className="w-12 h-12 rounded-2xl bg-[#2b292f] border border-[#e8b4b8]/30 text-[#e8b4b8] flex items-center justify-center mx-auto shadow-md">
+          <Award className="w-6 h-6" />
+        </div>
         <div>
-          <div className="flex items-center gap-2 text-[#d1c5b2] mb-1">
-            <Award className="w-6 h-6 text-[#e8b4b8]" />
-            <h2 className="text-2xl font-bold text-white font-headline">Intimacy Challenges & Rewards</h2>
-          </div>
-          <p className="text-xs text-slate-400">
-            Issue timed dares (24-48 hours). Completing dares earns reward points on your couple ledger!
+          <h2 className="text-xl sm:text-2xl font-bold text-white font-headline">{t.challengesTitle}</h2>
+          <p className="text-xs text-slate-300 max-w-md mx-auto mt-1">
+            {t.challengesSub}
           </p>
         </div>
 
-        <div className="flex items-center gap-4">
-          <div className="text-center px-4 py-2 rounded-2xl bg-[#1d1b21] border border-[#36343a]">
-            <span className="text-xs text-slate-400 block">Reward Points:</span>
-            <span className="text-2xl font-black text-[#e8b4b8] font-mono">{totalPoints} pts</span>
+        <div className="flex items-center justify-between gap-3 pt-3 border-t border-[#36343a]">
+          <div className="text-left px-4 py-2 rounded-2xl bg-[#141218] border border-[#36343a]">
+            <span className="text-[10px] text-slate-400 block">{t.rewardPoints}</span>
+            <span className="text-xl font-black text-[#e8b4b8] font-mono">{totalPoints} pts</span>
           </div>
 
           <button
             onClick={() => setShowCreateModal(true)}
-            className="btn-rose px-5 py-2.5 text-xs flex items-center gap-2"
+            className="btn-rose px-4 py-2.5 text-xs flex items-center gap-1.5"
           >
             <Plus className="w-4 h-4" />
-            <span>New Challenge</span>
+            <span>{t.newChallengeBtn}</span>
           </button>
         </div>
       </div>
 
       {/* Challenges List */}
-      <div className="space-y-4">
-        {challenges.length > 0 ? (
-          challenges.map((c) => {
-            const isExpired = new Date(c.expiresAt) < new Date() && c.status === 'PENDING';
-            const status = isExpired ? 'EXPIRED' : c.status;
+      {challenges.length > 0 ? (
+        <div className="space-y-3">
+          {challenges.map((challenge) => {
+            const isCompleted = challenge.status === 'COMPLETED';
+            const isExpired = challenge.status === 'EXPIRED';
 
             return (
-              <div key={c.id} className="glass-card p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border border-[#36343a]">
-                <div className="flex items-start gap-3.5">
-                  <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#e8b4b8] to-[#ffd2d5] flex items-center justify-center text-[#48272a] font-bold shrink-0 mt-0.5 shadow-md shadow-[#e8b4b8]/20">
-                    <Flame className="w-5 h-5 fill-[#48272a]" />
+              <div
+                key={challenge.id}
+                className="solid-card p-5 space-y-3 card-appear hover:border-[#e8b4b8]/40 transition"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-[#e8b4b8]">
+                    <Flame className="w-4 h-4" />
+                    <span>+{challenge.pointsValue} pts</span>
                   </div>
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <h3 className="text-lg font-bold text-white font-headline">{c.title}</h3>
-                      <span className="px-2.5 py-0.5 rounded-full bg-[#1d1b21] text-[#e8b4b8] text-[11px] font-bold font-mono">
-                        +{c.pointsValue} pts
-                      </span>
-                    </div>
-                    <p className="text-xs text-slate-300 mb-2 leading-relaxed">{c.description}</p>
-                    <div className="flex items-center gap-3 text-[11px] text-slate-400">
-                      <span className="flex items-center gap-1">
-                        <Clock className="w-3.5 h-3.5 text-[#e8b4b8]" />
-                        Expires: {new Date(c.expiresAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                      </span>
-                    </div>
-                  </div>
+
+                  {isCompleted && (
+                    <span className="px-3 py-1 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-xs font-bold flex items-center gap-1">
+                      <CheckCircle2 className="w-3.5 h-3.5" />
+                      <span>{t.statusCompleted}</span>
+                    </span>
+                  )}
+                  {isExpired && (
+                    <span className="px-3 py-1 rounded-full bg-slate-900 border border-slate-700 text-slate-400 text-xs font-bold flex items-center gap-1">
+                      <AlertCircle className="w-3.5 h-3.5" />
+                      <span>{t.statusExpired}</span>
+                    </span>
+                  )}
+                  {!isCompleted && !isExpired && (
+                    <span className="px-3 py-1 rounded-full bg-amber-950/80 border border-amber-500/40 text-amber-300 text-xs font-bold flex items-center gap-1">
+                      <Clock className="w-3.5 h-3.5" />
+                      <span>{t.statusPending}</span>
+                    </span>
+                  )}
                 </div>
 
-                {/* Status Badges */}
                 <div>
-                  {status === 'PENDING' && (
-                    <span className="px-3 py-1.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/30 text-xs font-semibold flex items-center gap-1.5">
-                      <Clock className="w-4 h-4" /> Pending Execution
-                    </span>
-                  )}
-                  {status === 'COMPLETED' && (
-                    <span className="px-3 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs font-semibold flex items-center gap-1.5">
-                      <CheckCircle2 className="w-4 h-4" /> Completed!
-                    </span>
-                  )}
-                  {status === 'EXPIRED' && (
-                    <span className="px-3 py-1.5 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/30 text-xs font-semibold flex items-center gap-1.5">
-                      <AlertCircle className="w-4 h-4" /> Expired
-                    </span>
-                  )}
+                  <h3 className="text-lg font-bold text-white font-headline">{challenge.title}</h3>
+                  <p className="text-xs text-slate-300 mt-1 leading-relaxed">
+                    {challenge.description}
+                  </p>
+                </div>
+
+                <div className="pt-3 border-t border-[#36343a] flex items-center justify-between text-[11px] text-slate-400">
+                  <span>{lang === 'he' ? 'זמן תפוגה:' : 'Expires:'} {new Date(challenge.expiresAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                  <Clock className="w-3.5 h-3.5 text-[#e8b4b8]" />
                 </div>
               </div>
             );
-          })
-        ) : (
-          <div className="glass-card p-10 text-center text-slate-400 space-y-2">
-            <Flame className="w-10 h-10 text-slate-600 mx-auto" />
-            <h3 className="text-lg font-bold text-white font-headline">No Active Challenges</h3>
-            <p className="text-xs max-w-sm mx-auto text-slate-300">
-              Click "New Challenge" to issue a timed dare to your partner.
-            </p>
+          })}
+        </div>
+      ) : (
+        <div className="solid-card p-8 text-center space-y-3">
+          <div className="w-12 h-12 rounded-full bg-[#2b292f] text-slate-500 flex items-center justify-center mx-auto">
+            <Flame className="w-6 h-6" />
           </div>
-        )}
-      </div>
+          <h4 className="text-base font-bold text-white font-headline">{t.noChallengesTitle}</h4>
+          <p className="text-xs text-slate-300 max-w-sm mx-auto">
+            {t.noChallengesSub}
+          </p>
+        </div>
+      )}
 
-      {/* Modal for Creating New Challenge */}
+      {/* Modal for Creating Challenge */}
       {showCreateModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
-          <div className="glass-card max-w-md w-full p-6 border border-[#36343a]">
-            <h3 className="text-xl font-bold text-white mb-4 font-headline">Issue New Intimacy Challenge</h3>
-            <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
+          <div className="solid-card p-6 max-w-md w-full space-y-4 card-appear">
+            <h3 className="text-lg font-bold text-white font-headline">{t.issueChallengeModalTitle}</h3>
+
+            <form onSubmit={handleSubmit} className="space-y-3 text-xs">
               <div>
-                <label className="text-xs font-semibold text-slate-300 block mb-1">Challenge Title:</label>
+                <label className="text-slate-300 block mb-1 font-semibold">{t.challengeTitleLabel}</label>
                 <input
                   type="text"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  placeholder="e.g. 15-Minute Sensual Shoulder Massage"
+                  placeholder={lang === 'he' ? 'למשל: עיסוי ללא מגע 5 דקות' : 'e.g. 5 minute tease'}
+                  className="w-full px-3 py-2.5 input-solid text-white"
                   required
-                  className="w-full px-4 py-2.5 rounded-2xl bg-[#141218] border border-[#36343a] text-white text-xs focus:outline-none focus:border-[#e8b4b8]"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-slate-300 block mb-1">Description & Guidelines:</label>
+                <label className="text-slate-300 block mb-1 font-semibold">{t.challengeDescLabel}</label>
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Describe the instructions and setup..."
+                  placeholder={lang === 'he' ? 'פרט את ההוראות לבן/בת הזוג...' : 'Detailed instructions...'}
                   rows={3}
+                  className="w-full px-3 py-2.5 input-solid text-white"
                   required
-                  className="w-full px-4 py-2.5 rounded-2xl bg-[#141218] border border-[#36343a] text-white text-xs focus:outline-none focus:border-[#e8b4b8]"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-slate-300 block mb-1">Duration Limit:</label>
+                <label className="text-slate-300 block mb-1 font-semibold">{t.durationLabel}</label>
                 <select
                   value={hours}
                   onChange={(e) => setHours(Number(e.target.value))}
-                  className="w-full px-4 py-2.5 rounded-2xl bg-[#141218] border border-[#36343a] text-white text-xs focus:outline-none focus:border-[#e8b4b8]"
+                  className="w-full px-3 py-2.5 input-solid text-white bg-[#141218]"
                 >
-                  <option value={24}>24 Hours (15 Reward Points)</option>
-                  <option value={48}>48 Hours (25 Reward Points)</option>
+                  <option value={12}>{lang === 'he' ? '12 שעות (מהיר)' : '12 Hours (Fast Dare)'}</option>
+                  <option value={24}>{lang === 'he' ? '24 שעות (רגיל)' : '24 Hours (Standard)'}</option>
+                  <option value={48}>{lang === 'he' ? '48 שעות (סוף שבוע)' : '48 Hours (Weekend)'}</option>
                 </select>
               </div>
 
               <div className="flex gap-2 pt-2">
-                <button type="submit" className="btn-rose flex-1 py-2.5 text-xs">
-                  Issue Challenge
-                </button>
                 <button
                   type="button"
                   onClick={() => setShowCreateModal(false)}
-                  className="btn-soft px-4 py-2.5 text-xs"
+                  className="btn-soft flex-1 py-2.5"
                 >
-                  Cancel
+                  {t.back}
+                </button>
+                <button type="submit" className="btn-rose flex-1 py-2.5">
+                  {t.newChallengeBtn}
                 </button>
               </div>
             </form>

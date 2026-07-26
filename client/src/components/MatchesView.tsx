@@ -1,143 +1,155 @@
 import React, { useState } from 'react';
-import { Sparkles, Star, Heart, CheckCircle2, HelpCircle, Flame, Shuffle } from 'lucide-react';
-import { SharedMatchItem } from '../services/api';
+import { Sparkles, Heart, HelpCircle, Filter, Star, Flame, ShieldCheck } from 'lucide-react';
+import { CatalogQuestion } from '../services/api';
+import { Language, translations } from '../services/i18n';
+
+export interface SharedMatchItem {
+  id: string;
+  matchStatus: 'MUTUAL_YES' | 'MUTUAL_MAYBE' | 'TENTATIVE_MIXED' | 'HIDDEN';
+  questionId: string;
+  question?: CatalogQuestion;
+  updatedAt?: string;
+}
 
 interface MatchesViewProps {
   matches: SharedMatchItem[];
-  onToggleStar?: (matchId: string) => void;
+  lang: Language;
 }
 
-export const MatchesView: React.FC<MatchesViewProps> = ({ matches }) => {
-  const [filter, setFilter] = useState<'ALL' | 'MUTUAL_YES' | 'MUTUAL_MAYBE'>('ALL');
+export const MatchesView: React.FC<MatchesViewProps> = ({ matches, lang }) => {
+  const t = translations[lang];
+  const [filter, setFilter] = useState<'ALL' | 'YES' | 'MAYBE'>('ALL');
+  const [favorites, setFavorites] = useState<string[]>([]);
 
-  const visibleMatches = matches.filter((m) => {
-    if (m.matchStatus === 'HIDDEN') return false;
-    if (filter === 'MUTUAL_YES') return m.matchStatus === 'MUTUAL_YES';
-    if (filter === 'MUTUAL_MAYBE') return m.matchStatus === 'MUTUAL_MAYBE' || m.matchStatus === 'TENTATIVE_MIXED';
+  const filteredMatches = matches.filter((m) => {
+    if (filter === 'YES') return m.matchStatus === 'MUTUAL_YES';
+    if (filter === 'MAYBE') return m.matchStatus === 'MUTUAL_MAYBE';
     return true;
   });
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'MUTUAL_YES':
-        return (
-          <span className="px-3 py-1 rounded-full bg-[#141218] text-emerald-400 border border-emerald-500/40 text-xs font-bold flex items-center gap-1">
-            <CheckCircle2 className="w-3.5 h-3.5" /> Mutual Match 💖
-          </span>
-        );
-      case 'MUTUAL_MAYBE':
-        return (
-          <span className="px-3 py-1 rounded-full bg-[#141218] text-amber-300 border border-amber-500/40 text-xs font-bold flex items-center gap-1">
-            <HelpCircle className="w-3.5 h-3.5" /> Mutual Maybe 🤔
-          </span>
-        );
-      case 'TENTATIVE_MIXED':
-        return (
-          <span className="px-3 py-1 rounded-full bg-[#141218] text-[#e8b4b8] border border-[#e8b4b8]/40 text-xs font-bold flex items-center gap-1">
-            <Sparkles className="w-3.5 h-3.5" /> Tentative Match 💡
-          </span>
-        );
-      default:
-        return null;
-    }
+  const toggleFavorite = (id: string) => {
+    setFavorites((prev) =>
+      prev.includes(id) ? prev.filter((favId) => favId !== id) : [...prev, id]
+    );
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-4">
-      {/* Header Banner */}
-      <div className="solid-card p-6 mb-6 flex flex-col md:flex-row items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2 text-[#e8b4b8] mb-1">
-            <Sparkles className="w-5 h-5" />
-            <h2 className="text-2xl font-bold text-white font-headline">Verified Mutual Matches</h2>
-          </div>
-          <p className="text-xs text-slate-300">
-            Exclusively displaying desires where both partners selected "YES" or "MAYBE". Declined items remain unrevealed.
-          </p>
+    <div className="max-w-xl mx-auto px-4 py-4 space-y-4">
+      {/* Title & Header */}
+      <div className="solid-card p-5 text-center space-y-2">
+        <div className="w-12 h-12 rounded-2xl bg-[#2b292f] border border-[#e8b4b8]/30 text-[#e8b4b8] flex items-center justify-center mx-auto shadow-md">
+          <Sparkles className="w-6 h-6" />
         </div>
+        <h2 className="text-xl sm:text-2xl font-bold text-white font-headline">
+          {t.matchesTitle}
+        </h2>
+        <p className="text-xs text-slate-300 max-w-md mx-auto">
+          {t.matchesSub}
+        </p>
 
-        {/* Status Filter buttons */}
-        <div className="flex gap-1.5 bg-[#141218] p-1.5 rounded-full border border-[#36343a]">
+        {/* Filter Pills */}
+        <div className="flex justify-center gap-2 pt-3 border-t border-[#36343a]">
           <button
             onClick={() => setFilter('ALL')}
-            className={`px-4 py-1.5 rounded-full text-xs font-semibold transition ${
-              filter === 'ALL' ? 'btn-rose' : 'text-slate-400 hover:text-slate-200'
+            className={`px-3.5 py-1 rounded-full text-xs font-semibold transition ${
+              filter === 'ALL' ? 'btn-rose' : 'btn-soft'
             }`}
           >
-            All ({matches.length})
+            {t.filterAll} ({matches.length})
           </button>
           <button
-            onClick={() => setFilter('MUTUAL_YES')}
-            className={`px-4 py-1.5 rounded-full text-xs font-semibold transition ${
-              filter === 'MUTUAL_YES' ? 'bg-emerald-600 text-white' : 'text-slate-400 hover:text-slate-200'
+            onClick={() => setFilter('YES')}
+            className={`px-3.5 py-1 rounded-full text-xs font-semibold transition ${
+              filter === 'YES' ? 'btn-rose' : 'btn-soft'
             }`}
           >
-            Mutual YES
+            {t.filterYes} ({matches.filter((m) => m.matchStatus === 'MUTUAL_YES').length})
           </button>
           <button
-            onClick={() => setFilter('MUTUAL_MAYBE')}
-            className={`px-4 py-1.5 rounded-full text-xs font-semibold transition ${
-              filter === 'MUTUAL_MAYBE' ? 'bg-amber-600 text-white' : 'text-slate-400 hover:text-slate-200'
+            onClick={() => setFilter('MAYBE')}
+            className={`px-3.5 py-1 rounded-full text-xs font-semibold transition ${
+              filter === 'MAYBE' ? 'btn-rose' : 'btn-soft'
             }`}
           >
-            Mutual MAYBE
+            {t.filterMaybe} ({matches.filter((m) => m.matchStatus === 'MUTUAL_MAYBE').length})
           </button>
         </div>
       </div>
 
-      {/* Matches Grid */}
-      {visibleMatches.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {visibleMatches.map((m) => {
+      {/* Matches Cards List */}
+      {filteredMatches.length > 0 ? (
+        <div className="space-y-3">
+          {filteredMatches.map((m) => {
             const q = m.question;
+            const isFav = favorites.includes(m.id);
+            if (!q) return null;
+
             return (
-              <div key={m.id} className="solid-card p-6 flex flex-col justify-between hover:border-[#e8b4b8]/50">
-                <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="px-3 py-0.5 rounded-full bg-[#141218] text-[#d1c5b2] text-[11px] font-semibold border border-[#36343a]">
-                      {q?.category || 'General'}
+              <div
+                key={m.id}
+                className="solid-card p-5 space-y-3 card-appear hover:border-[#e8b4b8]/40 transition relative"
+              >
+                {/* Header Badge */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="px-3 py-1 rounded-full bg-[#2b292f] border border-[#504444] text-[#e8b4b8] text-xs font-bold">
+                      {q.category}
                     </span>
-                    {getStatusBadge(m.matchStatus)}
+                    {m.matchStatus === 'MUTUAL_YES' ? (
+                      <span className="px-3 py-1 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-xs font-bold flex items-center gap-1">
+                        <Heart className="w-3 h-3 fill-emerald-300" />
+                        <span>{t.badgeMutualMatch}</span>
+                      </span>
+                    ) : (
+                      <span className="px-3 py-1 rounded-full bg-amber-950/80 border border-amber-500/40 text-amber-300 text-xs font-bold flex items-center gap-1">
+                        <HelpCircle className="w-3 h-3 text-amber-300" />
+                        <span>{t.badgeMutualMaybe}</span>
+                      </span>
+                    )}
                   </div>
 
-                  <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-2 font-headline">
-                    <Heart className="w-4 h-4 text-[#e8b4b8] fill-[#e8b4b8]" />
-                    {q?.title || 'Shared Fantasy'}
-                  </h3>
-
-                  <p className="text-xs text-slate-300 leading-relaxed mb-4">
-                    {q?.description || 'Positive mutual match discovered.'}
-                  </p>
-
-                  {q?.roleType !== 'SYMMETRIC' && (
-                    <div className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#141218] text-[#e8b4b8] text-[11px] font-semibold mb-3 border border-[#e8b4b8]/30">
-                      <Shuffle className="w-3 h-3" />
-                      <span>Complementary Roles: Giver & Receiver</span>
-                    </div>
-                  )}
+                  <button
+                    onClick={() => toggleFavorite(m.id)}
+                    className={`p-2 rounded-full transition ${
+                      isFav ? 'text-amber-400 bg-amber-950/50' : 'text-slate-500 hover:text-slate-300'
+                    }`}
+                  >
+                    <Star className={`w-4 h-4 ${isFav ? 'fill-amber-400' : ''}`} />
+                  </button>
                 </div>
 
-                <div className="pt-3 border-t border-[#36343a] flex items-center justify-between text-xs text-slate-400">
-                  <span className="flex items-center gap-1 text-[#d1c5b2]">
-                    <Flame className="w-3.5 h-3.5 text-[#e8b4b8]" />
-                    Intensity: {q?.intensityLevel || 'SPICY'}
-                  </span>
+                {/* Content */}
+                <div>
+                  <h3 className="text-lg font-bold text-white font-headline">{q.title}</h3>
+                  <p className="text-xs text-slate-300 mt-1 leading-relaxed">{q.description}</p>
+                </div>
 
-                  <button className="flex items-center gap-1 text-[#e8b4b8] hover:text-white font-semibold transition">
-                    <Star className="w-4 h-4" />
-                    <span>Favorite</span>
-                  </button>
+                {/* Footer Details */}
+                <div className="pt-3 border-t border-[#36343a] flex items-center justify-between text-[11px] text-slate-400">
+                  <span className="text-[#d1c5b2] font-semibold">
+                    {q.roleType === 'GIVER' && t.roleGiverBadge}
+                    {q.roleType === 'RECEIVER' && t.roleReceiverBadge}
+                    {q.roleType === 'SYMMETRIC' && (lang === 'he' ? 'תפקיד הדדי' : 'Symmetric / Both')}
+                  </span>
+                  <span className="text-slate-400 font-mono">
+                    {q.intensityLevel === 'VANILLA' && t.intensityVanilla}
+                    {q.intensityLevel === 'SPICY' && t.intensitySpicy}
+                    {q.intensityLevel === 'ADVENTUROUS' && t.intensityAdventurous}
+                  </span>
                 </div>
               </div>
             );
           })}
         </div>
       ) : (
-        <div className="solid-card p-12 text-center text-slate-400 space-y-3">
-          <Sparkles className="w-12 h-12 text-[#e8b4b8] mx-auto" />
-          <h3 className="text-xl font-bold text-white font-headline">No Mutual Matches Yet</h3>
-          <p className="text-xs max-w-md mx-auto text-slate-300">
-            Complete the Discovery Quiz in the first tab. Once both partners select "YES" or "MAYBE" for an item, it will automatically appear here!
+        /* Empty State */
+        <div className="solid-card p-8 text-center space-y-3">
+          <div className="w-12 h-12 rounded-full bg-[#2b292f] text-slate-500 flex items-center justify-center mx-auto">
+            <Heart className="w-6 h-6" />
+          </div>
+          <h4 className="text-base font-bold text-white font-headline">{t.noMatchesTitle}</h4>
+          <p className="text-xs text-slate-300 max-w-sm mx-auto">
+            {t.noMatchesSub}
           </p>
         </div>
       )}

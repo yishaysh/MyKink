@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Heart, ThumbsDown, HelpCircle, Flame, Filter, RotateCcw, Lock } from 'lucide-react';
 import { CatalogQuestion } from '../services/api';
+import { Language, translations } from '../services/i18n';
 
 interface SwipeDeckProps {
   questions: CatalogQuestion[];
@@ -10,6 +11,7 @@ interface SwipeDeckProps {
   selectedIntensity: string;
   setSelectedIntensity: (int: string) => void;
   onGoToMatches: () => void;
+  lang: Language;
 }
 
 export const SwipeDeck: React.FC<SwipeDeckProps> = ({
@@ -19,12 +21,27 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
   setSelectedCategory,
   selectedIntensity,
   setSelectedIntensity,
-  onGoToMatches
+  onGoToMatches,
+  lang
 }) => {
+  const t = translations[lang];
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const categories = ['ALL', 'Sensual', 'BDSM', 'Roleplay', 'Toys', 'ENM'];
-  const intensities = ['ALL', 'VANILLA', 'SPICY', 'ADVENTUROUS'];
+  const categories = [
+    { id: 'ALL', label: t.allCategories },
+    { id: 'Sensual', label: lang === 'he' ? 'חושים ומגע' : 'Sensual' },
+    { id: 'BDSM', label: 'BDSM' },
+    { id: 'Roleplay', label: lang === 'he' ? 'משחקי תפקידים' : 'Roleplay' },
+    { id: 'Toys', label: lang === 'he' ? 'צעצועים' : 'Toys' },
+    { id: 'ENM', label: lang === 'he' ? 'פנטזיות פתוחות' : 'Open / ENM' }
+  ];
+
+  const intensities = [
+    { id: 'ALL', label: t.allIntensities },
+    { id: 'VANILLA', label: t.intensityVanilla },
+    { id: 'SPICY', label: t.intensitySpicy },
+    { id: 'ADVENTUROUS', label: t.intensityAdventurous }
+  ];
 
   const currentQ = questions[currentIndex];
   const isFinished = currentIndex >= questions.length || !currentQ;
@@ -47,7 +64,7 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
         <div className="flex items-center justify-between text-xs text-slate-300 font-bold">
           <div className="flex items-center gap-1.5 text-[#e8b4b8]">
             <Filter className="w-4 h-4" />
-            <span>Filter Category & Intensity:</span>
+            <span>{t.filterTitle}</span>
           </div>
         </div>
 
@@ -55,131 +72,138 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
         <div className="flex flex-wrap gap-1.5">
           {categories.map((cat) => (
             <button
-              key={cat}
-              onClick={() => { setSelectedCategory(cat); setCurrentIndex(0); }}
+              key={cat.id}
+              onClick={() => { setSelectedCategory(cat.id); setCurrentIndex(0); }}
               className={`px-3.5 py-1 rounded-full text-xs font-semibold transition ${
-                selectedCategory === cat
+                selectedCategory === cat.id
                   ? 'btn-rose shadow-sm'
-                  : 'btn-soft text-slate-400'
+                  : 'btn-soft'
               }`}
             >
-              {cat === 'ALL' ? 'All Categories' : cat}
+              {cat.label}
             </button>
           ))}
         </div>
 
-        {/* Intensity Pills */}
-        <div className="flex flex-wrap gap-1.5 pt-2 border-t border-[#36343a]">
+        {/* Intensities Pills */}
+        <div className="flex flex-wrap gap-1.5 pt-1 border-t border-[#36343a]">
           {intensities.map((lvl) => (
             <button
-              key={lvl}
-              onClick={() => { setSelectedIntensity(lvl); setCurrentIndex(0); }}
-              className={`px-3 py-0.5 rounded-full text-[11px] font-medium transition ${
-                selectedIntensity === lvl
-                  ? 'bg-[#d1c5b2] text-[#363022] font-bold'
-                  : 'bg-[#141218] text-slate-400 hover:text-slate-200'
+              key={lvl.id}
+              onClick={() => { setSelectedIntensity(lvl.id); setCurrentIndex(0); }}
+              className={`px-3 py-0.5 rounded-full text-[11px] font-semibold transition ${
+                selectedIntensity === lvl.id
+                  ? 'bg-[#e8b4b8] text-[#48272a] font-bold'
+                  : 'bg-[#2b292f] text-slate-400 hover:text-slate-200'
               }`}
             >
-              {lvl === 'ALL' ? 'All Intensity Levels' : lvl}
+              {lvl.label}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Main Preference Swiper Card */}
+      {/* Main Swiper Card Area */}
       {!isFinished ? (
-        <div className="solid-card p-6 sm:p-8 text-center relative min-h-[400px] flex flex-col justify-between card-appear">
-          {/* Top Metadata */}
-          <div>
-            <div className="flex items-center justify-between text-xs text-slate-400 mb-4">
-              <span className="px-3 py-1 rounded-full bg-[#141218] text-[#e8b4b8] border border-[#36343a] font-semibold text-[11px]">
+        <div className="relative space-y-4">
+          <div className="solid-card p-6 sm:p-8 min-h-[360px] flex flex-col justify-between card-appear relative overflow-hidden">
+            {/* Top Badges */}
+            <div className="flex items-center justify-between gap-2">
+              <span className="px-3 py-1 rounded-full bg-[#2b292f] border border-[#504444] text-[#e8b4b8] text-xs font-bold uppercase tracking-wider">
                 {currentQ.category}
               </span>
-              <span className="flex items-center gap-1 font-semibold text-[#d1c5b2]">
-                <Flame className="w-3.5 h-3.5 text-[#e8b4b8]" />
-                {currentQ.intensityLevel}
-              </span>
-              <span className="font-mono text-slate-400 text-[11px]">
-                {currentIndex + 1} / {questions.length}
+              <span className="px-3 py-1 rounded-full bg-[#141218] border border-[#36343a] text-slate-300 text-xs font-mono font-bold">
+                {currentQ.intensityLevel === 'VANILLA' && t.intensityVanilla}
+                {currentQ.intensityLevel === 'SPICY' && t.intensitySpicy}
+                {currentQ.intensityLevel === 'ADVENTUROUS' && t.intensityAdventurous}
               </span>
             </div>
 
-            {/* Asymmetric Role Badge */}
-            {currentQ.roleType !== 'SYMMETRIC' && (
-              <div className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#2b292f] border border-[#e8b4b8]/40 text-[#e8b4b8] text-xs font-semibold mb-4">
-                <span>Role: {currentQ.roleType === 'GIVER' ? 'Giver / Dominant' : 'Receiver / Submissive'}</span>
-              </div>
-            )}
+            {/* Question Title & Description */}
+            <div className="my-6 text-center space-y-3">
+              <h3 className="text-xl sm:text-2xl font-bold text-white leading-snug font-headline">
+                {currentQ.title}
+              </h3>
+              <p className="text-sm text-slate-300 max-w-md mx-auto leading-relaxed">
+                {currentQ.description}
+              </p>
+            </div>
 
-            {/* Title & Description */}
-            <h3 className="text-2xl font-bold text-white mb-3 tracking-tight font-headline">
-              {currentQ.title}
-            </h3>
-            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-sm mx-auto">
-              {currentQ.description || 'Would you like to explore this fantasy together?'}
-            </p>
+            {/* Bottom Role Indicator & Privacy Footnote */}
+            <div className="pt-4 border-t border-[#36343a] flex items-center justify-between text-[11px] text-slate-400">
+              <span className="font-semibold text-[#d1c5b2]">
+                {currentQ.roleType === 'GIVER' && t.roleGiverBadge}
+                {currentQ.roleType === 'RECEIVER' && t.roleReceiverBadge}
+                {currentQ.roleType === 'SYMMETRIC' && (lang === 'he' ? 'תפקיד הדדי' : 'Symmetric / Both')}
+              </span>
+              <span className="font-mono text-slate-400">
+                {currentIndex + 1} / {questions.length}
+              </span>
+            </div>
           </div>
 
-          {/* Double-Blind Privacy Footnote */}
-          <div className="my-4 text-[11px] text-slate-400 flex items-center justify-center gap-1">
-            <Lock className="w-3.5 h-3.5 text-[#e8b4b8]" />
-            <span>"NO" answers are client-encrypted & strictly hidden from your partner</span>
-          </div>
-
-          {/* Voting Buttons */}
-          <div className="grid grid-cols-3 gap-3 pt-3 border-t border-[#36343a]">
+          {/* Voting Action Buttons */}
+          <div className="grid grid-cols-3 gap-3">
             {/* NO */}
             <button
               onClick={() => handleVote('NO')}
-              className="flex flex-col items-center justify-center p-3 rounded-2xl bg-[#141218] hover:bg-[#2b292f] text-rose-400 border border-rose-500/30 transition group"
+              className="py-4 px-3 rounded-2xl bg-[#1d1b21] hover:bg-rose-950/40 border-2 border-rose-900/60 hover:border-rose-500 text-rose-400 font-bold text-xs flex flex-col items-center justify-center gap-1.5 transition group shadow-lg"
             >
-              <ThumbsDown className="w-5 h-5 mb-1 group-hover:scale-110 transition-transform" />
-              <span className="text-xs font-bold">NO 🔒</span>
+              <ThumbsDown className="w-6 h-6 group-hover:scale-110 transition-transform" />
+              <span>{t.btnNo}</span>
             </button>
 
             {/* MAYBE */}
             <button
               onClick={() => handleVote('MAYBE')}
-              className="flex flex-col items-center justify-center p-3 rounded-2xl bg-[#141218] hover:bg-[#2b292f] text-amber-300 border border-amber-500/30 transition group"
+              className="py-4 px-3 rounded-2xl bg-[#1d1b21] hover:bg-amber-950/40 border-2 border-amber-900/60 hover:border-amber-500 text-amber-400 font-bold text-xs flex flex-col items-center justify-center gap-1.5 transition group shadow-lg"
             >
-              <HelpCircle className="w-5 h-5 mb-1 group-hover:scale-110 transition-transform" />
-              <span className="text-xs font-bold">MAYBE 🤔</span>
+              <HelpCircle className="w-6 h-6 group-hover:scale-110 transition-transform" />
+              <span>{t.btnMaybe}</span>
             </button>
 
             {/* YES */}
             <button
               onClick={() => handleVote('YES')}
-              className="flex flex-col items-center justify-center p-3 rounded-2xl bg-[#141218] hover:bg-[#2b292f] text-emerald-400 border border-emerald-500/30 transition group"
+              className="py-4 px-3 rounded-2xl bg-gradient-to-tr from-[#e8b4b8] to-[#ffd2d5] text-[#48272a] font-black text-xs flex flex-col items-center justify-center gap-1.5 transition group shadow-xl shadow-[#e8b4b8]/20 hover:scale-105 active:scale-100"
             >
-              <Heart className="w-5 h-5 mb-1 fill-emerald-400/20 group-hover:scale-110 transition-transform" />
-              <span className="text-xs font-bold">YES! 💖</span>
+              <Heart className="w-6 h-6 fill-[#48272a] group-hover:scale-110 transition-transform" />
+              <span>{t.btnYes}</span>
             </button>
           </div>
+
+          <p className="text-[10px] text-center text-slate-400 flex items-center justify-center gap-1">
+            <Lock className="w-3 h-3 text-[#e8b4b8]" />
+            <span>{t.noPrivacyFootnote}</span>
+          </p>
         </div>
       ) : (
-        /* Finished State */
-        <div className="solid-card p-8 text-center space-y-4">
-          <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-[#e8b4b8] to-[#ffd2d5] flex items-center justify-center mx-auto text-[#48272a] shadow-md shadow-[#e8b4b8]/30">
-            <Heart className="w-8 h-8 fill-[#48272a]" />
+        /* Quiz Finished State */
+        <div className="solid-card p-8 text-center space-y-5 card-appear">
+          <div className="w-16 h-16 rounded-full bg-[#2b292f] border border-[#e8b4b8]/40 text-[#e8b4b8] flex items-center justify-center mx-auto shadow-lg">
+            <Flame className="w-8 h-8" />
           </div>
-          <h3 className="text-2xl font-bold text-white font-headline">Quiz Completed!</h3>
-          <p className="text-xs text-slate-300 max-w-xs mx-auto">
-            You've evaluated all items in this category. Check **"Matches"** to see your verified mutual interests.
-          </p>
+          <div>
+            <h3 className="text-2xl font-bold text-white font-headline">{t.quizCompletedTitle}</h3>
+            <p className="text-xs text-slate-300 max-w-sm mx-auto mt-1">
+              {t.quizCompletedSub}
+            </p>
+          </div>
 
-          <div className="flex gap-2 pt-2">
+          <div className="flex flex-col sm:flex-row gap-3 pt-2">
             <button
               onClick={onGoToMatches}
-              className="btn-rose flex-1 py-3 text-xs"
+              className="btn-rose flex-1 py-3 text-xs flex items-center justify-center gap-2"
             >
-              View Mutual Matches
+              <Heart className="w-4 h-4 fill-[#48272a]" />
+              <span>{t.viewMatchesBtn}</span>
             </button>
             <button
               onClick={handleReset}
-              className="btn-soft px-5 py-3 text-xs flex items-center gap-1"
+              className="btn-soft px-5 py-3 text-xs flex items-center justify-center gap-2"
             >
-              <RotateCcw className="w-3.5 h-3.5" />
-              <span>Restart Quiz</span>
+              <RotateCcw className="w-4 h-4" />
+              <span>{t.restartQuizBtn}</span>
             </button>
           </div>
         </div>

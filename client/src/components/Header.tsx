@@ -1,5 +1,5 @@
 import React from 'react';
-import { Heart, ShieldCheck, Sparkles, Flame, Bot, Share2, User, Globe } from 'lucide-react';
+import { Heart, ShieldCheck, Sparkles, Flame, Bot, Share2, User, Globe, LogOut } from 'lucide-react';
 import { Language, translations } from '../services/i18n';
 
 interface HeaderProps {
@@ -11,6 +11,7 @@ interface HeaderProps {
   userAlias?: string;
   lang: Language;
   onToggleLang: () => void;
+  onSignOut: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -21,7 +22,8 @@ export const Header: React.FC<HeaderProps> = ({
   isPartnerConnected,
   userAlias,
   lang,
-  onToggleLang
+  onToggleLang,
+  onSignOut
 }) => {
   const t = translations[lang];
 
@@ -75,7 +77,7 @@ export const Header: React.FC<HeaderProps> = ({
             })}
           </nav>
 
-          {/* Controls: Language Switcher & Pair Code Button */}
+          {/* Controls: Language Switcher, Pair Code & Logout Button */}
           <div className="flex items-center gap-1.5 shrink-0">
             {/* Language Switcher Toggle Button */}
             <button
@@ -94,6 +96,16 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <Share2 className="w-3 h-3 text-[#e8b4b8]" />
               <span className="font-mono">{pairCode || t.code}</span>
+            </button>
+
+            {/* Sign Out / Reset Profile Button */}
+            <button
+              onClick={onSignOut}
+              className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#2b292f] border border-rose-900/50 hover:bg-rose-950 text-[11px] font-bold text-rose-300 transition shadow-sm"
+              title={lang === 'he' ? 'התנתקות ואיפוס פרופיל' : 'Sign Out & Reset Profile'}
+            >
+              <LogOut className="w-3 h-3 text-rose-400" />
+              <span className="hidden sm:inline">{lang === 'he' ? 'התנתק' : 'Logout'}</span>
             </button>
           </div>
         </div>

@@ -133,6 +133,25 @@ export const App: React.FC = () => {
     document.documentElement.lang = nextLang;
   };
 
+  // Sign Out & Reset Profile Handler
+  const handleSignOut = async () => {
+    try {
+      await supabase.auth.signOut();
+    } catch (e) {
+      console.warn('Sign out error:', e);
+    }
+    localStorage.removeItem('mykink_user_profile');
+    localStorage.removeItem('mykink_device_id');
+    localStorage.removeItem('mykink_public_key');
+    setUserProfile(null);
+    setGoogleUser(null);
+    setUserId(null);
+    setCoupleId(null);
+    setPairCode(null);
+    setIsPartnerConnected(false);
+    setActiveTab('onboarding');
+  };
+
   // 2. Load Questions catalog
   useEffect(() => {
     async function loadQ() {
@@ -255,6 +274,7 @@ export const App: React.FC = () => {
           userAlias={userProfile?.alias}
           lang={lang}
           onToggleLang={handleToggleLang}
+          onSignOut={handleSignOut}
         />
       )}
 
@@ -280,16 +300,17 @@ export const App: React.FC = () => {
             selectedIntensity={selectedIntensity}
             setSelectedIntensity={setSelectedIntensity}
             onGoToMatches={() => setActiveTab('matches')}
+            lang={lang}
           />
         )}
 
-        {activeTab === 'matches' && <MatchesView matches={matches} />}
+        {activeTab === 'matches' && <MatchesView matches={matches} lang={lang} />}
 
         {activeTab === 'dares' && (
-          <DaresView challenges={challenges} onCreateDare={handleCreateDare} />
+          <DaresView challenges={challenges} onCreateDare={handleCreateDare} lang={lang} />
         )}
 
-        {activeTab === 'ai' && <AICoachView coupleId={coupleId} />}
+        {activeTab === 'ai' && <AICoachView coupleId={coupleId} lang={lang} />}
       </main>
 
       {/* Pairing Modal */}
