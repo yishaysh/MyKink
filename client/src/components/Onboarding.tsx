@@ -83,9 +83,9 @@ export const Onboarding: React.FC<OnboardingProps> = ({
   };
 
   return (
-    <div className="max-w-xl mx-auto px-4 py-6">
-      {/* Step Progress Indicators */}
-      <div className="flex items-center justify-between mb-6 px-2">
+    <div className="max-w-xl mx-auto px-3 sm:px-4 py-4 sm:py-6">
+      {/* Step Progress Indicators (Enforced LTR so 1 2 3 4 reads cleanly) */}
+      <div dir="ltr" className="flex items-center justify-between mb-6 px-1">
         {[1, 2, 3, 4].map((s) => (
           <React.Fragment key={s}>
             <div className="flex items-center gap-1.5">
@@ -105,19 +105,19 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                 {s === 4 && (lang === 'he' ? 'צימוד' : 'Pairing')}
               </span>
             </div>
-            {s < 4 && <div className="flex-1 h-0.5 mx-2 bg-[#36343a]" />}
+            {s < 4 && <div className="flex-1 h-0.5 mx-1.5 bg-[#36343a]" />}
           </React.Fragment>
         ))}
       </div>
 
       {/* STEP 1: SEXY ALIAS & ROLE */}
       {step === 1 && (
-        <div className="solid-card p-6 sm:p-8 space-y-6 card-appear">
+        <div className="solid-card p-5 sm:p-8 space-y-5 card-appear">
           <div className="text-center">
-            <div className="w-14 h-14 rounded-2xl bg-[#2b292f] border border-[#e8b4b8]/30 text-[#e8b4b8] flex items-center justify-center mx-auto mb-3 shadow-md">
-              <User className="w-7 h-7" />
+            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-[#2b292f] border border-[#e8b4b8]/30 text-[#e8b4b8] flex items-center justify-center mx-auto mb-2.5 shadow-md">
+              <User className="w-6 h-6 sm:w-7 sm:h-7" />
             </div>
-            <h2 className="text-2xl font-bold text-white font-headline">{t.onboardingStep1Title}</h2>
+            <h2 className="text-xl sm:text-2xl font-bold text-white font-headline">{t.onboardingStep1Title}</h2>
             <p className="text-xs text-slate-300 max-w-sm mx-auto mt-1">
               {t.onboardingStep1Sub}
             </p>
@@ -142,21 +142,23 @@ export const Onboarding: React.FC<OnboardingProps> = ({
               <label className="text-xs font-semibold text-slate-300 block mb-2">
                 {t.intimacyRoleLabel}
               </label>
-              <div className="grid grid-cols-3 gap-2.5">
+              <div className="grid grid-cols-3 gap-2">
                 {/* GIVER */}
                 <button
                   type="button"
                   onClick={() => setRole('GIVER')}
-                  className={`p-3.5 rounded-2xl text-center border-2 transition-colors duration-150 flex flex-col justify-center items-center h-24 ${
-                    role === 'GIVER'
-                      ? 'bg-[#141218] border-[#e8b4b8] text-white shadow-md'
-                      : 'bg-[#141218] border-[#36343a] text-slate-400 hover:border-slate-500'
-                  }`}
+                  style={{
+                    borderColor: role === 'GIVER' ? '#e8b4b8' : '#36343a',
+                    borderWidth: '2px',
+                    borderStyle: 'solid',
+                    backgroundColor: role === 'GIVER' ? '#2b292f' : '#141218'
+                  }}
+                  className="p-2.5 sm:p-3.5 rounded-2xl text-center transition-all duration-150 flex flex-col justify-center items-center h-24"
                 >
                   <span className={`text-xs font-bold block ${role === 'GIVER' ? 'text-[#e8b4b8]' : 'text-slate-200'}`}>
                     {t.roleGiver}
                   </span>
-                  <span className="text-[10px] text-slate-400 block mt-1">
+                  <span className="text-[10px] text-slate-400 block mt-1 leading-tight">
                     {t.roleGiverSub}
                   </span>
                 </button>
@@ -165,16 +167,18 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                 <button
                   type="button"
                   onClick={() => setRole('RECEIVER')}
-                  className={`p-3.5 rounded-2xl text-center border-2 transition-colors duration-150 flex flex-col justify-center items-center h-24 ${
-                    role === 'RECEIVER'
-                      ? 'bg-[#141218] border-[#e8b4b8] text-white shadow-md'
-                      : 'bg-[#141218] border-[#36343a] text-slate-400 hover:border-slate-500'
-                  }`}
+                  style={{
+                    borderColor: role === 'RECEIVER' ? '#e8b4b8' : '#36343a',
+                    borderWidth: '2px',
+                    borderStyle: 'solid',
+                    backgroundColor: role === 'RECEIVER' ? '#2b292f' : '#141218'
+                  }}
+                  className="p-2.5 sm:p-3.5 rounded-2xl text-center transition-all duration-150 flex flex-col justify-center items-center h-24"
                 >
                   <span className={`text-xs font-bold block ${role === 'RECEIVER' ? 'text-[#e8b4b8]' : 'text-slate-200'}`}>
                     {t.roleReceiver}
                   </span>
-                  <span className="text-[10px] text-slate-400 block mt-1">
+                  <span className="text-[10px] text-slate-400 block mt-1 leading-tight">
                     {t.roleReceiverSub}
                   </span>
                 </button>
@@ -183,16 +187,18 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                 <button
                   type="button"
                   onClick={() => setRole('SWITCH')}
-                  className={`p-3.5 rounded-2xl text-center border-2 transition-colors duration-150 flex flex-col justify-center items-center h-24 ${
-                    role === 'SWITCH'
-                      ? 'bg-[#141218] border-[#e8b4b8] text-white shadow-md'
-                      : 'bg-[#141218] border-[#36343a] text-slate-400 hover:border-slate-500'
-                  }`}
+                  style={{
+                    borderColor: role === 'SWITCH' ? '#e8b4b8' : '#36343a',
+                    borderWidth: '2px',
+                    borderStyle: 'solid',
+                    backgroundColor: role === 'SWITCH' ? '#2b292f' : '#141218'
+                  }}
+                  className="p-2.5 sm:p-3.5 rounded-2xl text-center transition-all duration-150 flex flex-col justify-center items-center h-24"
                 >
                   <span className={`text-xs font-bold block ${role === 'SWITCH' ? 'text-[#e8b4b8]' : 'text-slate-200'}`}>
                     {t.roleSwitch}
                   </span>
-                  <span className="text-[10px] text-slate-400 block mt-1">
+                  <span className="text-[10px] text-slate-400 block mt-1 leading-tight">
                     {t.roleSwitchSub}
                   </span>
                 </button>
@@ -215,12 +221,12 @@ export const Onboarding: React.FC<OnboardingProps> = ({
 
       {/* STEP 2: FANTASY & KINK CATEGORIES */}
       {step === 2 && (
-        <div className="solid-card p-6 sm:p-8 space-y-6 card-appear">
+        <div className="solid-card p-5 sm:p-8 space-y-5 card-appear">
           <div className="text-center">
-            <div className="w-14 h-14 rounded-2xl bg-[#2b292f] border border-[#e8b4b8]/30 text-[#e8b4b8] flex items-center justify-center mx-auto mb-3 shadow-md">
-              <Sparkles className="w-7 h-7" />
+            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-[#2b292f] border border-[#e8b4b8]/30 text-[#e8b4b8] flex items-center justify-center mx-auto mb-2.5 shadow-md">
+              <Sparkles className="w-6 h-6 sm:w-7 sm:h-7" />
             </div>
-            <h2 className="text-2xl font-bold text-white font-headline">{t.onboardingStep2Title}</h2>
+            <h2 className="text-xl sm:text-2xl font-bold text-white font-headline">{t.onboardingStep2Title}</h2>
             <p className="text-xs text-slate-300 max-w-sm mx-auto mt-1">
               {t.onboardingStep2Sub}
             </p>
@@ -233,11 +239,13 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                 <div
                   key={cat.id}
                   onClick={() => toggleCategory(cat.id)}
-                  className={`p-4 rounded-2xl border-2 cursor-pointer flex items-center justify-between transition-colors duration-150 ${
-                    isSelected
-                      ? 'bg-[#141218] border-[#e8b4b8] text-white'
-                      : 'bg-[#141218] border-[#36343a] text-slate-400 hover:border-slate-600'
-                  }`}
+                  style={{
+                    borderColor: isSelected ? '#e8b4b8' : '#36343a',
+                    borderWidth: '2px',
+                    borderStyle: 'solid',
+                    backgroundColor: isSelected ? '#2b292f' : '#141218'
+                  }}
+                  className="p-3.5 sm:p-4 rounded-2xl cursor-pointer flex items-center justify-between transition-all duration-150"
                 >
                   <div>
                     <span className={`text-sm font-bold block ${isSelected ? 'text-[#e8b4b8]' : 'text-white'}`}>
@@ -276,12 +284,12 @@ export const Onboarding: React.FC<OnboardingProps> = ({
 
       {/* STEP 3: BOUNDARIES & INTENSITY */}
       {step === 3 && (
-        <div className="solid-card p-6 sm:p-8 space-y-6 card-appear">
+        <div className="solid-card p-5 sm:p-8 space-y-5 card-appear">
           <div className="text-center">
-            <div className="w-14 h-14 rounded-2xl bg-[#2b292f] border border-[#e8b4b8]/30 text-[#e8b4b8] flex items-center justify-center mx-auto mb-3 shadow-md">
-              <Flame className="w-7 h-7" />
+            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-[#2b292f] border border-[#e8b4b8]/30 text-[#e8b4b8] flex items-center justify-center mx-auto mb-2.5 shadow-md">
+              <Flame className="w-6 h-6 sm:w-7 sm:h-7" />
             </div>
-            <h2 className="text-2xl font-bold text-white font-headline">{t.onboardingStep3Title}</h2>
+            <h2 className="text-xl sm:text-2xl font-bold text-white font-headline">{t.onboardingStep3Title}</h2>
             <p className="text-xs text-slate-300 max-w-sm mx-auto mt-1">
               {t.onboardingStep3Sub}
             </p>
@@ -292,19 +300,23 @@ export const Onboarding: React.FC<OnboardingProps> = ({
               <label className="text-xs font-semibold text-slate-300 block mb-2">
                 {t.intensityLabel}
               </label>
-              <div className="grid grid-cols-3 gap-2.5">
+              <div className="grid grid-cols-3 gap-2">
                 {(['VANILLA', 'SPICY', 'ADVENTUROUS'] as const).map((lvl) => (
                   <button
                     key={lvl}
                     type="button"
                     onClick={() => setIntensity(lvl)}
-                    className={`p-3.5 rounded-2xl text-center border-2 transition-colors duration-150 h-14 flex items-center justify-center ${
-                      intensity === lvl
-                        ? 'bg-[#141218] border-[#e8b4b8] text-[#e8b4b8] font-bold'
-                        : 'bg-[#141218] border-[#36343a] text-slate-300 hover:border-slate-500'
-                    }`}
+                    style={{
+                      borderColor: intensity === lvl ? '#e8b4b8' : '#36343a',
+                      borderWidth: '2px',
+                      borderStyle: 'solid',
+                      backgroundColor: intensity === lvl ? '#2b292f' : '#141218'
+                    }}
+                    className="p-3 rounded-2xl text-center transition-all duration-150 h-14 flex items-center justify-center"
                   >
-                    <span className="text-xs font-bold block">{lvl}</span>
+                    <span className={`text-xs font-bold block ${intensity === lvl ? 'text-[#e8b4b8]' : 'text-slate-300'}`}>
+                      {lvl}
+                    </span>
                   </button>
                 ))}
               </div>
@@ -352,23 +364,23 @@ export const Onboarding: React.FC<OnboardingProps> = ({
 
       {/* STEP 4: COUPLE PAIRING */}
       {step === 4 && (
-        <div className="solid-card p-6 sm:p-8 text-center space-y-6 card-appear">
-          <div className="w-14 h-14 rounded-2xl bg-[#2b292f] border border-[#e8b4b8]/30 text-[#e8b4b8] flex items-center justify-center mx-auto shadow-md">
-            <Share2 className="w-7 h-7" />
+        <div className="solid-card p-5 sm:p-8 text-center space-y-5 card-appear">
+          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-[#2b292f] border border-[#e8b4b8]/30 text-[#e8b4b8] flex items-center justify-center mx-auto shadow-md">
+            <Share2 className="w-6 h-6 sm:w-7 sm:h-7" />
           </div>
 
           <div>
-            <h2 className="text-2xl font-bold text-white font-headline">{t.onboardingStep4Title}</h2>
+            <h2 className="text-xl sm:text-2xl font-bold text-white font-headline">{t.onboardingStep4Title}</h2>
             <p className="text-xs text-slate-300 max-w-sm mx-auto mt-1">
               {t.onboardingStep4Sub}
             </p>
           </div>
 
           {/* Option A: Share Code & Link */}
-          <div className="p-5 rounded-2xl bg-[#141218] border border-[#36343a] text-center space-y-3">
+          <div className="p-4 sm:p-5 rounded-2xl bg-[#141218] border border-[#36343a] text-center space-y-3">
             <span className="text-xs font-semibold text-slate-400 block">{t.yourCoupleCode}</span>
 
-            <div className="text-3xl font-black text-[#e8b4b8] font-mono tracking-widest">
+            <div className="text-2xl sm:text-3xl font-black text-[#e8b4b8] font-mono tracking-widest">
               {pairCode || '...'}
             </div>
 
@@ -382,8 +394,8 @@ export const Onboarding: React.FC<OnboardingProps> = ({
 
             {pairCode && (
               <div className="pt-3 flex flex-col items-center">
-                <div className="p-3 bg-white rounded-2xl">
-                  <QRCodeSVG value={shareUrl} size={110} />
+                <div className="p-2.5 bg-white rounded-2xl">
+                  <QRCodeSVG value={shareUrl} size={100} />
                 </div>
                 <span className="text-[10px] text-slate-400 mt-1.5 flex items-center gap-1">
                   <QrCode className="w-3 h-3 text-[#e8b4b8]" /> {t.scanQR}
@@ -406,7 +418,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                 maxLength={8}
                 className="flex-1 px-4 py-2.5 input-solid font-mono text-center tracking-widest text-xs"
               />
-              <button type="submit" className="btn-rose px-5 py-2.5 text-xs">
+              <button type="submit" className="btn-rose px-4 py-2.5 text-xs">
                 {t.connect}
               </button>
             </div>
