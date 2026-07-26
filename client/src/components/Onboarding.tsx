@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Heart, Lock, ShieldCheck, Share2, Copy, Check, QrCode, ArrowLeft, ArrowRight, Sparkles, User, Flame, CheckSquare, Square } from 'lucide-react';
+import { Sparkles, Share2, Copy, Check, QrCode, ArrowLeft, ArrowRight, User, Flame, CheckSquare, Square } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
+import { Language, translations } from '../services/i18n';
 
 interface OnboardingProps {
   pairCode: string | null;
@@ -12,14 +13,17 @@ interface OnboardingProps {
     categories: string[];
     intensity: string;
   }) => void;
+  lang: Language;
 }
 
 export const Onboarding: React.FC<OnboardingProps> = ({
   pairCode,
   onCreateCouple,
   onJoinCouple,
-  onCompleteOnboarding
+  onCompleteOnboarding,
+  lang
 }) => {
+  const t = translations[lang];
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
 
   // Profile Form State
@@ -34,11 +38,11 @@ export const Onboarding: React.FC<OnboardingProps> = ({
   const [copied, setCopied] = useState(false);
 
   const availableCategories = [
-    { id: 'Sensual', title: 'Sensual & Touch', desc: 'Oils, blindfolds, temperature play, slow intimacy' },
-    { id: 'BDSM', title: 'BDSM & Restraints', desc: 'Satin cuffs, rope work, dominance & submission' },
-    { id: 'Roleplay', title: 'Roleplay & Fantasies', desc: 'Stranger encounters, hotel scenarios, costumes' },
-    { id: 'Toys', title: 'Toys & Tech', desc: 'Remote vibrators, electro-stimulation, couples toys' },
-    { id: 'ENM', title: 'Open & ENM', desc: 'Threesomes, exhibitionism, voyeurism' }
+    { id: 'Sensual', title: lang === 'he' ? 'חושים ומגע' : 'Sensual & Touch', desc: lang === 'he' ? 'שמנים, כיסויי עיניים, משחקי טמפרטורה' : 'Oils, blindfolds, temperature play, slow intimacy' },
+    { id: 'BDSM', title: lang === 'he' ? 'BDSM וקשירות' : 'BDSM & Restraints', desc: lang === 'he' ? 'סרטי משי, קשרים, שליטה והתמסרות' : 'Satin cuffs, rope work, dominance & submission' },
+    { id: 'Roleplay', title: lang === 'he' ? 'משחקי תפקידים' : 'Roleplay & Fantasies', desc: lang === 'he' ? 'פגישות אנונימיות, מועדון מלון, תלבושות' : 'Stranger encounters, hotel scenarios, costumes' },
+    { id: 'Toys', title: 'צעצועים וטכנולוגיה', desc: lang === 'he' ? 'שלט רחוק, צעצועי זוגות, גירוי חשמלי' : 'Remote vibrators, electro-stimulation, couples toys' },
+    { id: 'ENM', title: lang === 'he' ? 'פנטזיות פתוחות' : 'Open & ENM', desc: lang === 'he' ? 'שלישיות, מציצנות, אקסהיביציוניזם' : 'Threesomes, exhibitionism, voyeurism' }
   ];
 
   const shareUrl = pairCode
@@ -63,7 +67,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({
 
   const handleFinish = () => {
     onCompleteOnboarding({
-      alias: alias.trim() || 'Desire Explorer',
+      alias: alias.trim() || (lang === 'he' ? 'מאהב מסתורי' : 'Desire Explorer'),
       role,
       categories: selectedCategories,
       intensity
@@ -95,10 +99,10 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                 {s}
               </span>
               <span className="hidden sm:inline text-xs font-semibold text-slate-300">
-                {s === 1 && 'Alias'}
-                {s === 2 && 'Fantasies'}
-                {s === 3 && 'Boundaries'}
-                {s === 4 && 'Pairing'}
+                {s === 1 && (lang === 'he' ? 'כינוי' : 'Alias')}
+                {s === 2 && (lang === 'he' ? 'פנטזיות' : 'Fantasies')}
+                {s === 3 && (lang === 'he' ? 'גבולות' : 'Boundaries')}
+                {s === 4 && (lang === 'he' ? 'צימוד' : 'Pairing')}
               </span>
             </div>
             {s < 4 && <div className="flex-1 h-0.5 mx-2 bg-[#36343a]" />}
@@ -113,22 +117,22 @@ export const Onboarding: React.FC<OnboardingProps> = ({
             <div className="w-14 h-14 rounded-2xl bg-[#2b292f] border border-[#e8b4b8]/30 text-[#e8b4b8] flex items-center justify-center mx-auto mb-3 shadow-md">
               <User className="w-7 h-7" />
             </div>
-            <h2 className="text-2xl font-bold text-white font-headline">Step 1: Your Secret Alias & Role</h2>
+            <h2 className="text-2xl font-bold text-white font-headline">{t.onboardingStep1Title}</h2>
             <p className="text-xs text-slate-300 max-w-sm mx-auto mt-1">
-              Choose an anonymous sexy nickname and your preferred dynamic role for your partner to see.
+              {t.onboardingStep1Sub}
             </p>
           </div>
 
           <div className="space-y-4">
             <div>
               <label className="text-xs font-semibold text-slate-300 block mb-1">
-                Sexy Nickname / Alias:
+                {t.sexyAliasLabel}
               </label>
               <input
                 type="text"
                 value={alias}
                 onChange={(e) => setAlias(e.target.value)}
-                placeholder="e.g. Velvet Goddess, Shadow Prince, Silk Siren"
+                placeholder={t.sexyAliasPlaceholder}
                 className="w-full px-4 py-3 input-solid text-xs text-white"
                 required
               />
@@ -136,7 +140,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({
 
             <div>
               <label className="text-xs font-semibold text-slate-300 block mb-2">
-                Preferred Intimacy Role:
+                {t.intimacyRoleLabel}
               </label>
               <div className="grid grid-cols-3 gap-2">
                 <button
@@ -148,8 +152,8 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                       : 'bg-[#141218] text-slate-300 border-[#36343a] hover:border-slate-500'
                   }`}
                 >
-                  <span className="text-xs block font-bold">Dominant / Giver</span>
-                  <span className="text-[10px] block opacity-80 mt-0.5">Taking control</span>
+                  <span className="text-xs block font-bold">{t.roleGiver}</span>
+                  <span className="text-[10px] block opacity-80 mt-0.5">{t.roleGiverSub}</span>
                 </button>
 
                 <button
@@ -161,8 +165,8 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                       : 'bg-[#141218] text-slate-300 border-[#36343a] hover:border-slate-500'
                   }`}
                 >
-                  <span className="text-xs block font-bold">Submissive / Receiver</span>
-                  <span className="text-[10px] block opacity-80 mt-0.5">Surrendering</span>
+                  <span className="text-xs block font-bold">{t.roleReceiver}</span>
+                  <span className="text-[10px] block opacity-80 mt-0.5">{t.roleReceiverSub}</span>
                 </button>
 
                 <button
@@ -174,8 +178,8 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                       : 'bg-[#141218] text-slate-300 border-[#36343a] hover:border-slate-500'
                   }`}
                 >
-                  <span className="text-xs block font-bold">Switch / Versatile</span>
-                  <span className="text-[10px] block opacity-80 mt-0.5">Both roles</span>
+                  <span className="text-xs block font-bold">{t.roleSwitch}</span>
+                  <span className="text-[10px] block opacity-80 mt-0.5">{t.roleSwitchSub}</span>
                 </button>
               </div>
             </div>
@@ -183,12 +187,12 @@ export const Onboarding: React.FC<OnboardingProps> = ({
 
           <button
             onClick={() => {
-              if (!alias.trim()) setAlias('Desire Explorer');
+              if (!alias.trim()) setAlias(lang === 'he' ? 'מאהב מסתורי' : 'Desire Explorer');
               setStep(2);
             }}
             className="btn-rose w-full py-3.5 text-xs flex items-center justify-center gap-2"
           >
-            <span>Continue to Fantasies</span>
+            <span>{t.continue}</span>
             <ArrowRight className="w-4 h-4" />
           </button>
         </div>
@@ -201,9 +205,9 @@ export const Onboarding: React.FC<OnboardingProps> = ({
             <div className="w-14 h-14 rounded-2xl bg-[#2b292f] border border-[#e8b4b8]/30 text-[#e8b4b8] flex items-center justify-center mx-auto mb-3 shadow-md">
               <Sparkles className="w-7 h-7" />
             </div>
-            <h2 className="text-2xl font-bold text-white font-headline">Step 2: Select Favorite Categories</h2>
+            <h2 className="text-2xl font-bold text-white font-headline">{t.onboardingStep2Title}</h2>
             <p className="text-xs text-slate-300 max-w-sm mx-auto mt-1">
-              Select the fantasy categories you are interested in exploring together.
+              {t.onboardingStep2Sub}
             </p>
           </div>
 
@@ -240,13 +244,13 @@ export const Onboarding: React.FC<OnboardingProps> = ({
               className="btn-soft px-4 py-3 text-xs flex items-center gap-1"
             >
               <ArrowLeft className="w-4 h-4" />
-              <span>Back</span>
+              <span>{t.back}</span>
             </button>
             <button
               onClick={() => setStep(3)}
               className="btn-rose flex-1 py-3 text-xs flex items-center justify-center gap-2"
             >
-              <span>Continue to Boundaries</span>
+              <span>{t.continue}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
@@ -260,16 +264,16 @@ export const Onboarding: React.FC<OnboardingProps> = ({
             <div className="w-14 h-14 rounded-2xl bg-[#2b292f] border border-[#e8b4b8]/30 text-[#e8b4b8] flex items-center justify-center mx-auto mb-3 shadow-md">
               <Flame className="w-7 h-7" />
             </div>
-            <h2 className="text-2xl font-bold text-white font-headline">Step 3: Boundaries & Intensity</h2>
+            <h2 className="text-2xl font-bold text-white font-headline">{t.onboardingStep3Title}</h2>
             <p className="text-xs text-slate-300 max-w-sm mx-auto mt-1">
-              Define your preferred intensity level and agree to fundamental safety principles.
+              {t.onboardingStep3Sub}
             </p>
           </div>
 
           <div className="space-y-4">
             <div>
               <label className="text-xs font-semibold text-slate-300 block mb-2">
-                Preferred Intensity Level:
+                {t.intensityLabel}
               </label>
               <div className="grid grid-cols-3 gap-2">
                 {(['VANILLA', 'SPICY', 'ADVENTUROUS'] as const).map((lvl) => (
@@ -299,9 +303,9 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                 <Square className="w-5 h-5 text-slate-600 shrink-0" />
               )}
               <div className="text-xs">
-                <span className="font-bold text-white block">Safeword & Consent Agreement</span>
+                <span className="font-bold text-white block">{t.safewordTitle}</span>
                 <span className="text-slate-400 block text-[11px] mt-0.5">
-                  I agree that Red means stop immediately, Yellow means slow down, and Green means continue.
+                  {t.safewordSub}
                 </span>
               </div>
             </div>
@@ -313,7 +317,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({
               className="btn-soft px-4 py-3 text-xs flex items-center gap-1"
             >
               <ArrowLeft className="w-4 h-4" />
-              <span>Back</span>
+              <span>{t.back}</span>
             </button>
             <button
               onClick={() => {
@@ -322,7 +326,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({
               }}
               className="btn-rose flex-1 py-3 text-xs flex items-center justify-center gap-2"
             >
-              <span>Continue to Pairing</span>
+              <span>{t.continue}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
@@ -337,18 +341,18 @@ export const Onboarding: React.FC<OnboardingProps> = ({
           </div>
 
           <div>
-            <h2 className="text-2xl font-bold text-white font-headline">Step 4: Anonymous Couple Pairing</h2>
+            <h2 className="text-2xl font-bold text-white font-headline">{t.onboardingStep4Title}</h2>
             <p className="text-xs text-slate-300 max-w-sm mx-auto mt-1">
-              Share your invite link or enter your partner's code to unlock mutual matches.
+              {t.onboardingStep4Sub}
             </p>
           </div>
 
           {/* Option A: Share Code & Link */}
           <div className="p-5 rounded-2xl bg-[#141218] border border-[#36343a] text-center space-y-3">
-            <span className="text-xs font-semibold text-slate-400 block">Your Unique Couple Code:</span>
+            <span className="text-xs font-semibold text-slate-400 block">{t.yourCoupleCode}</span>
 
             <div className="text-3xl font-black text-[#e8b4b8] font-mono tracking-widest">
-              {pairCode || 'Generating...'}
+              {pairCode || '...'}
             </div>
 
             <button
@@ -356,7 +360,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({
               className="btn-rose px-5 py-2.5 text-xs flex items-center justify-center gap-2 mx-auto"
             >
               {copied ? <Check className="w-4 h-4 text-[#48272a]" /> : <Copy className="w-4 h-4" />}
-              <span>{copied ? 'Link Copied!' : 'Copy Partner Invite Link'}</span>
+              <span>{copied ? t.linkCopied : t.copyInviteLink}</span>
             </button>
 
             {pairCode && (
@@ -365,7 +369,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                   <QRCodeSVG value={shareUrl} size={110} />
                 </div>
                 <span className="text-[10px] text-slate-400 mt-1.5 flex items-center gap-1">
-                  <QrCode className="w-3 h-3 text-[#e8b4b8]" /> Scan QR from partner's phone
+                  <QrCode className="w-3 h-3 text-[#e8b4b8]" /> {t.scanQR}
                 </span>
               </div>
             )}
@@ -374,7 +378,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({
           {/* Option B: Enter Partner's Code */}
           <form onSubmit={handleJoin} className="pt-2 border-t border-[#36343a] space-y-2.5">
             <label className="text-xs font-semibold text-slate-300 block">
-              Or enter partner's pair code:
+              {t.orEnterCode}
             </label>
             <div className="flex gap-2">
               <input
@@ -386,7 +390,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                 className="flex-1 px-4 py-2.5 input-solid font-mono text-center tracking-widest text-xs"
               />
               <button type="submit" className="btn-rose px-5 py-2.5 text-xs">
-                Connect
+                {t.connect}
               </button>
             </div>
           </form>
@@ -397,7 +401,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({
               className="btn-rose w-full py-3.5 text-xs flex items-center justify-center gap-2"
             >
               <Sparkles className="w-4 h-4" />
-              <span>Complete Setup & Enter Sanctuary</span>
+              <span>{t.completeSetupBtn}</span>
             </button>
           </div>
         </div>

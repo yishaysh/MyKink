@@ -19,10 +19,14 @@ import {
   CatalogQuestion
 } from './services/api';
 import { getOrCreateDeviceId, getOrCreatePublicKey, computeAnswerHash, encryptPayload } from './services/crypto';
+import { Language } from './services/i18n';
 
 export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('onboarding');
   const [isPairingModalOpen, setIsPairingModalOpen] = useState(false);
+
+  // i18n Language State (English default or Hebrew)
+  const [lang, setLang] = useState<Language>('en');
 
   // User Profile state
   const [userProfile, setUserProfile] = useState<{
@@ -46,10 +50,17 @@ export const App: React.FC = () => {
   const [matches, setMatches] = useState<SharedMatchItem[]>([]);
   const [challenges, setChallenges] = useState<ChallengeItem[]>([]);
 
-  // 1. Initialize User Registration, Saved Profile & Deep Link check
+  // 1. Initialize User Registration, Saved Profile, Language & Deep Link check
   useEffect(() => {
     async function init() {
       try {
+        const savedLang = localStorage.getItem('mykink_lang') as Language;
+        if (savedLang) {
+          setLang(savedLang);
+          document.documentElement.dir = savedLang === 'he' ? 'rtl' : 'ltr';
+          document.documentElement.lang = savedLang;
+        }
+
         const savedProf = localStorage.getItem('mykink_user_profile');
         if (savedProf) {
           const parsed = JSON.parse(savedProf);
@@ -81,6 +92,15 @@ export const App: React.FC = () => {
     }
     init();
   }, []);
+
+  // Language Toggle Handler
+  const handleToggleLang = () => {
+    const nextLang: Language = lang === 'en' ? 'he' : 'en';
+    setLang(nextLang);
+    localStorage.setItem('mykink_lang', nextLang);
+    document.documentElement.dir = nextLang === 'he' ? 'rtl' : 'ltr';
+    document.documentElement.lang = nextLang;
+  };
 
   // 2. Load Questions catalog
   useEffect(() => {
@@ -201,6 +221,8 @@ export const App: React.FC = () => {
         openPairingModal={() => setIsPairingModalOpen(true)}
         isPartnerConnected={isPartnerConnected}
         userAlias={userProfile?.alias}
+        lang={lang}
+        onToggleLang={handleToggleLang}
       />
 
       {/* Main Tab Views */}
@@ -211,6 +233,7 @@ export const App: React.FC = () => {
             onCreateCouple={handleCreateCouple}
             onJoinCouple={handleJoinCouple}
             onCompleteOnboarding={handleCompleteOnboarding}
+            lang={lang}
           />
         )}
 
