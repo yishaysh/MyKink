@@ -44,13 +44,23 @@ function generateUUID(): string {
   });
 }
 
-// Google OAuth Sign In with Graceful Error Protection
+// Google OAuth Sign In with Dynamic Production Redirect
 export async function signInWithGoogle() {
   try {
+    const currentOrigin =
+      typeof window !== 'undefined' && window.location.origin
+        ? window.location.origin
+        : 'https://my-kink.vercel.app';
+
+    // Ensure fallback to vercel.app if local or missing
+    const redirectUrl = currentOrigin.includes('localhost')
+      ? 'https://my-kink.vercel.app'
+      : currentOrigin;
+
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: window.location.origin
+        redirectTo: redirectUrl
       }
     });
 

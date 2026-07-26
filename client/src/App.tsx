@@ -20,6 +20,7 @@ import {
 } from './services/api';
 import { getOrCreateDeviceId, getOrCreatePublicKey, computeAnswerHash, encryptPayload } from './services/crypto';
 import { Language } from './services/i18n';
+import { supabase } from './services/supabase';
 
 export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('onboarding');
@@ -94,6 +95,33 @@ export const App: React.FC = () => {
       }
     }
     init();
+
+    // Listen for Supabase OAuth Callback events (Google Auth)
+    const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (session?.user) {
+        setGoogleUser(session.user);
+        const deviceId = getOrCreateDeviceId();
+        const pubKey = getOrCreatePublicKey();
+        const res = await registerDevice(deviceId, pubKey);
+
+        if (res.user) {
+          setUserId(res.user.id);
+          if (res.user.coupleId) {
+            setCoupleId(res.user.coupleId);
+            setIsPartnerConnected(true);
+          }
+        }
+
+        // Clear access token hash cleanly from address bar
+        if (window.location.hash.includes('access_token')) {
+          window.history.replaceState(null, '', window.location.pathname);
+        }
+      }
+    });
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
   }, []);
 
   // Language Toggle Handler
