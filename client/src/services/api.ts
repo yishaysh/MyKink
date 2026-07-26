@@ -33,40 +33,48 @@ export interface ScenarioStep {
   description: string;
 }
 
-// 1. Register Device / Local User ID
+// 1. Register Device (using deviceIdentity column name)
 export async function registerDevice(deviceId: string, publicKey: string) {
   try {
-    let { data: user } = await supabase
+    const { data: existingUsers, error: selectErr } = await supabase
       .from('User')
       .select('*')
-      .eq('deviceId', deviceId)
-      .single();
+      .eq('deviceIdentity', deviceId);
 
-    if (!user) {
-      const { data: newUser } = await supabase
-        .from('User')
-        .insert({ deviceId, publicKey })
-        .select()
-        .single();
-      user = newUser;
+    if (existingUsers && existingUsers.length > 0) {
+      return { success: true, user: existingUsers[0] };
     }
 
-    return { success: true, user };
+    // Insert new user
+    const { data: newUser, error: insertErr } = await supabase
+      .from('User')
+      .insert({ deviceIdentity: deviceId, publicKey })
+      .select()
+      .single();
+
+    if (newUser) {
+      return { success: true, user: newUser };
+    }
   } catch (e) {
-    console.warn('Supabase User query fallback:', e);
-    return { success: true, user: { id: deviceId, coupleId: null } };
+    console.warn('User registration fallback mode:', e);
   }
+
+  // Local fallback user object
+  return {
+    success: true,
+    user: { id: deviceId, deviceIdentity: deviceId, coupleId: null }
+  };
 }
 
 // 2. Create Couple
 export async function createCouple(userId: string) {
   try {
     const pairCode = Math.random().toString(36).substring(2, 8).toUpperCase();
-    const coupleSalt = Math.random().toString(36).substring(2, 12);
+    const coupleSalt = 'Salt_' + Math.random().toString(36).substring(2, 10);
 
     const { data: couple } = await supabase
       .from('Couple')
-      .insert({ pairCode, coupleSalt, status: 'ACTIVE' })
+      .insert({ pairCode, coupleSalt })
       .select()
       .single();
 
@@ -74,28 +82,31 @@ export async function createCouple(userId: string) {
       await supabase.from('User').update({ coupleId: couple.id }).eq('id', userId);
     }
 
-    return { success: true, couple };
+    if (couple) return { success: true, couple };
   } catch (e) {
-    const fakeCode = Math.random().toString(36).substring(2, 8).toUpperCase();
-    return {
-      success: true,
-      couple: { id: 'c_' + Date.now(), pairCode: fakeCode, coupleSalt: 'Salt123' }
-    };
+    console.warn('Couple creation fallback:', e);
   }
+
+  const fakeCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+  return {
+    success: true,
+    couple: { id: 'c_' + Date.now(), pairCode: fakeCode, coupleSalt: 'Salt_Default123' }
+  };
 }
 
 // 3. Join Couple by Pair Code
 export async function joinCouple(userId: string, pairCode: string) {
   try {
-    const { data: couple } = await supabase
+    const { data: couples } = await supabase
       .from('Couple')
       .select('*')
-      .eq('pairCode', pairCode.toUpperCase())
-      .single();
+      .eq('pairCode', pairCode.trim().toUpperCase());
 
-    if (!couple) {
+    if (!couples || couples.length === 0) {
       return { success: false, error: 'Pair code not found' };
     }
+
+    const couple = couples[0];
 
     if (userId) {
       await supabase.from('User').update({ coupleId: couple.id }).eq('id', userId);
@@ -105,12 +116,12 @@ export async function joinCouple(userId: string, pairCode: string) {
   } catch (e) {
     return {
       success: true,
-      couple: { id: 'c_' + Date.now(), pairCode: pairCode.toUpperCase(), coupleSalt: 'Salt123' }
+      couple: { id: 'c_' + Date.now(), pairCode: pairCode.toUpperCase(), coupleSalt: 'Salt_Default123' }
     };
   }
 }
 
-// 4. Fetch Questions Catalog (English fallback questions)
+// 4. Fetch Questions Catalog
 export async function fetchQuestions(category = 'ALL', intensity = 'ALL') {
   try {
     let query = supabase.from('QuestionCatalog').select('*');
@@ -118,7 +129,6 @@ export async function fetchQuestions(category = 'ALL', intensity = 'ALL') {
     if (intensity !== 'ALL') query = query.eq('intensityLevel', intensity);
 
     const { data: questions } = await query;
-
     if (questions && questions.length > 0) {
       return { success: true, questions };
     }
@@ -217,7 +227,6 @@ export async function fetchMatches(coupleId: string) {
     console.warn('Match fetch fallback');
   }
 
-  // English Sample Matches
   const sampleMatches: SharedMatchItem[] = [
     {
       id: 'm1',
@@ -284,7 +293,7 @@ export async function createDare(
   return { success: true };
 }
 
-// 9. Generate Evening Scenario (English 4-Step Output)
+// 9. Generate Evening Scenario
 export async function generateEveningScenario(coupleId: string | null, intensity = 'SPICY') {
   const steps: ScenarioStep[] = [
     {
@@ -316,7 +325,7 @@ export async function generateEveningScenario(coupleId: string | null, intensity
   return { success: true, steps };
 }
 
-// 10. Ask Aria AI Coach (English Responses)
+// 10. Ask Aria AI Coach
 export async function askAICoach(query: string) {
   const lower = query.toLowerCase();
 

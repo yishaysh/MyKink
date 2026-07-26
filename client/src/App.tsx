@@ -28,7 +28,7 @@ export const App: React.FC = () => {
   const [userId, setUserId] = useState<string | null>(null);
   const [coupleId, setCoupleId] = useState<string | null>(null);
   const [pairCode, setPairCode] = useState<string | null>(null);
-  const [coupleSalt, setCoupleSalt] = useState<string>('Default_Salt_123');
+  const [coupleSalt, setCoupleSalt] = useState<string>('Salt_Default123');
   const [isPartnerConnected, setIsPartnerConnected] = useState(false);
 
   // Data state
@@ -38,7 +38,7 @@ export const App: React.FC = () => {
   const [matches, setMatches] = useState<SharedMatchItem[]>([]);
   const [challenges, setChallenges] = useState<ChallengeItem[]>([]);
 
-  // 1. Initialize User & Device Registration + Deep Link check
+  // 1. Initialize User Registration + Deep Link check
   useEffect(() => {
     async function init() {
       try {
@@ -124,7 +124,7 @@ export const App: React.FC = () => {
       if (res.success && res.couple) {
         setCoupleId(res.couple.id);
         setPairCode(res.couple.pairCode);
-        setCoupleSalt(res.couple.coupleSalt);
+        setCoupleSalt(res.couple.coupleSalt || 'Salt_Default123');
       }
     } catch (e) {
       console.error(e);
@@ -138,12 +138,12 @@ export const App: React.FC = () => {
       if (res.success && res.couple) {
         setCoupleId(res.couple.id);
         setPairCode(res.couple.pairCode);
-        setCoupleSalt(res.couple.coupleSalt);
+        setCoupleSalt(res.couple.coupleSalt || 'Salt_Default123');
         setIsPairingModalOpen(false);
         setIsPartnerConnected(true);
         setActiveTab('swipe');
       } else {
-        alert(res.error || 'קוד צימוד לא נמצא');
+        alert(res.error || 'Pair code not found');
       }
     } catch (e) {
       console.error(e);
@@ -168,7 +168,7 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen pb-16">
+    <div className="min-h-screen pb-24 md:pb-12 bg-[#141218] text-[#e7e0e9]">
       {/* Header Bar */}
       <Header
         activeTab={activeTab}
@@ -179,7 +179,7 @@ export const App: React.FC = () => {
       />
 
       {/* Main Tab Views */}
-      <main className="mt-4">
+      <main className="mt-2 md:mt-6">
         {activeTab === 'onboarding' && (
           <Onboarding
             pairCode={pairCode}
