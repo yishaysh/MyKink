@@ -34,8 +34,8 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <>
-      {/* Top Header Bar */}
-      <header className="sticky top-0 z-40 bg-[#141218] border-b border-[#36343a] px-3 py-2.5 shadow-md">
+      {/* Top Header Bar (100% Solid Dark Background, Zero Transparency) */}
+      <header className="sticky top-0 z-40 app-header-solid border-b border-[#36343a] px-3 py-2.5 shadow-md">
         <div className="max-w-md md:max-w-5xl mx-auto flex items-center justify-between gap-1.5 overflow-hidden">
           {/* Brand Logo & Title */}
           <div className="flex items-center gap-2 shrink-0">
@@ -99,8 +99,8 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       </header>
 
-      {/* Mobile Bottom Navigation Bar (Solid 100% Opaque) */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#1d1b21] border-t border-[#36343a] px-2 py-1.5 shadow-2xl">
+      {/* Mobile Bottom Navigation Bar (100% Solid Opaque Dark, Zero Transparency) */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 app-bottom-nav-solid border-t border-[#36343a] px-2 py-2 shadow-2xl">
         <nav className="max-w-md mx-auto grid grid-cols-4 gap-1">
           {tabs.map((tabItem) => {
             const Icon = tabItem.icon;
@@ -109,7 +109,7 @@ export const Header: React.FC<HeaderProps> = ({
               <button
                 key={tabItem.id}
                 onClick={() => setActiveTab(tabItem.id)}
-                className={`flex flex-col items-center justify-center py-1.5 px-1 rounded-xl transition ${
+                className={`flex flex-col items-center justify-center py-2 px-1 rounded-xl transition ${
                   isActive
                     ? 'bg-[#2b292f] text-[#e8b4b8] font-bold border border-[#e8b4b8]/40 shadow-sm'
                     : 'text-slate-400 hover:text-slate-200'

@@ -243,7 +243,7 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen pb-24 md:pb-12 bg-[#141218] text-[#e7e0e9]">
+    <div className="min-h-screen pb-36 md:pb-16 bg-[#141218] text-[#e7e0e9]">
       {/* Hide Header and Bottom Nav entirely during Onboarding so there is ZERO background clutter */}
       {activeTab !== 'onboarding' && (
         <Header
@@ -259,7 +259,7 @@ export const App: React.FC = () => {
       )}
 
       {/* Main Tab Views */}
-      <main className={activeTab === 'onboarding' ? '' : 'mt-2 md:mt-6'}>
+      <main className={activeTab === 'onboarding' ? '' : 'mt-2 md:mt-6 pb-32'}>
         {activeTab === 'onboarding' && (
           <Onboarding
             pairCode={pairCode}

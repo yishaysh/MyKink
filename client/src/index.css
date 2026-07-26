@@ -27,7 +27,7 @@
 body {
   margin: 0;
   padding: 0;
-  background-color: #141218;
+  background-color: #141218 !important;
   color: #e7e0e9;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   min-height: 100vh;
@@ -38,11 +38,27 @@ h1, h2, h3, h4, .font-headline {
   font-family: 'Hanken Grotesk', sans-serif;
 }
 
+/* 100% OPAQUE SOLID HEADER & BOTTOM NAVIGATION (NO TRANSPARENCY EVER) */
+.app-header-solid {
+  background-color: #141218 !important;
+  background: #141218 !important;
+  opacity: 1 !important;
+  backdrop-filter: none !important;
+}
+
+.app-bottom-nav-solid {
+  background-color: #1d1b21 !important;
+  background: #1d1b21 !important;
+  opacity: 1 !important;
+  backdrop-filter: none !important;
+}
+
 /* 100% Solid Card Container (Zero Transparency / Zero Blur) */
 .solid-card {
-  background-color: #211f25;
+  background-color: #211f25 !important;
+  background: #211f25 !important;
   border: 1px solid #36343a;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
   border-radius: 1.5rem; /* 24px per Stitch DESIGN.md */
   transition: border-color 0.2s ease, transform 0.2s ease;
 }
@@ -53,8 +69,8 @@ h1, h2, h3, h4, .font-headline {
 
 /* Soft Rose Gold Pill Button */
 .btn-rose {
-  background: linear-gradient(135deg, #e8b4b8 0%, #ffd2d5 100%);
-  color: #48272a;
+  background: linear-gradient(135deg, #e8b4b8 0%, #ffd2d5 100%) !important;
+  color: #48272a !important;
   font-weight: 700;
   border-radius: 9999px;
   box-shadow: 0 4px 16px rgba(232, 180, 184, 0.3);
@@ -72,8 +88,8 @@ h1, h2, h3, h4, .font-headline {
 
 /* Champagne Ghost / Solid Button */
 .btn-soft {
-  background-color: #2b292f;
-  color: #d1c5b2;
+  background-color: #2b292f !important;
+  color: #d1c5b2 !important;
   border: 1px solid #504444;
   border-radius: 9999px;
   font-weight: 600;
@@ -81,14 +97,14 @@ h1, h2, h3, h4, .font-headline {
 }
 
 .btn-soft:hover {
-  background-color: #36343a;
-  color: #ffffff;
+  background-color: #36343a !important;
+  color: #ffffff !important;
   border-color: #e8b4b8;
 }
 
 /* Custom Input Field */
 .input-solid {
-  background-color: #141218;
+  background-color: #141218 !important;
   border: 1px solid #36343a;
   color: #ffffff;
   border-radius: 1rem;
