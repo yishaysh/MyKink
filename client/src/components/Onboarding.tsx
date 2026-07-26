@@ -68,7 +68,10 @@ export const Onboarding: React.FC<OnboardingProps> = ({
     }
   };
 
-  const handleFinish = () => {
+  const handleFinish = async () => {
+    if (!pairCode) {
+      await onCreateCouple();
+    }
     onCompleteOnboarding({
       alias: alias.trim() || (lang === 'he' ? 'מאהב מסתורי' : 'Desire Explorer'),
       role,
