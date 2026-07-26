@@ -142,44 +142,59 @@ export const Onboarding: React.FC<OnboardingProps> = ({
               <label className="text-xs font-semibold text-slate-300 block mb-2">
                 {t.intimacyRoleLabel}
               </label>
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-3 gap-2.5">
+                {/* GIVER */}
                 <button
                   type="button"
                   onClick={() => setRole('GIVER')}
-                  className={`p-3 rounded-2xl text-center border transition ${
+                  className={`p-3.5 rounded-2xl text-center border-2 transition-colors duration-150 flex flex-col justify-center items-center h-24 ${
                     role === 'GIVER'
-                      ? 'bg-[#e8b4b8] text-[#48272a] border-[#e8b4b8] font-bold'
-                      : 'bg-[#141218] text-slate-300 border-[#36343a] hover:border-slate-500'
+                      ? 'bg-[#141218] border-[#e8b4b8] text-white shadow-md'
+                      : 'bg-[#141218] border-[#36343a] text-slate-400 hover:border-slate-500'
                   }`}
                 >
-                  <span className="text-xs block font-bold">{t.roleGiver}</span>
-                  <span className="text-[10px] block opacity-80 mt-0.5">{t.roleGiverSub}</span>
+                  <span className={`text-xs font-bold block ${role === 'GIVER' ? 'text-[#e8b4b8]' : 'text-slate-200'}`}>
+                    {t.roleGiver}
+                  </span>
+                  <span className="text-[10px] text-slate-400 block mt-1">
+                    {t.roleGiverSub}
+                  </span>
                 </button>
 
+                {/* RECEIVER */}
                 <button
                   type="button"
                   onClick={() => setRole('RECEIVER')}
-                  className={`p-3 rounded-2xl text-center border transition ${
+                  className={`p-3.5 rounded-2xl text-center border-2 transition-colors duration-150 flex flex-col justify-center items-center h-24 ${
                     role === 'RECEIVER'
-                      ? 'bg-[#e8b4b8] text-[#48272a] border-[#e8b4b8] font-bold'
-                      : 'bg-[#141218] text-slate-300 border-[#36343a] hover:border-slate-500'
+                      ? 'bg-[#141218] border-[#e8b4b8] text-white shadow-md'
+                      : 'bg-[#141218] border-[#36343a] text-slate-400 hover:border-slate-500'
                   }`}
                 >
-                  <span className="text-xs block font-bold">{t.roleReceiver}</span>
-                  <span className="text-[10px] block opacity-80 mt-0.5">{t.roleReceiverSub}</span>
+                  <span className={`text-xs font-bold block ${role === 'RECEIVER' ? 'text-[#e8b4b8]' : 'text-slate-200'}`}>
+                    {t.roleReceiver}
+                  </span>
+                  <span className="text-[10px] text-slate-400 block mt-1">
+                    {t.roleReceiverSub}
+                  </span>
                 </button>
 
+                {/* SWITCH */}
                 <button
                   type="button"
                   onClick={() => setRole('SWITCH')}
-                  className={`p-3 rounded-2xl text-center border transition ${
+                  className={`p-3.5 rounded-2xl text-center border-2 transition-colors duration-150 flex flex-col justify-center items-center h-24 ${
                     role === 'SWITCH'
-                      ? 'bg-[#e8b4b8] text-[#48272a] border-[#e8b4b8] font-bold'
-                      : 'bg-[#141218] text-slate-300 border-[#36343a] hover:border-slate-500'
+                      ? 'bg-[#141218] border-[#e8b4b8] text-white shadow-md'
+                      : 'bg-[#141218] border-[#36343a] text-slate-400 hover:border-slate-500'
                   }`}
                 >
-                  <span className="text-xs block font-bold">{t.roleSwitch}</span>
-                  <span className="text-[10px] block opacity-80 mt-0.5">{t.roleSwitchSub}</span>
+                  <span className={`text-xs font-bold block ${role === 'SWITCH' ? 'text-[#e8b4b8]' : 'text-slate-200'}`}>
+                    {t.roleSwitch}
+                  </span>
+                  <span className="text-[10px] text-slate-400 block mt-1">
+                    {t.roleSwitchSub}
+                  </span>
                 </button>
               </div>
             </div>
@@ -218,14 +233,16 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                 <div
                   key={cat.id}
                   onClick={() => toggleCategory(cat.id)}
-                  className={`p-4 rounded-2xl border cursor-pointer flex items-center justify-between transition ${
+                  className={`p-4 rounded-2xl border-2 cursor-pointer flex items-center justify-between transition-colors duration-150 ${
                     isSelected
-                      ? 'bg-[#2b292f] border-[#e8b4b8] text-white'
+                      ? 'bg-[#141218] border-[#e8b4b8] text-white'
                       : 'bg-[#141218] border-[#36343a] text-slate-400 hover:border-slate-600'
                   }`}
                 >
                   <div>
-                    <span className="text-sm font-bold block text-white">{cat.title}</span>
+                    <span className={`text-sm font-bold block ${isSelected ? 'text-[#e8b4b8]' : 'text-white'}`}>
+                      {cat.title}
+                    </span>
                     <span className="text-xs text-slate-400 block mt-0.5">{cat.desc}</span>
                   </div>
                   {isSelected ? (
@@ -275,16 +292,16 @@ export const Onboarding: React.FC<OnboardingProps> = ({
               <label className="text-xs font-semibold text-slate-300 block mb-2">
                 {t.intensityLabel}
               </label>
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-3 gap-2.5">
                 {(['VANILLA', 'SPICY', 'ADVENTUROUS'] as const).map((lvl) => (
                   <button
                     key={lvl}
                     type="button"
                     onClick={() => setIntensity(lvl)}
-                    className={`p-3 rounded-2xl text-center border transition ${
+                    className={`p-3.5 rounded-2xl text-center border-2 transition-colors duration-150 h-14 flex items-center justify-center ${
                       intensity === lvl
-                        ? 'bg-[#e8b4b8] text-[#48272a] border-[#e8b4b8] font-bold'
-                        : 'bg-[#141218] text-slate-300 border-[#36343a] hover:border-slate-500'
+                        ? 'bg-[#141218] border-[#e8b4b8] text-[#e8b4b8] font-bold'
+                        : 'bg-[#141218] border-[#36343a] text-slate-300 hover:border-slate-500'
                     }`}
                   >
                     <span className="text-xs font-bold block">{lvl}</span>
@@ -295,7 +312,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({
 
             <div
               onClick={() => setAgreedSafewords(!agreedSafewords)}
-              className="p-4 rounded-2xl bg-[#141218] border border-[#36343a] flex items-center gap-3 cursor-pointer"
+              className="p-4 rounded-2xl bg-[#141218] border-2 border-[#36343a] flex items-center gap-3 cursor-pointer"
             >
               {agreedSafewords ? (
                 <CheckSquare className="w-5 h-5 text-emerald-400 shrink-0" />
