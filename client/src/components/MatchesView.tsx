@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Sparkles, Heart, HelpCircle, Filter, Star, Flame, ShieldCheck } from 'lucide-react';
 import { CatalogQuestion } from '../services/api';
-import { Language, translations } from '../services/i18n';
+import { Language, translations, translateQuestion } from '../services/i18n';
 
 export interface SharedMatchItem {
   id: string;
@@ -80,7 +80,8 @@ export const MatchesView: React.FC<MatchesViewProps> = ({ matches, lang }) => {
       {filteredMatches.length > 0 ? (
         <div className="space-y-3">
           {filteredMatches.map((m) => {
-            const q = m.question;
+            const rawQ = m.question;
+            const q = rawQ ? translateQuestion(rawQ, lang) : null;
             const isFav = favorites.includes(m.id);
             if (!q) return null;
 

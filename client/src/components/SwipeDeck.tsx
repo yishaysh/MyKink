@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Heart, ThumbsDown, HelpCircle, Flame, Filter, RotateCcw, Lock } from 'lucide-react';
 import { CatalogQuestion } from '../services/api';
-import { Language, translations } from '../services/i18n';
+import { Language, translations, translateQuestion } from '../services/i18n';
 
 interface SwipeDeckProps {
   questions: CatalogQuestion[];
@@ -43,12 +43,13 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
     { id: 'ADVENTUROUS', label: t.intensityAdventurous }
   ];
 
-  const currentQ = questions[currentIndex];
+  const rawQ = questions[currentIndex];
+  const currentQ = rawQ ? translateQuestion(rawQ, lang) : null;
   const isFinished = currentIndex >= questions.length || !currentQ;
 
   const handleVote = (val: 'YES' | 'MAYBE' | 'NO') => {
-    if (currentQ) {
-      onAnswer(currentQ.id, val);
+    if (rawQ) {
+      onAnswer(rawQ.id, val);
       setCurrentIndex((prev) => prev + 1);
     }
   };
@@ -104,7 +105,7 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
       </div>
 
       {/* Main Swiper Card Area */}
-      {!isFinished ? (
+      {!isFinished && currentQ ? (
         <div className="relative space-y-4">
           <div className="solid-card p-6 sm:p-8 min-h-[360px] flex flex-col justify-between card-appear relative overflow-hidden">
             {/* Top Badges */}
@@ -142,12 +143,18 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
             </div>
           </div>
 
-          {/* Voting Action Buttons */}
+          {/* Voting Action Buttons (All 3 with explicit rounded borders) */}
           <div className="grid grid-cols-3 gap-3">
             {/* NO */}
             <button
               onClick={() => handleVote('NO')}
-              className="py-4 px-3 rounded-2xl bg-[#1d1b21] hover:bg-rose-950/40 border-2 border-rose-900/60 hover:border-rose-500 text-rose-400 font-bold text-xs flex flex-col items-center justify-center gap-1.5 transition group shadow-lg"
+              style={{
+                borderWidth: '2px',
+                borderStyle: 'solid',
+                borderColor: 'rgba(225, 29, 72, 0.6)',
+                backgroundColor: '#1d1b21'
+              }}
+              className="py-4 px-3 rounded-2xl hover:bg-rose-950/40 text-rose-400 font-bold text-xs flex flex-col items-center justify-center gap-1.5 transition group shadow-lg"
             >
               <ThumbsDown className="w-6 h-6 group-hover:scale-110 transition-transform" />
               <span>{t.btnNo}</span>
@@ -156,18 +163,30 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
             {/* MAYBE */}
             <button
               onClick={() => handleVote('MAYBE')}
-              className="py-4 px-3 rounded-2xl bg-[#1d1b21] hover:bg-amber-950/40 border-2 border-amber-900/60 hover:border-amber-500 text-amber-400 font-bold text-xs flex flex-col items-center justify-center gap-1.5 transition group shadow-lg"
+              style={{
+                borderWidth: '2px',
+                borderStyle: 'solid',
+                borderColor: 'rgba(217, 119, 6, 0.6)',
+                backgroundColor: '#1d1b21'
+              }}
+              className="py-4 px-3 rounded-2xl hover:bg-amber-950/40 text-amber-400 font-bold text-xs flex flex-col items-center justify-center gap-1.5 transition group shadow-lg"
             >
               <HelpCircle className="w-6 h-6 group-hover:scale-110 transition-transform" />
               <span>{t.btnMaybe}</span>
             </button>
 
-            {/* YES */}
+            {/* YES - Enforced Solid Rose Gold 2px Border Box */}
             <button
               onClick={() => handleVote('YES')}
-              className="py-4 px-3 rounded-2xl bg-gradient-to-tr from-[#e8b4b8] to-[#ffd2d5] text-[#48272a] font-black text-xs flex flex-col items-center justify-center gap-1.5 transition group shadow-xl shadow-[#e8b4b8]/20 hover:scale-105 active:scale-100"
+              style={{
+                borderWidth: '2px',
+                borderStyle: 'solid',
+                borderColor: '#e8b4b8',
+                backgroundColor: '#2b292f'
+              }}
+              className="py-4 px-3 rounded-2xl hover:bg-[#36343a] text-[#e8b4b8] font-black text-xs flex flex-col items-center justify-center gap-1.5 transition group shadow-xl hover:scale-105 active:scale-100"
             >
-              <Heart className="w-6 h-6 fill-[#48272a] group-hover:scale-110 transition-transform" />
+              <Heart className="w-6 h-6 fill-[#e8b4b8] text-[#e8b4b8] group-hover:scale-110 transition-transform" />
               <span>{t.btnYes}</span>
             </button>
           </div>

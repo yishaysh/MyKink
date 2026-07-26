@@ -325,3 +325,70 @@ export const translations: Record<Language, TranslationDictionary> = {
     sendBtn: 'שלח'
   }
 };
+
+// Hebrew translations mapping for question titles and descriptions
+const questionTranslationsHe: Record<string, { title: string; description: string; category: string }> = {
+  q1: {
+    title: 'עיסוי כיסוי עיניים ממושך',
+    description: 'שימוש בשמני גוף ניחוחים וכיסוי עיניים ממשי למשך 20 דקות של גירוי חושי מתמשך.',
+    category: 'חושים ומגע'
+  },
+  q2: {
+    title: 'משחקי טמפרטורה איטיים',
+    description: 'שילוב בין נשימות חמות, קוביות קרח ומגע נוצה עדין באזורים רגישים.',
+    category: 'חושים ומגע'
+  },
+  q3: {
+    title: 'קשירת פרקי ידיים עדינה',
+    description: 'שימוש בסרטי משי רכים או צמידי סאטן לעגינה עדינה של בן/בת הזוג למיטה.',
+    category: 'BDSM וקשירות'
+  },
+  q4: {
+    title: 'מפגש אנונימי בבר מלון',
+    description: 'הגעה בנפרד לבר, התחזות לזרים מסקרנים החולקים משקה ופלרטוט.',
+    category: 'משחקי תפקידים'
+  },
+  q5: {
+    title: 'צעצוע אינטימי בשלט רחוק',
+    description: 'לבישת צעצוע אינטימי נשלט מרחוק במהלך ארוחה רומנטית או טיול יחדיו.',
+    category: 'צעצועים'
+  },
+  q6: {
+    title: 'סשן מראות רומנטי',
+    description: 'הצבת מראות גוף סביב חדר המיטות להעצמת הגירוי הויזואלי והתשוקה.',
+    category: 'חושים ומגע'
+  }
+};
+
+export function translateQuestion(
+  q: { id: string; title: string; description: string; category: string },
+  lang: Language
+) {
+  if (lang === 'he') {
+    const heTrans = questionTranslationsHe[q.id];
+    if (heTrans) {
+      return {
+        ...q,
+        title: heTrans.title,
+        description: heTrans.description,
+        category: heTrans.category
+      };
+    }
+
+    // Dynamic category translation fallback
+    const categoryMap: Record<string, string> = {
+      Sensual: 'חושים ומגע',
+      BDSM: 'BDSM וקשירות',
+      Roleplay: 'משחקי תפקידים',
+      Toys: 'צעצועים',
+      ENM: 'פנטזיות פתוחות'
+    };
+
+    return {
+      ...q,
+      category: categoryMap[q.category] || q.category
+    };
+  }
+
+  return q;
+}
