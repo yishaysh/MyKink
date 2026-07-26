@@ -33,6 +33,9 @@ export interface TranslationDictionary {
   onboardingStep3Title: string;
   onboardingStep3Sub: string;
   intensityLabel: string;
+  intensityVanilla: string;
+  intensitySpicy: string;
+  intensityAdventurous: string;
   safewordTitle: string;
   safewordSub: string;
 
@@ -140,6 +143,9 @@ export const translations: Record<Language, TranslationDictionary> = {
     onboardingStep3Title: 'Step 3: Boundaries & Intensity',
     onboardingStep3Sub: 'Define your preferred intensity level and agree to fundamental safety principles.',
     intensityLabel: 'Preferred Intensity Level:',
+    intensityVanilla: 'Vanilla & Mild',
+    intensitySpicy: 'Spicy & Hot',
+    intensityAdventurous: 'Adventurous & Bold',
     safewordTitle: 'Safeword & Consent Agreement',
     safewordSub: 'I agree that Red means stop immediately, Yellow means slow down, and Green means continue.',
 
@@ -239,6 +245,9 @@ export const translations: Record<Language, TranslationDictionary> = {
     onboardingStep3Title: 'שלב 3: גבולות ועוצמה',
     onboardingStep3Sub: 'הגדירו את רמת העוצמה המבוקשת ואשרו את הסכם הבטיחות.',
     intensityLabel: 'רמת עוצמה מועדפת:',
+    intensityVanilla: 'מעודן (ווניל)',
+    intensitySpicy: 'פילפלי ולוהט',
+    intensityAdventurous: 'הרפתקני ונועז',
     safewordTitle: 'הסכם מילות בטיחות והסכמה',
     safewordSub: 'אני מאשר/ת שאדום פירושו עצירה מיידית, צהוב פירושו האטה, וירוק פירושו להמשיך.',
 
@@ -276,7 +285,6 @@ export const translations: Record<Language, TranslationDictionary> = {
     filterMaybe: 'אולי משותף',
     badgeMutualMatch: 'התאמה מלאה 💖',
     badgeMutualMaybe: 'התאמה כמעט 💡',
-    badgeMutualMaybeText: 'אולי משותף 🤔',
     badgeTentativeMatch: 'התאמה משולבת 💡',
     complementaryRoles: 'תפקידים משלימים: מעניק ומקבל',
     favoriteBtn: 'מועדף',

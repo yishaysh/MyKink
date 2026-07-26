@@ -82,6 +82,12 @@ export const Onboarding: React.FC<OnboardingProps> = ({
     }
   };
 
+  const getIntensityText = (lvl: 'VANILLA' | 'SPICY' | 'ADVENTUROUS') => {
+    if (lvl === 'VANILLA') return t.intensityVanilla;
+    if (lvl === 'SPICY') return t.intensitySpicy;
+    return t.intensityAdventurous;
+  };
+
   return (
     <div className="max-w-xl mx-auto px-3 sm:px-4 py-4 sm:py-6">
       {/* Step Progress Indicators (Enforced LTR so 1 2 3 4 reads cleanly) */}
@@ -214,7 +220,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({
             className="btn-rose w-full py-3.5 text-xs flex items-center justify-center gap-2"
           >
             <span>{t.continue}</span>
-            <ArrowRight className="w-4 h-4" />
+            {lang === 'he' ? <ArrowLeft className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
           </button>
         </div>
       )}
@@ -268,7 +274,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({
               onClick={() => setStep(1)}
               className="btn-soft px-4 py-3 text-xs flex items-center gap-1"
             >
-              <ArrowLeft className="w-4 h-4" />
+              {lang === 'he' ? <ArrowRight className="w-4 h-4" /> : <ArrowLeft className="w-4 h-4" />}
               <span>{t.back}</span>
             </button>
             <button
@@ -276,7 +282,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({
               className="btn-rose flex-1 py-3 text-xs flex items-center justify-center gap-2"
             >
               <span>{t.continue}</span>
-              <ArrowRight className="w-4 h-4" />
+              {lang === 'he' ? <ArrowLeft className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
             </button>
           </div>
         </div>
@@ -312,10 +318,10 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                       borderStyle: 'solid',
                       backgroundColor: intensity === lvl ? '#2b292f' : '#141218'
                     }}
-                    className="p-3 rounded-2xl text-center transition-all duration-150 h-14 flex items-center justify-center"
+                    className="p-2.5 sm:p-3.5 rounded-2xl text-center transition-all duration-150 h-16 flex flex-col items-center justify-center"
                   >
-                    <span className={`text-xs font-bold block ${intensity === lvl ? 'text-[#e8b4b8]' : 'text-slate-300'}`}>
-                      {lvl}
+                    <span className={`text-xs font-bold block text-center ${intensity === lvl ? 'text-[#e8b4b8]' : 'text-slate-300'}`}>
+                      {getIntensityText(lvl)}
                     </span>
                   </button>
                 ))}
@@ -345,7 +351,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({
               onClick={() => setStep(2)}
               className="btn-soft px-4 py-3 text-xs flex items-center gap-1"
             >
-              <ArrowLeft className="w-4 h-4" />
+              {lang === 'he' ? <ArrowRight className="w-4 h-4" /> : <ArrowLeft className="w-4 h-4" />}
               <span>{t.back}</span>
             </button>
             <button
@@ -356,7 +362,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({
               className="btn-rose flex-1 py-3 text-xs flex items-center justify-center gap-2"
             >
               <span>{t.continue}</span>
-              <ArrowRight className="w-4 h-4" />
+              {lang === 'he' ? <ArrowLeft className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
             </button>
           </div>
         </div>
