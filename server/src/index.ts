@@ -376,7 +376,12 @@ app.post('/api/ai/aria-advice', async (req, res) => {
   }
 });
 
-// Start Server
-server.listen(PORT, () => {
-  console.log(`🚀 MyKink Backend running at http://localhost:${PORT}`);
-});
+// Start Server if not running in Vercel serverless environment
+if (!process.env.VERCEL) {
+  server.listen(PORT, () => {
+    console.log(`🚀 MyKink Backend running at http://localhost:${PORT}`);
+  });
+}
+
+export default app;
+
