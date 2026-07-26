@@ -326,8 +326,48 @@ export const translations: Record<Language, TranslationDictionary> = {
   }
 };
 
-// Comprehensive Hebrew Translation Dictionary for QuestionCatalog
+// Comprehensive Hebrew Translation Dictionary for QuestionCatalog (All DB Items)
 const catalogTranslationsHeByTitle: Record<string, { title: string; description: string; category?: string }> = {
+  "Sensual Oil Massage": {
+    title: "עיסוי שמן חושי",
+    description: "מתן או קבלת עיסוי שמן חם לכל הגוף לאור נרות.",
+    category: "חושים ומגע"
+  },
+  "Mutual Bath / Shower Romance": {
+    title: "אמבטיה/מקלחת רומנטית משותפת",
+    description: "שיתוף אמבט אינטימי עם נרות, מוזיקה ומגע רך.",
+    category: "חושים ומגע"
+  },
+  "Erotic Whisper & Verbal Teasing": {
+    title: "לחישות אירוטיות וגירוי מילולי",
+    description: "לחישת פנטזיות ותשוקות אירוטיות באוזן בן/בת הזוג במהלך היום.",
+    category: "חושים ומגע"
+  },
+  "Public Secret Displays of Affection": {
+    title: "מגע סודי דיסקרטי במרחב ציבורי",
+    description: "מגע נסתר ודיסקרטי או אותות מרמזים במקומות חצי-ציבוריים.",
+    category: "חושים ומגע"
+  },
+  "Slow Erotic Dancing": {
+    title: "ריקוד אירוטי איטי",
+    description: "ריקוד אינטימי וצמוד באור עמום בחדר השינה למוזיקה איטית.",
+    category: "חושים ומגע"
+  },
+  "Light Silk Restraints": {
+    title: "קשירות משי רכות",
+    description: "שימוש בסרטי משי רכים או צמידי סאטן במהלך האינטימיות.",
+    category: "BDSM וקשירות"
+  },
+  "Temperature Play (Ice & Warm Wax)": {
+    title: "משחקי טמפרטורה (קרח ושעווה חמה)",
+    description: "שילוב בין שעוות נרות חמה לבין קוביות קרח על עור רגיש.",
+    category: "BDSM וקשירות"
+  },
+  "Sensory Deprivation (Noise-cancelling + Blindfold)": {
+    title: "ניטרול חושים (כיסוי עיניים ואוזניות)",
+    description: "העצמת תחושת המגע על ידי ניטרול מלא של הראייה והשמיעה.",
+    category: "BDSM וקשירות"
+  },
   "Blindfolded Touch & Sensation Play": {
     title: "משחקי תחושות וכיסוי עיניים",
     description: "חקירת מגע וחושים כאשר אחד מבני הזוג ממוסך עיניים עם שמנים, קרח, נוצות או משי.",
@@ -500,8 +540,9 @@ export function translateQuestion(
   lang: Language
 ) {
   if (lang === 'he') {
-    // Check translation by Exact Title match
-    const byTitle = catalogTranslationsHeByTitle[q.title];
+    const cleanTitle = (q.title || '').trim();
+    const byTitle = catalogTranslationsHeByTitle[cleanTitle];
+
     if (byTitle) {
       return {
         ...q,
@@ -511,7 +552,7 @@ export function translateQuestion(
       };
     }
 
-    // Dynamic Category Translate
+    // Dynamic Category Translate Fallback
     const categoryMap: Record<string, string> = {
       Sensual: 'חושים ומגע',
       BDSM: 'BDSM וקשירות',
