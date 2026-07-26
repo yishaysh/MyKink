@@ -44,27 +44,56 @@ function generateUUID(): string {
   });
 }
 
-// 1. Register Device
+// Google OAuth Sign In
+export async function signInWithGoogle() {
+  try {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: window.location.origin
+      }
+    });
+    return { success: !error, data, error };
+  } catch (e) {
+    return { success: false, error: e };
+  }
+}
+
+export async function getGoogleUser() {
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    return user;
+  } catch (e) {
+    return null;
+  }
+}
+
+// 1. Register Device / Google User 1-to-1 Mapping
 export async function registerDevice(deviceId: string, publicKey: string) {
   try {
+    const gUser = await getGoogleUser();
+    const targetIdentity = gUser ? `google_${gUser.id}` : deviceId;
+
     const { data: existingUsers } = await supabase
       .from('User')
       .select('*')
-      .eq('deviceIdentity', deviceId);
+      .eq('deviceIdentity', targetIdentity);
 
     if (existingUsers && existingUsers.length > 0) {
-      return { success: true, user: existingUsers[0] };
+      return { success: true, user: existingUsers[0], googleUser: gUser };
     }
 
     const newId = generateUUID();
+    const alias = gUser?.user_metadata?.full_name || 'Desire Explorer';
+
     const { data: newUser } = await supabase
       .from('User')
-      .insert({ id: newId, deviceIdentity: deviceId, publicKey })
+      .insert({ id: newId, deviceIdentity: targetIdentity, publicKey, anonymousAlias: alias })
       .select()
       .single();
 
     if (newUser) {
-      return { success: true, user: newUser };
+      return { success: true, user: newUser, googleUser: gUser };
     }
   } catch (e) {
     console.warn('User registration fallback mode:', e);
@@ -72,7 +101,8 @@ export async function registerDevice(deviceId: string, publicKey: string) {
 
   return {
     success: true,
-    user: { id: deviceId, deviceIdentity: deviceId, coupleId: null }
+    user: { id: deviceId, deviceIdentity: deviceId, coupleId: null },
+    googleUser: null
   };
 }
 
@@ -201,7 +231,7 @@ export async function fetchQuestions(category = 'ALL', intensity = 'ALL') {
   return { success: true, questions: englishCatalog };
 }
 
-// 5. Submit Answer (Safe Upsert with UUID primary key)
+// 5. Submit Answer
 export async function submitAnswer(
   userId: string,
   questionId: string,

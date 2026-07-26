@@ -15,6 +15,8 @@ export interface TranslationDictionary {
   // Onboarding Step 1
   onboardingStep1Title: string;
   onboardingStep1Sub: string;
+  googleSignInBtn: string;
+  googleSignedInAs: string;
   sexyAliasLabel: string;
   sexyAliasPlaceholder: string;
   intimacyRoleLabel: string;
@@ -125,8 +127,10 @@ export const translations: Record<Language, TranslationDictionary> = {
     tabChallenges: 'Challenges',
     tabAria: 'Aria AI',
 
-    onboardingStep1Title: 'Step 1: Your Secret Alias & Role',
-    onboardingStep1Sub: 'Choose an anonymous sexy nickname and your preferred dynamic role for your partner to see.',
+    onboardingStep1Title: 'Step 1: Google Account & Secret Alias',
+    onboardingStep1Sub: 'Sign in with your Google account for 1-to-1 unique identity, and choose an anonymous sexy nickname.',
+    googleSignInBtn: 'Sign in with Google',
+    googleSignedInAs: 'Signed in as:',
     sexyAliasLabel: 'Sexy Nickname / Alias:',
     sexyAliasPlaceholder: 'e.g. Velvet Goddess, Shadow Prince, Silk Siren',
     intimacyRoleLabel: 'Preferred Intimacy Role:',
@@ -227,8 +231,10 @@ export const translations: Record<Language, TranslationDictionary> = {
     tabChallenges: 'אתגרים',
     tabAria: 'אריאל AI',
 
-    onboardingStep1Title: 'שלב 1: כינוי סקסי ותפקיד',
-    onboardingStep1Sub: 'בחרו כינוי אנונימי ותפקיד מועדף שיוצגו לבן/בת הזוג.',
+    onboardingStep1Title: 'שלב 1: חשבון Google וכינוי סקסי',
+    onboardingStep1Sub: 'התחברו עם חשבון גוגל לזיהוי חד-ערכי ייחודי, ובחרו כינוי אנונימי שיוצג לבן/בת הזוג.',
+    googleSignInBtn: 'התחברות מהירה באמצעות Google',
+    googleSignedInAs: 'מחובר כחשבון:',
     sexyAliasLabel: 'כינוי סקסי / אנונימי:',
     sexyAliasPlaceholder: 'למשל: נסיך האופל, אלילת המשי, מאהב מסתורי',
     intimacyRoleLabel: 'תפקיד דינמי מועדף:',

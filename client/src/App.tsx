@@ -25,7 +25,7 @@ export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('onboarding');
   const [isPairingModalOpen, setIsPairingModalOpen] = useState(false);
 
-  // i18n Language State (English default or Hebrew)
+  // i18n Language State
   const [lang, setLang] = useState<Language>('en');
 
   // User Profile state
@@ -36,8 +36,9 @@ export const App: React.FC = () => {
     intensity: string;
   } | null>(null);
 
-  // User & Couple state
+  // User & Couple & Google Auth state
   const [userId, setUserId] = useState<string | null>(null);
+  const [googleUser, setGoogleUser] = useState<any>(null);
   const [coupleId, setCoupleId] = useState<string | null>(null);
   const [pairCode, setPairCode] = useState<string | null>(null);
   const [coupleSalt, setCoupleSalt] = useState<string>('Salt_Default123');
@@ -50,7 +51,7 @@ export const App: React.FC = () => {
   const [matches, setMatches] = useState<SharedMatchItem[]>([]);
   const [challenges, setChallenges] = useState<ChallengeItem[]>([]);
 
-  // 1. Initialize User Registration, Saved Profile, Language & Deep Link check
+  // 1. Initialize User Registration, Google Session, Saved Profile & Deep Link check
   useEffect(() => {
     async function init() {
       try {
@@ -74,6 +75,8 @@ export const App: React.FC = () => {
 
         if (res.success && res.user) {
           setUserId(res.user.id);
+          if (res.googleUser) setGoogleUser(res.googleUser);
+
           if (res.user.coupleId) {
             setCoupleId(res.user.coupleId);
             setIsPartnerConnected(true);
@@ -213,20 +216,22 @@ export const App: React.FC = () => {
 
   return (
     <div className="min-h-screen pb-24 md:pb-12 bg-[#141218] text-[#e7e0e9]">
-      {/* Header Bar */}
-      <Header
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        pairCode={pairCode}
-        openPairingModal={() => setIsPairingModalOpen(true)}
-        isPartnerConnected={isPartnerConnected}
-        userAlias={userProfile?.alias}
-        lang={lang}
-        onToggleLang={handleToggleLang}
-      />
+      {/* Hide Header and Bottom Nav entirely during Onboarding so there is ZERO background clutter */}
+      {activeTab !== 'onboarding' && (
+        <Header
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          pairCode={pairCode}
+          openPairingModal={() => setIsPairingModalOpen(true)}
+          isPartnerConnected={isPartnerConnected}
+          userAlias={userProfile?.alias}
+          lang={lang}
+          onToggleLang={handleToggleLang}
+        />
+      )}
 
       {/* Main Tab Views */}
-      <main className="mt-2 md:mt-6">
+      <main className={activeTab === 'onboarding' ? '' : 'mt-2 md:mt-6'}>
         {activeTab === 'onboarding' && (
           <Onboarding
             pairCode={pairCode}
@@ -234,6 +239,7 @@ export const App: React.FC = () => {
             onJoinCouple={handleJoinCouple}
             onCompleteOnboarding={handleCompleteOnboarding}
             lang={lang}
+            googleUser={googleUser}
           />
         )}
 
