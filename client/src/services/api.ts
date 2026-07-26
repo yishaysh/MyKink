@@ -288,7 +288,7 @@ export async function fetchQuestions(category = 'ALL', intensity = 'ALL') {
   return { success: true, questions: englishCatalog };
 }
 
-// 5. Submit Answer
+// 5. Submit Answer (Clean Schema without invalid columns)
 export async function submitAnswer(
   userId: string,
   questionId: string,
@@ -297,8 +297,6 @@ export async function submitAnswer(
   value: 'YES' | 'MAYBE' | 'NO'
 ) {
   try {
-    const now = new Date().toISOString();
-
     const { data: existing } = await supabase
       .from('UserAnswer')
       .select('id')
@@ -308,7 +306,7 @@ export async function submitAnswer(
     if (existing && existing.length > 0) {
       await supabase
         .from('UserAnswer')
-        .update({ encryptedValue, answerHash, updatedAt: now })
+        .update({ encryptedValue, answerHash })
         .eq('id', existing[0].id);
     } else {
       await supabase.from('UserAnswer').insert({
@@ -316,8 +314,7 @@ export async function submitAnswer(
         userId,
         questionId,
         encryptedValue,
-        answerHash,
-        updatedAt: now
+        answerHash
       });
     }
 
