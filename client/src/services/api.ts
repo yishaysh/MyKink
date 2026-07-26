@@ -94,14 +94,21 @@ export async function registerDevice(deviceId: string, publicKey: string) {
 
     const newId = generateUUID();
     const alias = gUser?.user_metadata?.full_name || 'Desire Explorer';
+    const now = new Date().toISOString();
 
-    const { data: newUser } = await supabase
+    const { data: newUser, error } = await supabase
       .from('User')
-      .insert({ id: newId, deviceIdentity: targetIdentity, publicKey, anonymousAlias: alias })
+      .insert({
+        id: newId,
+        deviceIdentity: targetIdentity,
+        publicKey,
+        anonymousAlias: alias,
+        updatedAt: now
+      })
       .select()
       .single();
 
-    if (newUser) {
+    if (!error && newUser) {
       return { success: true, user: newUser, googleUser: gUser };
     }
   } catch (e) {
@@ -121,15 +128,16 @@ export async function createCouple(userId: string) {
     const pairCode = Math.random().toString(36).substring(2, 8).toUpperCase();
     const coupleSalt = 'Salt_' + Math.random().toString(36).substring(2, 10);
     const newId = generateUUID();
+    const now = new Date().toISOString();
 
-    const { data: couple } = await supabase
+    const { data: couple, error } = await supabase
       .from('Couple')
-      .insert({ id: newId, pairCode, coupleSalt })
+      .insert({ id: newId, pairCode, coupleSalt, updatedAt: now })
       .select()
       .single();
 
-    if (couple && userId) {
-      await supabase.from('User').update({ coupleId: couple.id }).eq('id', userId);
+    if (!error && couple && userId) {
+      await supabase.from('User').update({ coupleId: couple.id, updatedAt: now }).eq('id', userId);
     }
 
     if (couple) return { success: true, couple };
@@ -157,9 +165,10 @@ export async function joinCouple(userId: string, pairCode: string) {
     }
 
     const couple = couples[0];
+    const now = new Date().toISOString();
 
     if (userId) {
-      await supabase.from('User').update({ coupleId: couple.id }).eq('id', userId);
+      await supabase.from('User').update({ coupleId: couple.id, updatedAt: now }).eq('id', userId);
     }
 
     return { success: true, couple };
@@ -249,6 +258,8 @@ export async function submitAnswer(
   value: 'YES' | 'MAYBE' | 'NO'
 ) {
   try {
+    const now = new Date().toISOString();
+
     const { data: existing } = await supabase
       .from('UserAnswer')
       .select('id')
@@ -258,7 +269,7 @@ export async function submitAnswer(
     if (existing && existing.length > 0) {
       await supabase
         .from('UserAnswer')
-        .update({ encryptedValue, answerHash })
+        .update({ encryptedValue, answerHash, updatedAt: now })
         .eq('id', existing[0].id);
     } else {
       await supabase.from('UserAnswer').insert({
@@ -266,7 +277,8 @@ export async function submitAnswer(
         userId,
         questionId,
         encryptedValue,
-        answerHash
+        answerHash,
+        updatedAt: now
       });
     }
 
