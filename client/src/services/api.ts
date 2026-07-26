@@ -1,12 +1,22 @@
 const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api';
 
+async function safeJson(res: Response) {
+  const text = await res.text();
+  try {
+    return JSON.parse(text);
+  } catch (e) {
+    console.error('Non-JSON server response:', text);
+    return { success: false, error: text || 'Server Error' };
+  }
+}
+
 export async function registerDevice(deviceIdentity: string, publicKey: string) {
   const res = await fetch(`${API_BASE}/auth/register-device`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ deviceIdentity, publicKey })
   });
-  return res.json();
+  return safeJson(res);
 }
 
 export async function createCouple(userId: string) {
@@ -15,7 +25,7 @@ export async function createCouple(userId: string) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ userId })
   });
-  return res.json();
+  return safeJson(res);
 }
 
 export async function joinCouple(userId: string, pairCode: string) {
@@ -24,12 +34,12 @@ export async function joinCouple(userId: string, pairCode: string) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ userId, pairCode })
   });
-  return res.json();
+  return safeJson(res);
 }
 
 export async function fetchQuestions(category = 'ALL', intensity = 'ALL') {
   const res = await fetch(`${API_BASE}/questions?category=${category}&intensity=${intensity}`);
-  return res.json();
+  return safeJson(res);
 }
 
 export async function submitAnswer(
@@ -44,17 +54,17 @@ export async function submitAnswer(
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ userId, questionId, encryptedValue, answerHash, rawValue })
   });
-  return res.json();
+  return safeJson(res);
 }
 
 export async function fetchMatches(coupleId: string) {
   const res = await fetch(`${API_BASE}/matches?coupleId=${coupleId}`);
-  return res.json();
+  return safeJson(res);
 }
 
 export async function fetchDares(coupleId: string) {
   const res = await fetch(`${API_BASE}/dares?coupleId=${coupleId}`);
-  return res.json();
+  return safeJson(res);
 }
 
 export async function createDare(coupleId: string, title: string, description: string, durationHours = 24) {
@@ -63,7 +73,7 @@ export async function createDare(coupleId: string, title: string, description: s
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ coupleId, title, description, durationHours })
   });
-  return res.json();
+  return safeJson(res);
 }
 
 export async function logIntimacy(
@@ -79,12 +89,12 @@ export async function logIntimacy(
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ coupleId, activityType, durationMinutes, location, protectionUsed, moodRating })
   });
-  return res.json();
+  return safeJson(res);
 }
 
 export async function fetchIntimacyLogs(coupleId: string) {
   const res = await fetch(`${API_BASE}/intimacy/logs?coupleId=${coupleId}`);
-  return res.json();
+  return safeJson(res);
 }
 
 export async function generateAIScenario(coupleId: string, intensityMode: 'VANILLA' | 'SPICY' | 'ADVENTUROUS') {
@@ -93,7 +103,7 @@ export async function generateAIScenario(coupleId: string, intensityMode: 'VANIL
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ coupleId, intensityMode })
   });
-  return res.json();
+  return safeJson(res);
 }
 
 export async function askAria(prompt: string) {
@@ -102,5 +112,5 @@ export async function askAria(prompt: string) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ prompt })
   });
-  return res.json();
+  return safeJson(res);
 }

@@ -8,7 +8,9 @@ import { socketServer } from './services/socketServer';
 
 const app = express();
 const server = http.createServer(app);
-const prisma = new PrismaClient();
+const globalForPrisma = global as unknown as { prisma: PrismaClient };
+const prisma = globalForPrisma.prisma || new PrismaClient();
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
 const PORT = process.env.PORT || 4000;
 
 app.use(cors());
