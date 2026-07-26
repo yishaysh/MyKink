@@ -1,5 +1,5 @@
 import React from 'react';
-import { Heart, ShieldCheck, Sparkles, MessageCircle, Flame, Calendar, Bot, Users, Share2 } from 'lucide-react';
+import { Heart, ShieldCheck, Sparkles, Flame, Bot, Share2 } from 'lucide-react';
 
 interface HeaderProps {
   activeTab: string;
@@ -17,27 +17,27 @@ export const Header: React.FC<HeaderProps> = ({
   isPartnerConnected
 }) => {
   const tabs = [
-    { id: 'swipe', label: 'העדפות שלי', icon: Heart },
-    { id: 'matches', label: 'התאמות', icon: Sparkles },
-    { id: 'dares', label: 'אתגרים ומשחקים', icon: Flame },
-    { id: 'ai', label: 'Aria & ערב אינטימי', icon: Bot }
+    { id: 'swipe', label: 'Discovery', icon: Heart },
+    { id: 'matches', label: 'Matches', icon: Sparkles },
+    { id: 'dares', label: 'Challenges', icon: Flame },
+    { id: 'ai', label: 'Aria AI', icon: Bot }
   ];
 
   return (
-    <header className="sticky top-0 z-40 bg-slate-950/85 backdrop-blur-xl border-b border-rose-500/10 px-4 py-3">
+    <header className="sticky top-0 z-40 bg-[#141218]/90 backdrop-blur-xl border-b border-[#e8b4b8]/10 px-4 py-3">
       <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
         {/* Brand */}
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-rose-500 to-amber-500 flex items-center justify-center shadow-lg shadow-rose-500/25">
-            <Heart className="w-5 h-5 text-white fill-white" />
+          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#e8b4b8] to-[#ffd2d5] flex items-center justify-center shadow-lg shadow-[#e8b4b8]/20">
+            <Heart className="w-5 h-5 text-[#48272a] fill-[#48272a]" />
           </div>
           <div>
-            <h1 className="text-xl font-black tracking-tight text-white">
+            <h1 className="text-xl font-bold tracking-tight text-white font-headline">
               MyKink
             </h1>
-            <div className="flex items-center gap-1.5 text-[11px] text-slate-400">
+            <div className="flex items-center gap-1.5 text-[11px] text-[#d1c5b2]">
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-              <span>דיסקרטיות ופרטיות מוחלטת</span>
+              <span>Digital Sanctuary • End-to-End Encrypted</span>
             </div>
           </div>
         </div>
@@ -46,10 +46,10 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="flex items-center gap-2.5">
           <button
             onClick={openPairingModal}
-            className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-slate-800 hover:border-rose-500/40 text-xs font-semibold text-slate-200 transition shadow-sm"
+            className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#211f25] border border-[#36343a] hover:border-[#e8b4b8]/40 text-xs font-semibold text-slate-200 transition shadow-sm"
           >
-            <Share2 className="w-3.5 h-3.5 text-rose-400" />
-            <span>קוד: {pairCode || 'צור קוד'}</span>
+            <Share2 className="w-3.5 h-3.5 text-[#e8b4b8]" />
+            <span>Code: {pairCode || 'Generate'}</span>
           </button>
 
           <div
@@ -60,12 +60,12 @@ export const Header: React.FC<HeaderProps> = ({
             }`}
           >
             <span className={`w-2 h-2 rounded-full ${isPartnerConnected ? 'bg-emerald-400 animate-pulse' : 'bg-amber-400'}`} />
-            <span>{isPartnerConnected ? 'מחובר זוגית' : 'ממתין לחיבור'}</span>
+            <span>{isPartnerConnected ? 'Partner Connected' : 'Waiting for Partner'}</span>
           </div>
         </div>
 
-        {/* Simplified Navigation */}
-        <nav className="flex items-center gap-1 bg-slate-900/90 p-1 rounded-2xl border border-slate-800">
+        {/* Floating Glass Navigation */}
+        <nav className="flex items-center gap-1 bg-[#211f25]/90 p-1 rounded-full border border-[#36343a]">
           {tabs.map((t) => {
             const Icon = t.icon;
             const isActive = activeTab === t.id;
@@ -73,10 +73,10 @@ export const Header: React.FC<HeaderProps> = ({
               <button
                 key={t.id}
                 onClick={() => setActiveTab(t.id)}
-                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition ${
+                className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold transition ${
                   isActive
-                    ? 'btn-rose text-white shadow-md shadow-rose-500/25'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+                    ? 'btn-rose shadow-md shadow-[#e8b4b8]/20'
+                    : 'text-slate-400 hover:text-slate-200 hover:bg-[#2b292f]'
                 }`}
               >
                 <Icon className="w-3.5 h-3.5" />

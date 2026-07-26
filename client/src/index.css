@@ -1,6 +1,6 @@
 @import "https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css";
 
-/* Stitch DESIGN.md - Midnight Velvet Design System Tokens */
+/* Stitch DESIGN.md - Midnight Velvet System Tokens */
 :root {
   --bg-surface: #141218;
   --bg-surface-lowest: #0f0d13;
@@ -29,23 +29,23 @@ body {
   padding: 0;
   background-color: var(--bg-surface);
   color: #e7e0e9;
-  font-family: 'Inter', 'Heebo', system-ui, -apple-system, sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
   min-height: 100vh;
   overflow-x: hidden;
 }
 
 h1, h2, h3, h4, .font-headline {
-  font-family: 'Hanken Grotesk', 'Heebo', sans-serif;
+  font-family: 'Hanken Grotesk', sans-serif;
 }
 
-/* Glassmorphism Surface Cards */
+/* Glassmorphism Surface Cards (24px corner radius per DESIGN.md) */
 .glass-card {
   background: rgba(33, 31, 37, 0.75);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(232, 180, 184, 0.12);
   box-shadow: 0 12px 36px 0 rgba(0, 0, 0, 0.45);
-  border-radius: 1.5rem; /* 24px per DESIGN.md */
+  border-radius: 1.5rem;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -59,7 +59,7 @@ h1, h2, h3, h4, .font-headline {
   background: linear-gradient(135deg, #e8b4b8 0%, #ffd2d5 100%);
   color: #48272a;
   font-weight: 700;
-  border-radius: 9999px; /* Pill shape per DESIGN.md */
+  border-radius: 9999px;
   box-shadow: 0 4px 20px rgba(232, 180, 184, 0.25);
   transition: all 0.25s ease;
 }
