@@ -52,7 +52,6 @@ export async function signInWithGoogle() {
         ? window.location.origin
         : 'https://my-kink.vercel.app';
 
-    // Ensure fallback to vercel.app if local or missing
     const redirectUrl = currentOrigin.includes('localhost')
       ? 'https://my-kink.vercel.app'
       : currentOrigin;
@@ -87,7 +86,7 @@ export async function getGoogleUser() {
   }
 }
 
-// 1. Register Device / Google User 1-to-1 Mapping
+// 1. Register Device / Google User 1-to-1 Mapping & Restore Saved DB State
 export async function registerDevice(deviceId: string, publicKey: string) {
   try {
     const gUser = await getGoogleUser();
@@ -130,6 +129,36 @@ export async function registerDevice(deviceId: string, publicKey: string) {
     user: { id: deviceId, deviceIdentity: deviceId, coupleId: null },
     googleUser: null
   };
+}
+
+// 1b. Update User Profile in DB
+export async function updateUserProfileInDB(userId: string, alias: string) {
+  try {
+    const now = new Date().toISOString();
+    await supabase.from('User').update({
+      anonymousAlias: alias,
+      updatedAt: now
+    }).eq('id', userId);
+  } catch (e) {
+    console.warn('Update user profile error:', e);
+  }
+}
+
+// 1c. Fetch User Saved Answers from DB
+export async function fetchUserAnswers(userId: string) {
+  try {
+    const { data: answers, error } = await supabase
+      .from('UserAnswer')
+      .select('questionId')
+      .eq('userId', userId);
+
+    if (!error && answers) {
+      return { success: true, answers };
+    }
+  } catch (e) {
+    console.warn('Fetch user answers error:', e);
+  }
+  return { success: false, answers: [] };
 }
 
 // 2. Create Couple

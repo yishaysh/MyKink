@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Heart, ThumbsDown, HelpCircle, Flame, Filter, RotateCcw, Lock } from 'lucide-react';
 import { CatalogQuestion } from '../services/api';
 import { Language, translations, translateQuestion } from '../services/i18n';
 
 interface SwipeDeckProps {
   questions: CatalogQuestion[];
+  answeredQuestionIds?: string[];
   onAnswer: (questionId: string, value: 'YES' | 'MAYBE' | 'NO') => void;
   selectedCategory: string;
   setSelectedCategory: (cat: string) => void;
@@ -16,6 +17,7 @@ interface SwipeDeckProps {
 
 export const SwipeDeck: React.FC<SwipeDeckProps> = ({
   questions,
+  answeredQuestionIds = [],
   onAnswer,
   selectedCategory,
   setSelectedCategory,
@@ -26,6 +28,18 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
 }) => {
   const t = translations[lang];
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  // Jump to first unanswered question if available
+  useEffect(() => {
+    if (questions.length > 0 && answeredQuestionIds.length > 0) {
+      const firstUnansweredIndex = questions.findIndex(
+        (q) => !answeredQuestionIds.includes(q.id)
+      );
+      if (firstUnansweredIndex !== -1) {
+        setCurrentIndex(firstUnansweredIndex);
+      }
+    }
+  }, [questions, answeredQuestionIds]);
 
   const categories = [
     { id: 'ALL', label: t.allCategories },
@@ -67,6 +81,11 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
             <Filter className="w-4 h-4" />
             <span>{t.filterTitle}</span>
           </div>
+          {answeredQuestionIds.length > 0 && (
+            <span className="text-[11px] font-mono text-[#d1c5b2]">
+              {lang === 'he' ? 'נענו:' : 'Answered:'} {answeredQuestionIds.length}
+            </span>
+          )}
         </div>
 
         {/* Categories Pills */}
@@ -143,7 +162,7 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
             </div>
           </div>
 
-          {/* Voting Action Buttons (All 3 with explicit rounded borders) */}
+          {/* Voting Action Buttons */}
           <div className="grid grid-cols-3 gap-3">
             {/* NO */}
             <button

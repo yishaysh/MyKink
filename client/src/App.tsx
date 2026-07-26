@@ -16,6 +16,8 @@ import {
   fetchMatches,
   fetchDares,
   createDare,
+  updateUserProfileInDB,
+  fetchUserAnswers,
   CatalogQuestion
 } from './services/api';
 import { getOrCreateDeviceId, getOrCreatePublicKey, computeAnswerHash, encryptPayload } from './services/crypto';
@@ -45,12 +47,52 @@ export const App: React.FC = () => {
   const [coupleSalt, setCoupleSalt] = useState<string>('Salt_Default123');
   const [isPartnerConnected, setIsPartnerConnected] = useState(false);
 
+  // User Answered Question IDs restored from DB
+  const [answeredQuestionIds, setAnsweredQuestionIds] = useState<string[]>([]);
+
   // Data state
   const [questions, setQuestions] = useState<CatalogQuestion[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('ALL');
   const [selectedIntensity, setSelectedIntensity] = useState('ALL');
   const [matches, setMatches] = useState<SharedMatchItem[]>([]);
   const [challenges, setChallenges] = useState<ChallengeItem[]>([]);
+
+  // Helper to load user DB state (profile, answers, couple)
+  const syncUserDBState = async (userRecord: any, gUserObj?: any) => {
+    if (!userRecord) return;
+    setUserId(userRecord.id);
+    if (gUserObj) setGoogleUser(gUserObj);
+
+    // 1. Fetch user's answered questions from DB
+    const ansRes = await fetchUserAnswers(userRecord.id);
+    if (ansRes.success && ansRes.answers) {
+      setAnsweredQuestionIds(ansRes.answers.map((a: any) => a.questionId));
+    }
+
+    // 2. Restore Profile if exists in DB or LocalStorage
+    const savedProf = localStorage.getItem('mykink_user_profile');
+    if (savedProf) {
+      const parsed = JSON.parse(savedProf);
+      setUserProfile(parsed);
+      setActiveTab('swipe');
+    } else if (userRecord.anonymousAlias) {
+      const restoredProf = {
+        alias: userRecord.anonymousAlias,
+        role: 'SWITCH',
+        categories: ['Sensual', 'BDSM', 'Roleplay', 'Toys', 'ENM'],
+        intensity: 'SPICY'
+      };
+      setUserProfile(restoredProf);
+      localStorage.setItem('mykink_user_profile', JSON.stringify(restoredProf));
+      setActiveTab('swipe');
+    }
+
+    // 3. Connect Couple if exists
+    if (userRecord.coupleId) {
+      setCoupleId(userRecord.coupleId);
+      setIsPartnerConnected(true);
+    }
+  };
 
   // 1. Initialize User Registration, Google Session, Saved Profile & Deep Link check
   useEffect(() => {
@@ -63,25 +105,12 @@ export const App: React.FC = () => {
           document.documentElement.lang = savedLang;
         }
 
-        const savedProf = localStorage.getItem('mykink_user_profile');
-        if (savedProf) {
-          const parsed = JSON.parse(savedProf);
-          setUserProfile(parsed);
-          setActiveTab('swipe');
-        }
-
         const deviceId = getOrCreateDeviceId();
         const pubKey = getOrCreatePublicKey();
         const res = await registerDevice(deviceId, pubKey);
 
         if (res.success && res.user) {
-          setUserId(res.user.id);
-          if (res.googleUser) setGoogleUser(res.googleUser);
-
-          if (res.user.coupleId) {
-            setCoupleId(res.user.coupleId);
-            setIsPartnerConnected(true);
-          }
+          await syncUserDBState(res.user, res.googleUser);
         }
 
         // Deep link ?pair=ABC123 auto pairing check
@@ -105,11 +134,7 @@ export const App: React.FC = () => {
         const res = await registerDevice(deviceId, pubKey);
 
         if (res.user) {
-          setUserId(res.user.id);
-          if (res.user.coupleId) {
-            setCoupleId(res.user.coupleId);
-            setIsPartnerConnected(true);
-          }
+          await syncUserDBState(res.user, session.user);
         }
 
         // Clear access token hash cleanly from address bar
@@ -149,6 +174,7 @@ export const App: React.FC = () => {
     setCoupleId(null);
     setPairCode(null);
     setIsPartnerConnected(false);
+    setAnsweredQuestionIds([]);
     setActiveTab('onboarding');
   };
 
@@ -233,7 +259,7 @@ export const App: React.FC = () => {
     }
   };
 
-  const handleCompleteOnboarding = (profile: {
+  const handleCompleteOnboarding = async (profile: {
     alias: string;
     role: string;
     categories: string[];
@@ -241,6 +267,11 @@ export const App: React.FC = () => {
   }) => {
     setUserProfile(profile);
     localStorage.setItem('mykink_user_profile', JSON.stringify(profile));
+
+    if (userId) {
+      await updateUserProfileInDB(userId, profile.alias);
+    }
+
     setActiveTab('swipe');
   };
 
@@ -251,6 +282,8 @@ export const App: React.FC = () => {
     const encryptedVal = encryptPayload(value);
 
     await submitAnswer(userId, questionId, encryptedVal, answerHash, value);
+    setAnsweredQuestionIds((prev) => [...prev, questionId]);
+
     if (coupleId) reloadMatches();
   };
 
@@ -294,6 +327,7 @@ export const App: React.FC = () => {
         {activeTab === 'swipe' && (
           <SwipeDeck
             questions={questions}
+            answeredQuestionIds={answeredQuestionIds}
             onAnswer={handleAnswer}
             selectedCategory={selectedCategory}
             setSelectedCategory={setSelectedCategory}
