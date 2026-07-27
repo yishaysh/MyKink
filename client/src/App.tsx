@@ -158,7 +158,7 @@ export const App: React.FC = () => {
     document.documentElement.lang = nextLang;
   };
 
-  // Sign Out & Reset Profile Handler
+  // Sign Out Handler
   const handleSignOut = async () => {
     try {
       await supabase.auth.signOut();
@@ -176,6 +176,26 @@ export const App: React.FC = () => {
     setIsPartnerConnected(false);
     setAnsweredQuestionIds([]);
     setActiveTab('onboarding');
+  };
+
+  // Reset Account & Restart Onboarding Handler
+  const handleResetAccount = async () => {
+    const confirmMsg =
+      lang === 'he'
+        ? 'האם אתה בטוח שברצונך למחוק לחלוטין את החשבון והתשובות מ-Database ולהתחיל Onboarding מחדש?'
+        : 'Are you sure you want to delete your account and answers from the database completely and restart Onboarding?';
+
+    if (window.confirm(confirmMsg)) {
+      if (userId) {
+        try {
+          await supabase.from('UserAnswer').delete().eq('userId', userId);
+          await supabase.from('User').delete().eq('id', userId);
+        } catch (e) {
+          console.warn('Delete user data error:', e);
+        }
+      }
+      await handleSignOut();
+    }
   };
 
   // 2. Load Questions catalog
@@ -308,6 +328,7 @@ export const App: React.FC = () => {
           lang={lang}
           onToggleLang={handleToggleLang}
           onSignOut={handleSignOut}
+          onResetAccount={handleResetAccount}
         />
       )}
 
