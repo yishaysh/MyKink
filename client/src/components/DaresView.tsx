@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Flame, Clock, Award, Plus, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Flame, Clock, Award, Plus, CheckCircle2, AlertCircle, Wand2, Sparkles } from 'lucide-react';
 import { ChallengeItem } from '../services/api';
+import { generateAIDare } from '../services/gemini';
 import { Language, translations } from '../services/i18n';
 
 interface DaresViewProps {
@@ -26,6 +27,7 @@ export const DaresView: React.FC<DaresViewProps> = ({ challenges, onCreateDare, 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [hours, setHours] = useState(24);
+  const [isGeneratingAI, setIsGeneratingAI] = useState(false);
 
   const totalPoints = challenges
     .filter((c) => c.status === 'COMPLETED')
@@ -39,6 +41,14 @@ export const DaresView: React.FC<DaresViewProps> = ({ challenges, onCreateDare, 
       setDescription('');
       setShowCreateModal(false);
     }
+  };
+
+  const handleGenerateAIDare = async () => {
+    setIsGeneratingAI(true);
+    const aiDare = await generateAIDare('SPICY', lang);
+    setTitle(aiDare.title);
+    setDescription(aiDare.description);
+    setIsGeneratingAI(false);
   };
 
   const getLocalizedDare = (challenge: ChallengeItem) => {
@@ -155,7 +165,18 @@ export const DaresView: React.FC<DaresViewProps> = ({ challenges, onCreateDare, 
       {showCreateModal && (
         <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
           <div className="solid-card p-6 max-w-md w-full space-y-4 card-appear">
-            <h3 className="text-lg font-bold text-white font-headline">{t.issueChallengeModalTitle}</h3>
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-bold text-white font-headline">{t.issueChallengeModalTitle}</h3>
+              <button
+                type="button"
+                onClick={handleGenerateAIDare}
+                disabled={isGeneratingAI}
+                className="px-3 py-1 rounded-full bg-[#2b292f] border border-[#e8b4b8]/50 hover:border-[#e8b4b8] text-[#e8b4b8] text-[11px] font-bold flex items-center gap-1 transition"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>{isGeneratingAI ? (lang === 'he' ? 'מייצר...' : 'Generating...') : (lang === 'he' ? 'חולל עם AI 🪄' : 'Generate with AI 🪄')}</span>
+              </button>
+            </div>
 
             <form onSubmit={handleSubmit} className="space-y-3 text-xs">
               <div>

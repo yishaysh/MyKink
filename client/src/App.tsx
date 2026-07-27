@@ -59,6 +59,12 @@ export const App: React.FC = () => {
   const [matches, setMatches] = useState<SharedMatchItem[]>([]);
   const [challenges, setChallenges] = useState<ChallengeItem[]>([]);
 
+  // Tab navigation handler with persistence
+  const changeActiveTab = (tab: string) => {
+    setActiveTab(tab);
+    localStorage.setItem('mykink_active_tab', tab);
+  };
+
   // Helper to load user DB state (profile, answers, couple)
   const syncUserDBState = async (userRecord: any, gUserObj?: any) => {
     if (!userRecord) return;
@@ -71,12 +77,18 @@ export const App: React.FC = () => {
       setAnsweredQuestionIds(ansRes.answers.map((a: any) => a.questionId));
     }
 
-    // 2. Restore Profile if exists in DB or LocalStorage (and NOT PENDING)
+    // 2. Restore Profile & Active Tab from LocalStorage or DB
     const savedProf = localStorage.getItem('mykink_user_profile');
+    const savedTab = localStorage.getItem('mykink_active_tab');
+
     if (savedProf) {
       const parsed = JSON.parse(savedProf);
       setUserProfile(parsed);
-      setActiveTab('swipe');
+      if (savedTab && savedTab !== 'onboarding') {
+        setActiveTab(savedTab);
+      } else {
+        setActiveTab('swipe');
+      }
     } else if (
       userRecord.anonymousAlias &&
       userRecord.anonymousAlias !== 'PENDING' &&
@@ -90,7 +102,11 @@ export const App: React.FC = () => {
       };
       setUserProfile(restoredProf);
       localStorage.setItem('mykink_user_profile', JSON.stringify(restoredProf));
-      setActiveTab('swipe');
+      if (savedTab && savedTab !== 'onboarding') {
+        setActiveTab(savedTab);
+      } else {
+        setActiveTab('swipe');
+      }
     } else {
       setActiveTab('onboarding');
     }
@@ -174,6 +190,7 @@ export const App: React.FC = () => {
       console.warn('Sign out error:', e);
     }
     localStorage.removeItem('mykink_user_profile');
+    localStorage.removeItem('mykink_active_tab');
     localStorage.removeItem('mykink_device_id');
     localStorage.removeItem('mykink_public_key');
     setUserProfile(null);
@@ -293,7 +310,7 @@ export const App: React.FC = () => {
       await updateUserProfileInDB(userId, profile.alias);
     }
 
-    setActiveTab('swipe');
+    changeActiveTab('swipe');
   };
 
   // Handler for Swiping Card Answer
@@ -321,7 +338,7 @@ export const App: React.FC = () => {
       {activeTab !== 'onboarding' && (
         <Header
           activeTab={activeTab}
-          setActiveTab={setActiveTab}
+          setActiveTab={changeActiveTab}
           pairCode={pairCode}
           openPairingModal={() => setIsPairingModalOpen(true)}
           isPartnerConnected={isPartnerConnected}
@@ -355,7 +372,7 @@ export const App: React.FC = () => {
             setSelectedCategory={setSelectedCategory}
             selectedIntensity={selectedIntensity}
             setSelectedIntensity={setSelectedIntensity}
-            onGoToMatches={() => setActiveTab('matches')}
+            onGoToMatches={() => changeActiveTab('matches')}
             lang={lang}
           />
         )}

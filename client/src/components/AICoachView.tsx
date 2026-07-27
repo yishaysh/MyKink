@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Bot, Send, Sparkles, Wand2, Shield, Heart } from 'lucide-react';
-import { askAICoach, generateEveningScenario, ScenarioStep } from '../services/api';
+import { generateEveningScenario, ScenarioStep } from '../services/api';
+import { askGeminiAria } from '../services/gemini';
 import { Language, translations } from '../services/i18n';
 
 interface AICoachViewProps {
@@ -47,8 +48,8 @@ export const AICoachView: React.FC<AICoachViewProps> = ({ coupleId, lang }) => {
     setInputMsg('');
     setIsAsking(true);
 
-    const res = await askAICoach(userText);
-    setChatMessages((prev) => [...prev, { sender: 'aria', text: res.answer }]);
+    const answer = await askGeminiAria(userText, lang);
+    setChatMessages((prev) => [...prev, { sender: 'aria', text: answer }]);
     setIsAsking(false);
   };
 
