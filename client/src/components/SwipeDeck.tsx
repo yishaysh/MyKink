@@ -28,6 +28,7 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
 }) => {
   const t = translations[lang];
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isVoting, setIsVoting] = useState(false);
 
   // Jump to first unanswered question if available, or set to finished if all are answered
   useEffect(() => {
@@ -69,9 +70,11 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
   const isFinished = currentIndex >= questions.length || !currentQ;
 
   const handleVote = (val: 'YES' | 'MAYBE' | 'NO') => {
-    if (rawQ) {
+    if (rawQ && !isVoting) {
+      setIsVoting(true);
       onAnswer(rawQ.id, val);
       setCurrentIndex((prev) => prev + 1);
+      setTimeout(() => setIsVoting(false), 200);
     }
   };
 
@@ -174,13 +177,14 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
             {/* NO */}
             <button
               onClick={() => handleVote('NO')}
+              disabled={isVoting}
               style={{
                 borderWidth: '2px',
                 borderStyle: 'solid',
                 borderColor: 'rgba(225, 29, 72, 0.6)',
                 backgroundColor: '#1d1b21'
               }}
-              className="py-4 px-3 rounded-2xl hover:bg-rose-950/40 text-rose-400 font-bold text-xs flex flex-col items-center justify-center gap-1.5 transition group shadow-lg"
+              className="py-4 px-3 rounded-2xl hover:bg-rose-950/40 text-rose-400 font-bold text-xs flex flex-col items-center justify-center gap-1.5 transition group shadow-lg disabled:opacity-60"
             >
               <ThumbsDown className="w-6 h-6 group-hover:scale-110 transition-transform" />
               <span>{t.btnNo}</span>
@@ -189,13 +193,14 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
             {/* MAYBE */}
             <button
               onClick={() => handleVote('MAYBE')}
+              disabled={isVoting}
               style={{
                 borderWidth: '2px',
                 borderStyle: 'solid',
                 borderColor: 'rgba(217, 119, 6, 0.6)',
                 backgroundColor: '#1d1b21'
               }}
-              className="py-4 px-3 rounded-2xl hover:bg-amber-950/40 text-amber-400 font-bold text-xs flex flex-col items-center justify-center gap-1.5 transition group shadow-lg"
+              className="py-4 px-3 rounded-2xl hover:bg-amber-950/40 text-amber-400 font-bold text-xs flex flex-col items-center justify-center gap-1.5 transition group shadow-lg disabled:opacity-60"
             >
               <HelpCircle className="w-6 h-6 group-hover:scale-110 transition-transform" />
               <span>{t.btnMaybe}</span>
@@ -204,13 +209,14 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
             {/* YES */}
             <button
               onClick={() => handleVote('YES')}
+              disabled={isVoting}
               style={{
                 borderWidth: '2px',
                 borderStyle: 'solid',
                 borderColor: '#e8b4b8',
                 backgroundColor: '#2b292f'
               }}
-              className="py-4 px-3 rounded-2xl hover:bg-[#36343a] text-[#e8b4b8] font-black text-xs flex flex-col items-center justify-center gap-1.5 transition group shadow-xl hover:scale-105 active:scale-100"
+              className="py-4 px-3 rounded-2xl hover:bg-[#36343a] text-[#e8b4b8] font-black text-xs flex flex-col items-center justify-center gap-1.5 transition group shadow-xl hover:scale-105 active:scale-100 disabled:opacity-60"
             >
               <Heart className="w-6 h-6 fill-[#e8b4b8] text-[#e8b4b8] group-hover:scale-110 transition-transform" />
               <span>{t.btnYes}</span>

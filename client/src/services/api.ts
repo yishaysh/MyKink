@@ -44,6 +44,25 @@ function generateUUID(): string {
   });
 }
 
+// Generate deterministic UUID for UserAnswer to eliminate 409 Conflict on rapid clicks
+function getDeterministicAnswerId(userId: string, questionId: string): string {
+  const str = `${userId}_${questionId}`;
+  let hash1 = 5381;
+  let hash2 = 52711;
+
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash1 = (hash1 * 33) ^ char;
+    hash2 = (hash2 * 33) ^ char;
+  }
+
+  const h1 = Math.abs(hash1).toString(16).padStart(16, '0');
+  const h2 = Math.abs(hash2).toString(16).padStart(16, '0');
+  const hex = (h1 + h2).slice(0, 32);
+
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-4${hex.slice(13, 16)}-a${hex.slice(17, 20)}-${hex.slice(20, 32)}`;
+}
+
 // Google OAuth Sign In with Dynamic Production Redirect
 export async function signInWithGoogle() {
   try {
@@ -237,7 +256,7 @@ export async function fetchQuestions(category = 'ALL', intensity = 'ALL') {
   return { success: true, questions: [] };
 }
 
-// 5. Submit Answer (Using upsert with existing ID to prevent 409 Conflict)
+// 5. Submit Answer (Using deterministic answer ID to prevent 409 Conflict on rapid clicks)
 export async function submitAnswer(
   userId: string,
   questionId: string,
@@ -246,16 +265,10 @@ export async function submitAnswer(
   value: 'YES' | 'MAYBE' | 'NO'
 ) {
   try {
-    const { data: existing } = await supabase
-      .from('UserAnswer')
-      .select('id')
-      .eq('userId', userId)
-      .eq('questionId', questionId);
-
-    const existingId = existing && existing.length > 0 ? existing[0].id : generateUUID();
+    const answerId = getDeterministicAnswerId(userId, questionId);
 
     await supabase.from('UserAnswer').upsert({
-      id: existingId,
+      id: answerId,
       userId,
       questionId,
       encryptedValue,
