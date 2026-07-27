@@ -9,6 +9,17 @@ interface DaresViewProps {
   lang: Language;
 }
 
+const defaultDareTranslationsHe: Record<string, { title: string; description: string }> = {
+  'Sensual Tease Without Touching': {
+    title: 'גירוי חושי ללא מגע',
+    description: 'הקדישו 5 דקות בלחישת שלוש פנטזיות כמוסות תוך שמירה על קשר עין רציף.'
+  },
+  'Secret Intimacy Note': {
+    title: 'פתק תשוקה סודי',
+    description: 'החביאו פתק רומנטי בכתב יד בכיס או בתיק של בן/בת הזוג לפני היציאה לעבודה.'
+  }
+};
+
 export const DaresView: React.FC<DaresViewProps> = ({ challenges, onCreateDare, lang }) => {
   const t = translations[lang];
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -28,6 +39,20 @@ export const DaresView: React.FC<DaresViewProps> = ({ challenges, onCreateDare, 
       setDescription('');
       setShowCreateModal(false);
     }
+  };
+
+  const getLocalizedDare = (challenge: ChallengeItem) => {
+    if (lang === 'he') {
+      const trans = defaultDareTranslationsHe[challenge.title.trim()];
+      if (trans) {
+        return {
+          ...challenge,
+          title: trans.title,
+          description: trans.description
+        };
+      }
+    }
+    return challenge;
   };
 
   return (
@@ -63,7 +88,8 @@ export const DaresView: React.FC<DaresViewProps> = ({ challenges, onCreateDare, 
       {/* Challenges List */}
       {challenges.length > 0 ? (
         <div className="space-y-3">
-          {challenges.map((challenge) => {
+          {challenges.map((rawChallenge) => {
+            const challenge = getLocalizedDare(rawChallenge);
             const isCompleted = challenge.status === 'COMPLETED';
             const isExpired = challenge.status === 'EXPIRED';
 

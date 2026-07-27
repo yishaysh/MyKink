@@ -231,61 +231,10 @@ export async function fetchQuestions(category = 'ALL', intensity = 'ALL') {
       return { success: true, questions };
     }
   } catch (e) {
-    console.warn('Using English Catalog Fallback');
+    console.warn('Using Catalog Fallback');
   }
 
-  const englishCatalog: CatalogQuestion[] = [
-    {
-      id: 'q1',
-      category: 'Sensual',
-      intensityLevel: 'VANILLA',
-      roleType: 'SYMMETRIC',
-      title: 'Extended Blindfolded Massage',
-      description: 'Using warm scented body oils and a silk blindfold for 20 continuous sensory minutes.'
-    },
-    {
-      id: 'q2',
-      category: 'Sensual',
-      intensityLevel: 'VANILLA',
-      roleType: 'SYMMETRIC',
-      title: 'Slow Temperature Play',
-      description: 'Alternating warm breath, ice cubes, and warm feather touches across sensitive areas.'
-    },
-    {
-      id: 'q3',
-      category: 'BDSM',
-      intensityLevel: 'SPICY',
-      roleType: 'GIVER',
-      title: 'Gentle Wrist Restraints',
-      description: 'Using soft satin cuffs or silk scarves to gently anchor your partner to the bed posts.'
-    },
-    {
-      id: 'q4',
-      category: 'Roleplay',
-      intensityLevel: 'SPICY',
-      roleType: 'SYMMETRIC',
-      title: 'Anonymous Hotel Bar Encounter',
-      description: 'Arriving separately at a lounge, pretending to be intriguing strangers sharing a drink.'
-    },
-    {
-      id: 'q5',
-      category: 'Toys',
-      intensityLevel: 'SPICY',
-      roleType: 'RECEIVER',
-      title: 'App-Controlled Remote Vibrator',
-      description: 'Wearing a discreet remote-controlled toy during a romantic dinner or private walk.'
-    },
-    {
-      id: 'q6',
-      category: 'Sensual',
-      intensityLevel: 'ADVENTUROUS',
-      roleType: 'SYMMETRIC',
-      title: 'Mirrored Intimacy Session',
-      description: 'Setting up full-length mirrors around the bedroom to heighten visual stimulation.'
-    }
-  ];
-
-  return { success: true, questions: englishCatalog };
+  return { success: true, questions: [] };
 }
 
 // 5. Submit Answer (Using upsert with existing ID to prevent 409 Conflict)
@@ -320,7 +269,7 @@ export async function submitAnswer(
   }
 }
 
-// 6. Fetch Matches
+// 6. Fetch Matches (Return empty array when no actual matches exist)
 export async function fetchMatches(coupleId: string) {
   try {
     const { data: matches, error } = await supabase
@@ -328,7 +277,11 @@ export async function fetchMatches(coupleId: string) {
       .select('*')
       .eq('coupleId', coupleId);
 
-    if (!error && matches && matches.length > 0) {
+    if (!error && matches) {
+      if (matches.length === 0) {
+        return { success: true, matches: [] };
+      }
+
       const qIds = matches.map((m) => m.questionId).filter(Boolean);
       const { data: qList } = await supabase
         .from('QuestionCatalog')
@@ -344,39 +297,10 @@ export async function fetchMatches(coupleId: string) {
       return { success: true, matches: enrichedMatches };
     }
   } catch (e) {
-    console.warn('Match fetch fallback');
+    console.warn('Match fetch error');
   }
 
-  const sampleMatches: SharedMatchItem[] = [
-    {
-      id: 'm1',
-      matchStatus: 'MUTUAL_YES',
-      questionId: 'q1',
-      question: {
-        id: 'q1',
-        category: 'Sensual',
-        intensityLevel: 'VANILLA',
-        roleType: 'SYMMETRIC',
-        title: 'Extended Blindfolded Massage',
-        description: 'Using warm scented body oils and a silk blindfold for 20 continuous sensory minutes.'
-      }
-    },
-    {
-      id: 'm2',
-      matchStatus: 'MUTUAL_MAYBE',
-      questionId: 'q3',
-      question: {
-        id: 'q3',
-        category: 'BDSM',
-        intensityLevel: 'SPICY',
-        roleType: 'GIVER',
-        title: 'Gentle Wrist Restraints',
-        description: 'Using soft satin cuffs or silk scarves to gently anchor your partner to the bed posts.'
-      }
-    }
-  ];
-
-  return { success: true, matches: sampleMatches };
+  return { success: true, matches: [] };
 }
 
 // 7. Fetch Dares

@@ -29,14 +29,21 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
   const t = translations[lang];
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Jump to first unanswered question if available
+  // Jump to first unanswered question if available, or set to finished if all are answered
   useEffect(() => {
-    if (questions.length > 0 && answeredQuestionIds.length > 0) {
-      const firstUnansweredIndex = questions.findIndex(
-        (q) => !answeredQuestionIds.includes(q.id)
-      );
-      if (firstUnansweredIndex !== -1) {
-        setCurrentIndex(firstUnansweredIndex);
+    if (questions.length > 0) {
+      if (answeredQuestionIds.length > 0) {
+        const firstUnansweredIndex = questions.findIndex(
+          (q) => !answeredQuestionIds.includes(q.id)
+        );
+        if (firstUnansweredIndex !== -1) {
+          setCurrentIndex(firstUnansweredIndex);
+        } else {
+          // All questions in the current filter list have already been answered
+          setCurrentIndex(questions.length);
+        }
+      } else {
+        setCurrentIndex(0);
       }
     }
   }, [questions, answeredQuestionIds]);
@@ -83,7 +90,7 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
           </div>
           {answeredQuestionIds.length > 0 && (
             <span className="text-[11px] font-mono text-[#d1c5b2]">
-              {lang === 'he' ? 'נענו:' : 'Answered:'} {answeredQuestionIds.length}
+              {lang === 'he' ? 'נענו:' : 'Answered:'} {answeredQuestionIds.length} / {questions.length}
             </span>
           )}
         </div>
@@ -194,7 +201,7 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
               <span>{t.btnMaybe}</span>
             </button>
 
-            {/* YES - Enforced Solid Rose Gold 2px Border Box */}
+            {/* YES */}
             <button
               onClick={() => handleVote('YES')}
               style={{
