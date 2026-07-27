@@ -18,6 +18,10 @@ const defaultDareTranslationsHe: Record<string, { title: string; description: st
   'Secret Intimacy Note': {
     title: 'פתק תשוקה סודי',
     description: 'החביאו פתק רומנטי בכתב יד בכיס או בתיק של בן/בת הזוג לפני היציאה לעבודה.'
+  },
+  'Silent Sensory Touch': {
+    title: 'מגע ללא מילים בכיסוי עיניים',
+    description: 'הניחו כיסוי עיניים רך על בן/בת הזוג וגעו בעדינות באזורים רגישים במשך 5 דקות ללא דיבור.'
   }
 };
 

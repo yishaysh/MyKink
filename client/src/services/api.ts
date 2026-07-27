@@ -316,7 +316,7 @@ export async function fetchMatches(coupleId: string) {
   return { success: true, matches: [] };
 }
 
-// 7. Fetch Dares (No hardcoded sample dares — default to empty array)
+// 7. Fetch Dares (3 Initial Default Challenges)
 export async function fetchDares(coupleId: string) {
   try {
     const key = `mykink_dares_${coupleId || 'default'}`;
@@ -329,7 +329,35 @@ export async function fetchDares(coupleId: string) {
     console.warn('Fetch dares local storage error:', e);
   }
 
-  return { success: true, challenges: [] };
+  // Initial 3 Default Challenges
+  const defaultInitialChallenges: ChallengeItem[] = [
+    {
+      id: 'd1',
+      title: 'Sensual Tease Without Touching',
+      description: 'Spend 5 minutes whispering three hidden fantasies while maintaining eye contact.',
+      pointsValue: 15,
+      status: 'PENDING',
+      expiresAt: new Date(Date.now() + 24 * 3600 * 1000).toISOString()
+    },
+    {
+      id: 'd2',
+      title: 'Secret Intimacy Note',
+      description: 'Hide a passionate handwritten note in your partner’s pocket or bag before work.',
+      pointsValue: 10,
+      status: 'PENDING',
+      expiresAt: new Date(Date.now() + 12 * 3600 * 1000).toISOString()
+    },
+    {
+      id: 'd3',
+      title: 'Silent Sensory Touch',
+      description: 'Place a soft blindfold on your partner and touch sensitive areas gently for 5 minutes without speaking.',
+      pointsValue: 20,
+      status: 'PENDING',
+      expiresAt: new Date(Date.now() + 48 * 3600 * 1000).toISOString()
+    }
+  ];
+
+  return { success: true, challenges: defaultInitialChallenges };
 }
 
 // 8. Create Dare (Save to LocalStorage)
@@ -341,8 +369,8 @@ export async function createDare(
 ) {
   try {
     const key = `mykink_dares_${coupleId || 'default'}`;
-    const existingRaw = localStorage.getItem(key);
-    const existing: ChallengeItem[] = existingRaw ? JSON.parse(existingRaw) : [];
+    const existingRes = await fetchDares(coupleId);
+    const existing: ChallengeItem[] = existingRes.challenges || [];
 
     const newDare: ChallengeItem = {
       id: generateUUID(),
