@@ -86,7 +86,7 @@ export async function getGoogleUser() {
   }
 }
 
-// 1. Register Device / Google User 1-to-1 Mapping & Restore Saved DB State
+// 1. Register Device / Google User 1-to-1 Mapping
 export async function registerDevice(deviceId: string, publicKey: string) {
   try {
     const gUser = await getGoogleUser();
@@ -102,16 +102,16 @@ export async function registerDevice(deviceId: string, publicKey: string) {
     }
 
     const newId = generateUUID();
-    const alias = gUser?.user_metadata?.full_name || 'Desire Explorer';
     const now = new Date().toISOString();
 
+    // Insert new user with anonymousAlias: null so Onboarding is not auto-bypassed!
     const { data: newUser, error } = await supabase
       .from('User')
       .insert({
         id: newId,
         deviceIdentity: targetIdentity,
         publicKey,
-        anonymousAlias: alias,
+        anonymousAlias: null,
         updatedAt: now
       })
       .select()
@@ -288,7 +288,7 @@ export async function fetchQuestions(category = 'ALL', intensity = 'ALL') {
   return { success: true, questions: englishCatalog };
 }
 
-// 5. Submit Answer (Clean Schema without invalid columns)
+// 5. Submit Answer
 export async function submitAnswer(
   userId: string,
   questionId: string,
