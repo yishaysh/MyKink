@@ -391,6 +391,32 @@ export async function createDare(
   return { success: true };
 }
 
+// 8b. Update Dare Status (Mark as COMPLETED or EXPIRED)
+export async function updateDareStatus(
+  coupleId: string,
+  challengeId: string,
+  status: 'COMPLETED' | 'EXPIRED'
+) {
+  try {
+    const key = `mykink_dares_${coupleId || 'default'}`;
+    const existingRes = await fetchDares(coupleId);
+    const existing: ChallengeItem[] = existingRes.challenges || [];
+
+    const updated = existing.map((item) => {
+      if (item.id === challengeId) {
+        return { ...item, status };
+      }
+      return item;
+    });
+
+    localStorage.setItem(key, JSON.stringify(updated));
+    return { success: true, challenges: updated };
+  } catch (e) {
+    console.warn('Update dare status error:', e);
+  }
+  return { success: true };
+}
+
 // 9. Generate Evening Scenario
 export async function generateEveningScenario(coupleId: string | null, intensity = 'SPICY') {
   const steps: ScenarioStep[] = [

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Flame, Clock, Award, Plus, CheckCircle2, AlertCircle, Wand2, Sparkles } from 'lucide-react';
+import { Flame, Clock, Award, Plus, CheckCircle2, AlertCircle, Wand2, Sparkles, XCircle } from 'lucide-react';
 import { ChallengeItem } from '../services/api';
 import { generateAIDare } from '../services/gemini';
 import { Language, translations } from '../services/i18n';
@@ -7,6 +7,7 @@ import { Language, translations } from '../services/i18n';
 interface DaresViewProps {
   challenges: ChallengeItem[];
   onCreateDare: (title: string, description: string, hours: number) => void;
+  onUpdateDareStatus: (challengeId: string, status: 'COMPLETED' | 'EXPIRED') => void;
   lang: Language;
 }
 
@@ -25,7 +26,12 @@ const defaultDareTranslationsHe: Record<string, { title: string; description: st
   }
 };
 
-export const DaresView: React.FC<DaresViewProps> = ({ challenges, onCreateDare, lang }) => {
+export const DaresView: React.FC<DaresViewProps> = ({
+  challenges,
+  onCreateDare,
+  onUpdateDareStatus,
+  lang
+}) => {
   const t = translations[lang];
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [title, setTitle] = useState('');
@@ -155,6 +161,28 @@ export const DaresView: React.FC<DaresViewProps> = ({ challenges, onCreateDare, 
                   <span>{lang === 'he' ? 'זמן תפוגה:' : 'Expires:'} {new Date(challenge.expiresAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                   <Clock className="w-3.5 h-3.5 text-[#e8b4b8]" />
                 </div>
+
+                {/* Pending Actions: Mark Completed or Cancel */}
+                {!isCompleted && !isExpired && (
+                  <div className="pt-2 flex gap-2 border-t border-[#36343a]">
+                    <button
+                      type="button"
+                      onClick={() => onUpdateDareStatus(rawChallenge.id, 'COMPLETED')}
+                      className="btn-rose flex-1 py-2 text-xs flex items-center justify-center gap-1.5"
+                    >
+                      <CheckCircle2 className="w-3.5 h-3.5" />
+                      <span>{lang === 'he' ? 'סמן כבוצע 🎉' : 'Mark Completed 🎉'}</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => onUpdateDareStatus(rawChallenge.id, 'EXPIRED')}
+                      className="btn-soft flex-1 py-2 text-xs flex items-center justify-center gap-1.5 text-slate-400 hover:text-rose-300"
+                    >
+                      <XCircle className="w-3.5 h-3.5" />
+                      <span>{lang === 'he' ? 'וותר / ביטול ❌' : 'Cancel / Give Up ❌'}</span>
+                    </button>
+                  </div>
+                )}
               </div>
             );
           })}

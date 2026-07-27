@@ -17,6 +17,7 @@ import {
   fetchMatches,
   fetchDares,
   createDare,
+  updateDareStatus,
   updateUserProfileInDB,
   fetchUserAnswers,
   CatalogQuestion
@@ -332,6 +333,12 @@ export const App: React.FC = () => {
     reloadChallenges();
   };
 
+  // Handler for Updating Dare Status (Mark as Completed or Cancelled)
+  const handleUpdateDareStatus = async (challengeId: string, status: 'COMPLETED' | 'EXPIRED') => {
+    await updateDareStatus(coupleId || 'default', challengeId, status);
+    reloadChallenges();
+  };
+
   return (
     <div className="min-h-screen pb-36 md:pb-16 bg-[#141218] text-[#e7e0e9]">
       {/* Hide Header and Bottom Nav entirely during Onboarding so there is ZERO background clutter */}
@@ -380,7 +387,12 @@ export const App: React.FC = () => {
         {activeTab === 'matches' && <MatchesView matches={matches} lang={lang} />}
 
         {activeTab === 'dares' && (
-          <DaresView challenges={challenges} onCreateDare={handleCreateDare} lang={lang} />
+          <DaresView
+            challenges={challenges}
+            onCreateDare={handleCreateDare}
+            onUpdateDareStatus={handleUpdateDareStatus}
+            lang={lang}
+          />
         )}
 
         {activeTab === 'ai' && <AICoachView coupleId={coupleId} lang={lang} />}
