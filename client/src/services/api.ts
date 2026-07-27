@@ -86,7 +86,7 @@ export async function getGoogleUser() {
   }
 }
 
-// 1. Register Device / Google User 1-to-1 Mapping
+// 1. Register Device / Google User 1-to-1 Mapping with Upsert
 export async function registerDevice(deviceId: string, publicKey: string) {
   try {
     const gUser = await getGoogleUser();
@@ -104,16 +104,16 @@ export async function registerDevice(deviceId: string, publicKey: string) {
     const newId = generateUUID();
     const now = new Date().toISOString();
 
-    // Insert new user with anonymousAlias: 'PENDING' to satisfy NOT NULL constraint without bypassing Onboarding
+    // Use upsert onConflict deviceIdentity to prevent 409 Conflict errors
     const { data: newUser, error } = await supabase
       .from('User')
-      .insert({
+      .upsert({
         id: newId,
         deviceIdentity: targetIdentity,
         publicKey,
         anonymousAlias: 'PENDING',
         updatedAt: now
-      })
+      }, { onConflict: 'deviceIdentity' })
       .select()
       .single();
 
@@ -161,21 +161,21 @@ export async function fetchUserAnswers(userId: string) {
   return { success: false, answers: [] };
 }
 
-// 2. Create Couple
+// 2. Create Couple (Without non-existent updatedAt column to prevent 400 Bad Request)
 export async function createCouple(userId: string) {
   try {
     const pairCode = Math.random().toString(36).substring(2, 8).toUpperCase();
     const coupleSalt = 'Salt_' + Math.random().toString(36).substring(2, 10);
     const newId = generateUUID();
-    const now = new Date().toISOString();
 
     const { data: couple, error } = await supabase
       .from('Couple')
-      .insert({ id: newId, pairCode, coupleSalt, updatedAt: now })
+      .insert({ id: newId, pairCode, coupleSalt })
       .select()
       .single();
 
     if (!error && couple && userId) {
+      const now = new Date().toISOString();
       await supabase.from('User').update({ coupleId: couple.id, updatedAt: now }).eq('id', userId);
     }
 
@@ -288,7 +288,7 @@ export async function fetchQuestions(category = 'ALL', intensity = 'ALL') {
   return { success: true, questions: englishCatalog };
 }
 
-// 5. Submit Answer
+// 5. Submit Answer (Using upsert with existing ID to prevent 409 Conflict)
 export async function submitAnswer(
   userId: string,
   questionId: string,
@@ -303,20 +303,15 @@ export async function submitAnswer(
       .eq('userId', userId)
       .eq('questionId', questionId);
 
-    if (existing && existing.length > 0) {
-      await supabase
-        .from('UserAnswer')
-        .update({ encryptedValue, answerHash })
-        .eq('id', existing[0].id);
-    } else {
-      await supabase.from('UserAnswer').insert({
-        id: generateUUID(),
-        userId,
-        questionId,
-        encryptedValue,
-        answerHash
-      });
-    }
+    const existingId = existing && existing.length > 0 ? existing[0].id : generateUUID();
+
+    await supabase.from('UserAnswer').upsert({
+      id: existingId,
+      userId,
+      questionId,
+      encryptedValue,
+      answerHash
+    });
 
     return { success: true };
   } catch (e) {
