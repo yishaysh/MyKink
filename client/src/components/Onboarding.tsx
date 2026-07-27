@@ -41,14 +41,26 @@ export const Onboarding: React.FC<OnboardingProps> = ({
   const [inputCode, setInputCode] = useState('');
   const [copied, setCopied] = useState(false);
 
-  const suggestedAliases = [
-    'VelvetTouch 💋',
-    'ShadowFox 🦊',
-    'MidnightRose 🌹',
-    'WildHeart 🖤',
-    'MysticFlame 🔥',
-    'SatinWhisper ✨'
-  ];
+  const suggestedAliases =
+    lang === 'he'
+      ? [
+          'מגע סאטן 💋',
+          'נמר מסתורי 🐅',
+          'להבה יצרית 🔥',
+          'שועל חושני 🦊',
+          'ורד חצות 🌹',
+          'לחישה סודית ✨',
+          'VelvetTouch 💋',
+          'ShadowFox 🦊'
+        ]
+      : [
+          'VelvetTouch 💋',
+          'ShadowFox 🦊',
+          'MidnightRose 🌹',
+          'WildHeart 🖤',
+          'MysticFlame 🔥',
+          'SatinWhisper ✨'
+        ];
 
   const availableCategories = [
     { id: 'Sensual', title: lang === 'he' ? 'חושים ומגע' : 'Sensual & Touch', desc: lang === 'he' ? 'שמנים, כיסויי עיניים, משחקי טמפרטורה' : 'Oils, blindfolds, temperature play, slow intimacy' },
@@ -88,7 +100,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({
   };
 
   const handleFinish = async () => {
-    const finalAlias = alias.trim() || 'VelvetTouch 💋';
+    const finalAlias = alias.trim() || (lang === 'he' ? 'מגע סאטן 💋' : 'VelvetTouch 💋');
     if (!pairCode) {
       await onCreateCouple();
     }
@@ -197,7 +209,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                     setAlias(e.target.value);
                     if (e.target.value.trim()) setAliasError(false);
                   }}
-                  placeholder={lang === 'he' ? 'למשל: VelvetTouch 💋' : t.sexyAliasPlaceholder}
+                  placeholder={lang === 'he' ? 'למשל: מגע סאטן 💋' : t.sexyAliasPlaceholder}
                   className={`w-full px-4 py-3 input-solid text-xs text-white ${
                     aliasError ? 'border-rose-500 ring-1 ring-rose-500' : ''
                   }`}
@@ -214,7 +226,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                 {/* Quick Selection Pills */}
                 <div className="mt-2.5">
                   <span className="text-[10px] text-slate-400 block mb-1.5 font-semibold">
-                    {lang === 'he' ? 'הצעות לכינויים בלחיצה קלה:' : 'Quick suggested sexy aliases:'}
+                    {lang === 'he' ? 'הצעות לכינויים בלחיצה קלה (בעברית ובאנגלית):' : 'Quick suggested sexy aliases:'}
                   </span>
                   <div className="flex flex-wrap gap-1.5">
                     {suggestedAliases.map((suggested) => (
