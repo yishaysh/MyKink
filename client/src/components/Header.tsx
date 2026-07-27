@@ -1,5 +1,5 @@
 import React from 'react';
-import { Heart, ShieldCheck, Sparkles, Flame, Bot, Share2, Globe, LogOut, Trash2 } from 'lucide-react';
+import { ShieldCheck, Sparkles, Flame, Bot, Share2, Globe, LogOut, Trash2, Heart } from 'lucide-react';
 import { Language, translations } from '../services/i18n';
 
 interface HeaderProps {
@@ -41,18 +41,24 @@ export const Header: React.FC<HeaderProps> = ({
       {/* Top Header Bar (100% Solid Dark Background, Zero Transparency) */}
       <header className="sticky top-0 z-40 app-header-solid border-b border-[#36343a] px-3 py-2.5 shadow-md">
         <div className="max-w-md md:max-w-5xl mx-auto flex items-center justify-between gap-1.5 overflow-hidden">
-          {/* Brand Logo & Title */}
+          {/* Brand Logo Image & Title */}
           <div className="flex items-center gap-2 shrink-0">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#e8b4b8] to-[#ffd2d5] flex items-center justify-center shadow-md shadow-[#e8b4b8]/20 shrink-0">
-              <Heart className="w-4 h-4 text-[#48272a] fill-[#48272a]" />
-            </div>
+            <img
+              src="/logo.png"
+              alt="MyKink Logo"
+              className="w-8 h-8 rounded-xl object-cover border border-[#e8b4b8]/40 shadow-sm shrink-0"
+              onError={(e) => {
+                // Fallback to Heart icon if image fails to render
+                e.currentTarget.style.display = 'none';
+              }}
+            />
             <div>
               <h1 className="text-base font-bold tracking-tight text-white font-headline leading-none">
                 MyKink
               </h1>
               <div className="hidden sm:flex items-center gap-1 text-[10px] text-[#d1c5b2] mt-0.5">
                 <ShieldCheck className="w-3 h-3 text-emerald-400 shrink-0" />
-                <span className="truncate">{t.digitalSanctuary}</span>
+                <span className="truncate">{userAlias || t.digitalSanctuary}</span>
               </div>
             </div>
           </div>
@@ -135,7 +141,7 @@ export const Header: React.FC<HeaderProps> = ({
                 onClick={() => setActiveTab(tabItem.id)}
                 className={`flex flex-col items-center justify-center py-2 px-1 rounded-xl transition ${
                   isActive
-                    ? 'bg-[#2b292f] text-[#e8b4b8] font-bold border border-[#e8b4b8]/40 shadow-sm'
+                    ? 'bg-[#2b292f] text-[#e8b4b8] font-[#e8b4b8] font-bold border border-[#e8b4b8]/40 shadow-sm'
                     : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
