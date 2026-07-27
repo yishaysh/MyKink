@@ -43,6 +43,12 @@ export const DaresView: React.FC<DaresViewProps> = ({ challenges, onCreateDare, 
     }
   };
 
+  const handleCloseModal = () => {
+    setTitle('');
+    setDescription('');
+    setShowCreateModal(false);
+  };
+
   const handleGenerateAIDare = async () => {
     setIsGeneratingAI(true);
     const aiDare = await generateAIDare('SPICY', lang);
@@ -219,7 +225,7 @@ export const DaresView: React.FC<DaresViewProps> = ({ challenges, onCreateDare, 
               <div className="flex gap-2 pt-2">
                 <button
                   type="button"
-                  onClick={() => setShowCreateModal(false)}
+                  onClick={handleCloseModal}
                   className="btn-soft flex-1 py-2.5"
                 >
                   {t.back}

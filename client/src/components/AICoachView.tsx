@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Bot, Send, Sparkles, Wand2, Shield, Heart } from 'lucide-react';
-import { generateEveningScenario, ScenarioStep } from '../services/api';
-import { askGeminiAria } from '../services/gemini';
+import { generateAIScenario, askGeminiAria, ScenarioStep } from '../services/gemini';
 import { Language, translations } from '../services/i18n';
 
 interface AICoachViewProps {
@@ -32,10 +31,8 @@ export const AICoachView: React.FC<AICoachViewProps> = ({ coupleId, lang }) => {
 
   const handleGenerateScenario = async () => {
     setIsGenerating(true);
-    const res = await generateEveningScenario(coupleId, intensity);
-    if (res.success && res.steps) {
-      setScenarioSteps(res.steps);
-    }
+    const steps = await generateAIScenario(intensity, lang);
+    setScenarioSteps(steps);
     setIsGenerating(false);
   };
 
