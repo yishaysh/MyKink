@@ -264,7 +264,7 @@ export const translations: Record<Language, TranslationDictionary> = {
     linkCopied: 'הקישור הועתק!',
     scanQR: 'סריקת קוד QR מהטלפון השני',
     orEnterCode: 'או הזן קוד צימוד של בן/בת הזוג:',
-    connect: 'תחבר',
+    connect: 'התחבר',
     completeSetupBtn: 'סיום הרשמה וכניסה לאפליקציה',
 
     back: 'חזרה',

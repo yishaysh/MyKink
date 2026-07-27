@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, Copy, Check, QrCode, Share2, ShieldCheck } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
+import { Language, translations } from '../services/i18n';
 
 interface PairingModalProps {
   isOpen: boolean;
@@ -8,6 +9,7 @@ interface PairingModalProps {
   pairCode: string | null;
   onCreateCouple: () => void;
   onJoinCouple: (code: string) => void;
+  lang?: Language;
 }
 
 export const PairingModal: React.FC<PairingModalProps> = ({
@@ -15,8 +17,10 @@ export const PairingModal: React.FC<PairingModalProps> = ({
   onClose,
   pairCode,
   onCreateCouple,
-  onJoinCouple
+  onJoinCouple,
+  lang = 'he'
 }) => {
+  const t = translations[lang];
   const [inputCode, setInputCode] = useState('');
   const [copied, setCopied] = useState(false);
 
@@ -44,7 +48,7 @@ export const PairingModal: React.FC<PairingModalProps> = ({
       <div className="glass-card max-w-md w-full p-6 border border-[#36343a] relative card-appear">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 rounded-full text-slate-400 hover:text-white hover:bg-[#2b292f] transition"
+          className="absolute top-4 left-4 p-2 rounded-full text-slate-400 hover:text-white hover:bg-[#2b292f] transition"
         >
           <X className="w-4 h-4" />
         </button>
@@ -54,19 +58,21 @@ export const PairingModal: React.FC<PairingModalProps> = ({
             <Share2 className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-xl font-bold text-white font-headline">Partner Pairing Code</h3>
+            <h3 className="text-xl font-bold text-white font-headline">
+              {lang === 'he' ? 'צימוד קוד זוגי' : 'Partner Pairing Code'}
+            </h3>
             <div className="flex items-center gap-1 text-[11px] text-[#d1c5b2]">
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Zero-Knowledge Double-Blind Encrypted</span>
+              <span>{t.digitalSanctuary}</span>
             </div>
           </div>
         </div>
 
         {/* Display Pair Code & QR */}
         <div className="p-4 rounded-2xl bg-[#1d1b21] border border-[#36343a] text-center space-y-3 mb-4">
-          <span className="text-xs text-slate-400 font-semibold block">Your Unique Code:</span>
+          <span className="text-xs text-slate-400 font-semibold block">{t.yourCoupleCode}</span>
           <div className="text-3xl font-black text-[#e8b4b8] font-mono tracking-widest">
-            {pairCode || 'Generating...'}
+            {pairCode || '...'}
           </div>
 
           <button
@@ -74,7 +80,7 @@ export const PairingModal: React.FC<PairingModalProps> = ({
             className="btn-rose px-5 py-2 text-xs flex items-center justify-center gap-2 mx-auto"
           >
             {copied ? <Check className="w-4 h-4 text-[#48272a]" /> : <Copy className="w-4 h-4" />}
-            <span>{copied ? 'Link Copied!' : 'Copy Partner Invite Link'}</span>
+            <span>{copied ? t.linkCopied : t.copyInviteLink}</span>
           </button>
 
           {pairCode && (
@@ -83,7 +89,7 @@ export const PairingModal: React.FC<PairingModalProps> = ({
                 <QRCodeSVG value={shareUrl} size={110} />
               </div>
               <span className="text-[10px] text-slate-400 mt-1 flex items-center gap-1">
-                <QrCode className="w-3 h-3 text-[#e8b4b8]" /> Scan from partner's phone
+                <QrCode className="w-3 h-3 text-[#e8b4b8]" /> {t.scanQR}
               </span>
             </div>
           )}
@@ -92,7 +98,7 @@ export const PairingModal: React.FC<PairingModalProps> = ({
         {/* Enter Partner's Code */}
         <form onSubmit={handleJoin} className="space-y-2 pt-2 border-t border-[#2b292f]">
           <label className="text-xs font-semibold text-slate-300 block">
-            Enter partner's pair code:
+            {t.orEnterCode}
           </label>
           <div className="flex gap-2">
             <input
@@ -104,7 +110,7 @@ export const PairingModal: React.FC<PairingModalProps> = ({
               className="flex-1 px-4 py-2.5 rounded-2xl bg-[#141218] border border-[#36343a] text-white font-mono text-center tracking-widest text-xs focus:outline-none focus:border-[#e8b4b8]"
             />
             <button type="submit" className="btn-rose px-5 py-2.5 text-xs">
-              Connect
+              {t.connect}
             </button>
           </div>
         </form>
