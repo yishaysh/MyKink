@@ -46,91 +46,65 @@ export async function askGeminiAria(userQuery: string, lang: 'en' | 'he'): Promi
     : "Intimacy flourishes with mutual respect. Always use clear safewords and open dialogue!";
 }
 
-// Diverse scenario step sets for fallback rotation
+// Research-Backed Erotic Arc Scenario Sets (Gottman & Esther Perel Framework)
 const fallbackScenarioSetsHe: ScenarioStep[][] = [
   [
     {
       stepNumber: 1,
-      phase: 'אווירה וחימום ראשוני',
-      title: 'אור נרות עמום ומוזיקת ג\'אז איטית',
-      description: 'עמעום תאורת החדר, הדלקת נרות ארומטיים בריח וניל והשמעת מוזיקה מרגיעה ללא מילים.'
+      phase: 'אווירה, ציפייה וביטחון רגשי',
+      title: 'אור נרות ארומטי ומוזיקת ג\'אז עמוקה',
+      description: 'עמעום תאורת הבית, הדלקת נרות בריח וניל וסנדלווד והשמעת סאונדסקייפ מרגיע ליצירת מרחב מקודש ללא הטרדות.'
     },
     {
       stepNumber: 2,
-      phase: 'העצמת החושים והמגע',
-      title: 'עיסוי שמן חם בכיסוי עיניים',
-      description: 'הנחת כיסוי עיניים רך על בן/בת הזוג ומתן עיסוי איטי ומפנק לאורכי הגב והכתפיים.'
+      phase: 'העצמת חושים ומגע נוכח (Sensate Focus)',
+      title: 'כיסוי עיניים רך ועיסוי שמן חם',
+      description: 'הנחת כיסוי עיניים סאטן על בן/בת הזוג והתחלת עיסוי איטי לאורך הכתפיים והגב להעברת הפוקוס מהראש אל החושים.'
     },
     {
       stepNumber: 3,
-      phase: 'חקר תשוקות ומשחק זוגי',
+      phase: 'חקר פנטזיות, משחק וחיכוך (Erotic Play)',
       title: 'קשירות משי עדינות ומשחקי טמפרטורה',
-      description: 'עיגון קל של פרקי הידיים בסרטי סאטן נעימים ושילוב לסירוגין בין נטיפות שעווה חמה לקוביות קרח.'
+      description: 'עיגון קל של פרקי הידיים בסרטי משי נעימים ושילוב לסירוגין בין נטיפות שעווה חמה לנגיעות קוביות קרח.'
     },
     {
       stepNumber: 4,
-      phase: 'שיא התשוקה ואפטרקייר',
-      title: 'אינטימיות עמוקה וחיבוק חם',
-      description: 'שחרור הקשירות, שיתוף תחושות, שתיית תה חם וחיבוק צמוד במיטה ללא הפרעות.'
+      phase: 'אפטרקייר, עיטוף וחיבור רגשי (Aftercare)',
+      title: 'נחיתה רכה, תה חם וחיבוק צמוד',
+      description: 'שחרור הקשירות, שתיית תה צמחים חם, שיתוף תחושות פתוח והתכרבלות ממושכת מתחת לשמיכה עבה.'
     }
   ],
   [
     {
       stepNumber: 1,
-      phase: 'אווירה וחימום ראשוני',
-      title: 'לחישות סודיות ויין אדום',
-      description: 'לגימת כוס יין לאור עמום ולחישת פנטזיות כמוסות באוזן במרחק נגיעה.'
+      phase: 'אווירה, ציפייה וביטחון רגשי',
+      title: 'לחישות סודיות וכוס יין אדום',
+      description: 'לגימת יין לאור עמום ולחישת 3 פנטזיות כמוסות באוזן במרחק נגיעה לבניית מתח חיובי וציפייה.'
     },
     {
       stepNumber: 2,
-      phase: 'העצמת החושים והמגע',
+      phase: 'העצמת חושים ומגע נוכח (Sensate Focus)',
       title: 'ליטוף נוצה ומגע ללא דיבור',
-      description: 'מעבר עדין עם נוצה רכה על צוואר, גב ופנים תוך שמירה על קשר עין ללא מילים.'
+      description: 'מעבר עדין עם נוצה רכה או בד משי על הצוואר והגב תוך שמירה על קשר עין רציף ללא מילים.'
     },
     {
       stepNumber: 3,
-      phase: 'חקר תשוקות ומשחק זוגי',
-      title: 'משחק תפקידים דיסקרטי',
-      description: 'אימוץ דמויות סודיות מבר מלון יוקרתי ופגישה אקראית לכאורה בחדר השינה.'
+      phase: 'חקר פנטזיות, משחק וחיכוך (Erotic Play)',
+      title: 'משחק תפקידים דיסקרטי במלון',
+      description: 'אימוץ דמויות סודיות של זרים שנפגשים לכאורה לראשונה בבר מלון יוקרתי בחדר השינה.'
     },
     {
       stepNumber: 4,
-      phase: 'שיא התשוקה ואפטרקייר',
-      title: 'נשיקות ממושכות ושיחה פתוחה',
-      description: 'מעבר לחיבוק עמוק, נשיקות איטיות ושיתוף הרגעים הכי מרגשים מהערב.'
-    }
-  ],
-  [
-    {
-      stepNumber: 1,
-      phase: 'אווירה וחימום ראשוני',
-      title: 'אמבטיה חמה ושמנים אתריים',
-      description: 'טבילה זוגית באמבט קצף חם עם שמני לבנדר ותאורה רומנטית רכה.'
-    },
-    {
-      stepNumber: 2,
-      phase: 'העצמת החושים והמגע',
-      title: 'ייבוש עדין ועיסוי כפות רגליים',
-      description: 'עיטוף במגבת חמה ועיסוי מפנק לכפות הרגליים עם חמאת שיאה.'
-    },
-    {
-      stepNumber: 3,
-      phase: 'חקר תשוקות ומשחק זוגי',
-      title: 'משחק מילות בטיחות ותרגילי היפנוזה',
-      description: 'הנחיית נשימות בקצב אחיד, לחישת פקודות רכות והעצמת המתח החושי.'
-    },
-    {
-      stepNumber: 4,
-      phase: 'שיא התשוקה ואפטרקייר',
-      title: 'כרבול צמוד ומים צוננים',
-      description: 'שתיית מים קרים, התכרבלות מתחת לשמיכה עבה ומנוחה רגועה יחד.'
+      phase: 'אפטרקייר, עיטוף וחיבור רגשי (Aftercare)',
+      title: 'נשיקות ממושכות ושיחה מעצימה',
+      description: 'מעבר לחיבוק עמוק, נשיקות איטיות ושיתוף הרגעים הכי מרגשים ומקרבים מתוך הערב.'
     }
   ]
 ];
 
 let scenarioIndex = 0;
 
-// Dynamic AI Evening Scenario Generator (Rotates to a NEW unique scenario on EVERY click)
+// Research-Backed AI Evening Scenario Generator (Gottman & Esther Perel Erotic Arc)
 export async function generateAIScenario(
   intensity: string,
   lang: 'en' | 'he'
@@ -138,21 +112,28 @@ export async function generateAIScenario(
   scenarioIndex = (scenarioIndex + 1) % fallbackScenarioSetsHe.length;
 
   try {
-    const randomThemes = [
-      'משחקי חושים וכיסוי עיניים',
-      'משחקי מגע ושמנים ארומטיים',
-      'משחקי תפקידים ופנטזיות סודיות',
-      'קשירות משי ומשחקי טמפרטורה'
+    const themes = [
+      'משחקי חושים, מגע נוכח וכיסוי עיניים',
+      'משחקי טמפרטורה, שמנים ארומטיים וקשירות משי',
+      'משחקי תפקידים, פנטזיות סודיות וחיכוך',
+      'אינטימיות עמוקה, עיסוי ושפת הגוף'
     ];
-    const selectedTheme = randomThemes[Math.floor(Math.random() * randomThemes.length)];
+    const selectedTheme = themes[Math.floor(Math.random() * themes.length)];
 
     const prompt =
       lang === 'he'
-        ? `צור תרחיש ערב רומנטי ואינטימי מגוון וחדש לחלוטין בנושא "${selectedTheme}" ב-4 שלבים לבני זוג ברמת עוצמה ${intensity}.
+        ? `אתה אדריכל אינטימיות וזוגיות מומחה המסתמך על מודל Erotic Arc (Gottman & Esther Perel).
+בנה תרחיש ערב זוגי ב-4 שלבים מדוייקים בנושא "${selectedTheme}" ברמת עוצמה ${intensity}:
+- שלב 1: אווירה, ציפייה וביטחון רגשי (Buildup & Safety)
+- שלב 2: העצמת חושים ומגע נוכח (Sensory Immersion & Sensate Focus)
+- שלב 3: חקר פנטזיות, משחק וחיכוך (Erotic Play & Novelty)
+- שלב 4: אפטרקייר, עיטוף וחיבור רגשי (Aftercare & Integration)
+
 החזר אך ורק מערך JSON תקין של 4 אובייקטים עם השדות:
-"stepNumber" (מספר 1-4), "phase" (שם השלב), "title" (כותרת השלב), "description" (תיאור מפורט ב-2 משפטים).
-שפה: עברית רהוטה ורומנטית.`
-        : `Generate a new unique 4-step romantic evening scenario regarding "${selectedTheme}" at intensity level ${intensity}.
+"stepNumber" (מספר 1-4), "phase" (שם השלב בעברית), "title" (כותרת מפתה), "description" (הוראות ביצוע מפורטות ב-2 משפטים רהוטים).`
+        : `You are an expert intimacy architect based on the Erotic Arc framework (Gottman & Esther Perel).
+Generate a 4-step romantic evening scenario regarding "${selectedTheme}" at intensity ${intensity}:
+Phase 1: Buildup & Safety, Phase 2: Sensory Immersion, Phase 3: Erotic Play, Phase 4: Aftercare.
 Return JSON array of 4 objects with fields: "stepNumber", "phase", "title", "description".`;
 
     const response = await fetch(

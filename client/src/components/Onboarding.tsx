@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sparkles, Share2, Copy, Check, QrCode, ArrowLeft, ArrowRight, User, Flame, CheckSquare, Square, LogIn } from 'lucide-react';
+import { Sparkles, Share2, Copy, Check, QrCode, ArrowLeft, ArrowRight, User, Flame, CheckSquare, Square, LogIn, AlertCircle } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { Language, translations } from '../services/i18n';
 import { signInWithGoogle } from '../services/api';
@@ -30,7 +30,8 @@ export const Onboarding: React.FC<OnboardingProps> = ({
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
 
   // Profile Form State
-  const [alias, setAlias] = useState(googleUser?.user_metadata?.full_name || '');
+  const [alias, setAlias] = useState('');
+  const [aliasError, setAliasError] = useState(false);
   const [role, setRole] = useState<'GIVER' | 'RECEIVER' | 'SWITCH'>('SWITCH');
   const [selectedCategories, setSelectedCategories] = useState<string[]>(['Sensual', 'BDSM']);
   const [intensity, setIntensity] = useState<'VANILLA' | 'SPICY' | 'ADVENTUROUS'>('SPICY');
@@ -39,6 +40,15 @@ export const Onboarding: React.FC<OnboardingProps> = ({
   // Pairing State
   const [inputCode, setInputCode] = useState('');
   const [copied, setCopied] = useState(false);
+
+  const suggestedAliases = [
+    'VelvetTouch 💋',
+    'ShadowFox 🦊',
+    'MidnightRose 🌹',
+    'WildHeart 🖤',
+    'MysticFlame 🔥',
+    'SatinWhisper ✨'
+  ];
 
   const availableCategories = [
     { id: 'Sensual', title: lang === 'he' ? 'חושים ומגע' : 'Sensual & Touch', desc: lang === 'he' ? 'שמנים, כיסויי עיניים, משחקי טמפרטורה' : 'Oils, blindfolds, temperature play, slow intimacy' },
@@ -68,12 +78,22 @@ export const Onboarding: React.FC<OnboardingProps> = ({
     }
   };
 
+  const handleNextFromStep1 = () => {
+    if (!alias.trim()) {
+      setAliasError(true);
+      return;
+    }
+    setAliasError(false);
+    setStep(2);
+  };
+
   const handleFinish = async () => {
+    const finalAlias = alias.trim() || 'VelvetTouch 💋';
     if (!pairCode) {
       await onCreateCouple();
     }
     onCompleteOnboarding({
-      alias: alias.trim() || (lang === 'he' ? 'מאהב מסתורי' : 'Desire Explorer'),
+      alias: finalAlias,
       role,
       categories: selectedCategories,
       intensity
@@ -113,7 +133,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                   {s}
                 </span>
                 <span className="hidden sm:inline text-xs font-semibold text-slate-300">
-                  {s === 1 && (lang === 'he' ? 'כינוי' : 'Alias')}
+                  {s === 1 && (lang === 'he' ? 'כינוי סקסי' : 'Sexy Alias')}
                   {s === 2 && (lang === 'he' ? 'פנטזיות' : 'Fantasies')}
                   {s === 3 && (lang === 'he' ? 'גבולות' : 'Boundaries')}
                   {s === 4 && (lang === 'he' ? 'צימוד' : 'Pairing')}
@@ -124,16 +144,20 @@ export const Onboarding: React.FC<OnboardingProps> = ({
           ))}
         </div>
 
-        {/* STEP 1: GOOGLE SIGN-IN & SEXY ALIAS & ROLE */}
+        {/* STEP 1: GOOGLE SIGN-IN & MANDATORY SEXY ALIAS & ROLE */}
         {step === 1 && (
           <div className="solid-card p-5 sm:p-8 space-y-5 card-appear border border-[#36343a]">
             <div className="text-center">
               <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-[#2b292f] border border-[#e8b4b8]/30 text-[#e8b4b8] flex items-center justify-center mx-auto mb-2.5 shadow-md">
                 <User className="w-6 h-6 sm:w-7 sm:h-7" />
               </div>
-              <h2 className="text-xl sm:text-2xl font-bold text-white font-headline">{t.onboardingStep1Title}</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-white font-headline">
+                {lang === 'he' ? 'בחירת כינוי סקסי ואינטימי' : t.onboardingStep1Title}
+              </h2>
               <p className="text-xs text-slate-300 max-w-sm mx-auto mt-1">
-                {t.onboardingStep1Sub}
+                {lang === 'he'
+                  ? 'לשמירה על דיסקרטיות מלאה, הזינו כינוי סקסי שבו תשתמשו באפליקציה ובמשימות הזוגיות.'
+                  : t.onboardingStep1Sub}
               </p>
             </div>
 
@@ -164,16 +188,54 @@ export const Onboarding: React.FC<OnboardingProps> = ({
             <div className="space-y-4">
               <div>
                 <label className="text-xs font-semibold text-slate-300 block mb-1">
-                  {t.sexyAliasLabel}
+                  {lang === 'he' ? 'כינוי סקסי חובה (Sexy Alias)' : t.sexyAliasLabel}
                 </label>
                 <input
                   type="text"
                   value={alias}
-                  onChange={(e) => setAlias(e.target.value)}
-                  placeholder={t.sexyAliasPlaceholder}
-                  className="w-full px-4 py-3 input-solid text-xs text-white"
+                  onChange={(e) => {
+                    setAlias(e.target.value);
+                    if (e.target.value.trim()) setAliasError(false);
+                  }}
+                  placeholder={lang === 'he' ? 'למשל: VelvetTouch 💋' : t.sexyAliasPlaceholder}
+                  className={`w-full px-4 py-3 input-solid text-xs text-white ${
+                    aliasError ? 'border-rose-500 ring-1 ring-rose-500' : ''
+                  }`}
                   required
                 />
+
+                {aliasError && (
+                  <p className="text-[11px] text-rose-400 mt-1.5 flex items-center gap-1 font-bold">
+                    <AlertCircle className="w-3.5 h-3.5" />
+                    <span>{lang === 'he' ? 'חובה לבחור או להזין כינוי סקסי כדי להמשיך 🌹' : 'Please enter a sexy alias to continue'}</span>
+                  </p>
+                )}
+
+                {/* Quick Selection Pills */}
+                <div className="mt-2.5">
+                  <span className="text-[10px] text-slate-400 block mb-1.5 font-semibold">
+                    {lang === 'he' ? 'הצעות לכינויים בלחיצה קלה:' : 'Quick suggested sexy aliases:'}
+                  </span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {suggestedAliases.map((suggested) => (
+                      <button
+                        key={suggested}
+                        type="button"
+                        onClick={() => {
+                          setAlias(suggested);
+                          setAliasError(false);
+                        }}
+                        className={`px-3 py-1 rounded-full text-xs font-semibold transition ${
+                          alias === suggested
+                            ? 'bg-[#e8b4b8] text-[#48272a] font-bold shadow-sm'
+                            : 'bg-[#2b292f] border border-[#36343a] text-slate-300 hover:border-[#e8b4b8]/50'
+                        }`}
+                      >
+                        {suggested}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
 
               <div>
@@ -245,10 +307,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({
             </div>
 
             <button
-              onClick={() => {
-                if (!alias.trim()) setAlias(lang === 'he' ? 'מאהב מסתורי' : 'Desire Explorer');
-                setStep(2);
-              }}
+              onClick={handleNextFromStep1}
               className="btn-rose w-full py-3.5 text-xs flex items-center justify-center gap-2"
             >
               <span>{t.continue}</span>
