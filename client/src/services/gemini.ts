@@ -9,12 +9,26 @@ export interface ScenarioStep {
   description: string;
 }
 
+// Smart Offline Knowledge Base for Aria AI when API key is not yet set
+const ariaOfflineAnswersHe: Record<string, string> = {
+  'default': "אינטימיות מעצימה מתחילה בתקשורת פתוחה, הקשבה ללא שיפוטיות ושימוש במילות בטיחות (אדום/צהוב/ירוק). ספרו לי מה הייתם רוצים לחקור יחד!",
+  'fantasy': "כדי להעלות פנטזיה חדשה ללא מבוכה, מומלץ לשוחח בזמן רגוע מחוץ לחדר השינה. אפשר לומר: 'ראיתי משהו מעניין ב-MyKink שחשבתי שיהיה כיף לנסות יחד'. זה מוריד לחץ ובונה ציפייה!",
+  'boundary': "מילות בטיחות הן הבסיס לכל משחק אינטימי. שיטת הרמזור עובדת מעולה: 'ירוק' = ממשיכים, 'צהוב' = האטה/התאמה, 'אדום' = עוצרים מיד. כבוד הדדי בונה אמון מוחלט.",
+  'bdsm': "משחקי שליטה וקשירות דורשים הסכמה מפורשת מראש (SSC - Safe, Sane, Consensual). התחילו בקשירות משי רכות ומילות בטיחות ברורות, והקפידו על אפטרקייר (חיבוק ושיחה) בסיום.",
+  'massage': "עיסוי חושני הוא דרך נפלאה להורדת מתחים. השתמשו בשמנים חמים, עמעמו תאורה והתחילו בכתפיים ובגב. מגע איטי בלחישות בונה מתח חיובי נהדר!"
+};
+
 export async function askGeminiAria(userQuery: string, lang: 'en' | 'he'): Promise<string> {
   if (!GEMINI_API_KEY) {
+    const q = userQuery.toLowerCase();
     if (lang === 'he') {
-      return "אני אריאל — יועצת האינטימיות שלכם. כדי לקבל מענה אינטליגנטי ומותאם אישית בזמן אמת, יש להזין מפתח VITE_GEMINI_API_KEY בקובץ .env. בינתיים: תקשורת פתוחה, הקשבה ללא שיפוטיות ושימוש במילות בטיחות הם המפתח לזוגיות מעצימה!";
+      if (q.includes('פנטז') || q.includes('לספר') || q.includes('לשתף') || q.includes('רעיון')) return ariaOfflineAnswersHe['fantasy'];
+      if (q.includes('גבול') || q.includes('בטיחות') || q.includes('עצור') || q.includes('מילה')) return ariaOfflineAnswersHe['boundary'];
+      if (q.includes('קשיר') || q.includes('שליטה') || q.includes('bdsm') || q.includes('סאדו')) return ariaOfflineAnswersHe['bdsm'];
+      if (q.includes('עיסוי') || q.includes('שמן') || q.includes('מגע')) return ariaOfflineAnswersHe['massage'];
+      return ariaOfflineAnswersHe['default'];
     }
-    return "I am Aria, your intimacy & communication guide. To enable real-time Gemini AI responses, please add VITE_GEMINI_API_KEY in your .env file. Meanwhile: open communication and clear safewords build deep trust!";
+    return "Intimacy flourishes with mutual respect. Always use clear safewords and open dialogue!";
   }
 
   try {
@@ -52,12 +66,9 @@ export async function askGeminiAria(userQuery: string, lang: 'en' | 'he'): Promi
     : "Intimacy flourishes with mutual respect. Always use clear safewords and open dialogue!";
 }
 
-// Dynamic AI Evening Scenario Generator (Generates a 4-step romantic plan in selected language)
-export async function generateAIScenario(
-  intensity: string,
-  lang: 'en' | 'he'
-): Promise<ScenarioStep[]> {
-  const fallbackStepsHe: ScenarioStep[] = [
+// Diverse scenario step sets for fallback rotation
+const fallbackScenarioSetsHe: ScenarioStep[][] = [
+  [
     {
       stepNumber: 1,
       phase: 'אווירה וחימום ראשוני',
@@ -82,47 +93,85 @@ export async function generateAIScenario(
       title: 'אינטימיות עמוקה וחיבוק חם',
       description: 'שחרור הקשירות, שיתוף תחושות, שתיית תה חם וחיבוק צמוד במיטה ללא הפרעות.'
     }
-  ];
-
-  const fallbackStepsEn: ScenarioStep[] = [
+  ],
+  [
     {
       stepNumber: 1,
-      phase: 'Atmosphere & Warm-Up',
-      title: 'Soft Candlelight & Ambient Music',
-      description: 'Dim main lights, light sandalwood or vanilla candles, and start low ambient tunes.'
+      phase: 'אווירה וחימום ראשוני',
+      title: 'לחישות סודיות ויין אדום',
+      description: 'לגימת כוס ין לאור עמום ולחישת פנטזיות כמוסות באוזן במרחק נגיעה.'
     },
     {
       stepNumber: 2,
-      phase: 'Sensory Heightening',
-      title: 'Silk Blindfold & Warm Oil Massage',
-      description: 'Guide your partner gently onto the bed, apply silk blindfold, and massage shoulders.'
+      phase: 'העצמת החושים והמגע',
+      title: 'ליטוף נוצה ומגע ללא דיבור',
+      description: 'מעבר עדין עם נוצה רכה על צוואר, גב ופנים תוך שמירה על קשר עין ללא מילים.'
     },
     {
       stepNumber: 3,
-      phase: 'Core Mutual Fantasy Exploration',
-      title: 'Gentle Satin Restraints & Teasing',
-      description: 'Transition smoothly into softly anchoring wrists with silk scarves.'
+      phase: 'חקר תשוקות ומשחק זוגי',
+      title: 'משחק תפקידים דיסקרטי',
+      description: 'אימוץ דמויות סודיות מבר מלון יוקרתי ופגישה אקראית לכאורה בחדר השינה.'
     },
     {
       stepNumber: 4,
-      phase: 'Climax & Aftercare',
-      title: 'Shared Intimacy & Warm Embrace',
-      description: 'Remove restraints, share warm water or tea, and cuddle closely.'
+      phase: 'שיא התשוקה ואפטרקייר',
+      title: 'נשיקות ממושכות ושיחה פתוחה',
+      description: 'מעבר לחיבוק עמוק, נשיקות איטיות ושיתוף הרגעים הכי מרגשים מהערב.'
     }
-  ];
+  ],
+  [
+    {
+      stepNumber: 1,
+      phase: 'אווירה וחימום ראשוני',
+      title: 'אמבטיה חמה ושמנים אתריים',
+      description: 'טבילה זוגית באמבט קצף חם עם שמני לבנדר ותאורה רומנטית רכה.'
+    },
+    {
+      stepNumber: 2,
+      phase: 'העצמת החושים והמגע',
+      title: 'ייבוש עדין ועיסוי כפות רגליים',
+      description: 'עיטוף במגבת חמה ועיסוי מפנק לכפות הרגליים עם חמאת שיאה.'
+    },
+    {
+      stepNumber: 3,
+      phase: 'חקר תשוקות ומשחק זוגי',
+      title: 'משחק מילות בטיחות ותרגילי היפנוזה',
+      description: 'הנחיית נשימות בקצב אחיד, לחישת פקודות רכות והעצמת המתח החושי.'
+    },
+    {
+      stepNumber: 4,
+      phase: 'שיא התשוקה ואפטרקייר',
+      title: 'כרבול צמוד ומים צוננים',
+      description: 'שתיית מים קרים, התכרבלות מתחת לשמיכה עבה ומנוחה רגועה יחד.'
+    }
+  ]
+];
+
+let scenarioIndex = 0;
+
+// Dynamic AI Evening Scenario Generator (Rotates to a NEW unique scenario on EVERY click)
+export async function generateAIScenario(
+  intensity: string,
+  lang: 'en' | 'he'
+): Promise<ScenarioStep[]> {
+  scenarioIndex = (scenarioIndex + 1) % fallbackScenarioSetsHe.length;
 
   if (!GEMINI_API_KEY) {
-    return lang === 'he' ? fallbackStepsHe : fallbackStepsEn;
+    return lang === 'he' ? fallbackScenarioSetsHe[scenarioIndex] : fallbackScenarioSetsHe[scenarioIndex];
   }
 
   try {
+    const randomThemes = ['משחקי חושים וכיסוי עיניים', 'משחקי מגע ושמנים ארומטיים', 'משחקי תפקידים ופנטזיות סודיות', 'קשירות משי וטמפרטורה'];
+    const selectedTheme = randomThemes[Math.floor(Math.random() * randomThemes.length)];
+
     const prompt =
       lang === 'he'
-        ? `צור תרחיש ערב רומנטי ואינטימי ב-4 שלבים לבני זוג ברמת עוצמה ${intensity}.
+        ? `צור תרחיש ערב רומנטי ואינטימי מגוון וחדש לחלוטין בנושא "${selectedTheme}" ב-4 שלבים לבני זוג ברמת עוצמה ${intensity}.
 החזר אך ורק מערך JSON תקין של 4 אובייקטים עם השדות:
 "stepNumber" (מספר 1-4), "phase" (שם השלב), "title" (כותרת השלב), "description" (תיאור מפורט ב-2 משפטים).
 שפה: עברית רהוטה ורומנטית.`
-        : `Generate a 4-step romantic evening progression scenario for a couple at intensity level ${intensity}.
+        : `Generate a new unique 4-step romantic evening scenario regarding "${selectedTheme}" at intensity level ${intensity}.
 Return JSON array of 4 objects with fields: "stepNumber", "phase", "title", "description".`;
 
     const response = await fetch(
@@ -149,7 +198,7 @@ Return JSON array of 4 objects with fields: "stepNumber", "phase", "title", "des
     console.warn('Gemini Scenario Error:', e);
   }
 
-  return lang === 'he' ? fallbackStepsHe : fallbackStepsEn;
+  return fallbackScenarioSetsHe[scenarioIndex];
 }
 
 // Dynamic AI Dare Generator (Generates a unique new dare on every click)
@@ -157,7 +206,6 @@ export async function generateAIDare(
   intensity: string,
   lang: 'en' | 'he'
 ): Promise<{ title: string; description: string }> {
-  // Diverse seed themes to ensure a UNIQUE new dare on every click
   const themesHe = [
     'משחקי מגע וחושים בכיסוי עיניים',
     'לחישת פנטזיות כמוסות באוזן',
