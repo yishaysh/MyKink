@@ -303,37 +303,50 @@ export async function fetchMatches(coupleId: string) {
   return { success: true, matches: [] };
 }
 
-// 7. Fetch Dares
+// 7. Fetch Dares (No hardcoded sample dares — default to empty array)
 export async function fetchDares(coupleId: string) {
-  const defaultChallenges: ChallengeItem[] = [
-    {
-      id: 'd1',
-      title: 'Sensual Tease Without Touching',
-      description: 'Spend 5 minutes whispering three hidden fantasies while maintaining eye contact.',
-      pointsValue: 15,
-      status: 'PENDING',
-      expiresAt: new Date(Date.now() + 24 * 3600 * 1000).toISOString()
-    },
-    {
-      id: 'd2',
-      title: 'Secret Intimacy Note',
-      description: 'Hide a passionate handwritten note in your partner’s pocket or bag before work.',
-      pointsValue: 10,
-      status: 'COMPLETED',
-      expiresAt: new Date(Date.now() - 3600 * 1000).toISOString()
+  try {
+    const key = `mykink_dares_${coupleId || 'default'}`;
+    const raw = localStorage.getItem(key);
+    if (raw) {
+      const parsed: ChallengeItem[] = JSON.parse(raw);
+      return { success: true, challenges: parsed };
     }
-  ];
+  } catch (e) {
+    console.warn('Fetch dares local storage error:', e);
+  }
 
-  return { success: true, challenges: defaultChallenges };
+  return { success: true, challenges: [] };
 }
 
-// 8. Create Dare
+// 8. Create Dare (Save to LocalStorage)
 export async function createDare(
   coupleId: string,
   title: string,
   description: string,
   hours: number
 ) {
+  try {
+    const key = `mykink_dares_${coupleId || 'default'}`;
+    const existingRaw = localStorage.getItem(key);
+    const existing: ChallengeItem[] = existingRaw ? JSON.parse(existingRaw) : [];
+
+    const newDare: ChallengeItem = {
+      id: generateUUID(),
+      title,
+      description,
+      pointsValue: 15,
+      status: 'PENDING',
+      expiresAt: new Date(Date.now() + hours * 3600 * 1000).toISOString()
+    };
+
+    const updated = [newDare, ...existing];
+    localStorage.setItem(key, JSON.stringify(updated));
+
+    return { success: true, dare: newDare };
+  } catch (e) {
+    console.warn('Create dare error:', e);
+  }
   return { success: true };
 }
 
