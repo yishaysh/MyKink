@@ -104,14 +104,14 @@ export async function registerDevice(deviceId: string, publicKey: string) {
     const newId = generateUUID();
     const now = new Date().toISOString();
 
-    // Insert new user with anonymousAlias: null so Onboarding is not auto-bypassed!
+    // Insert new user with anonymousAlias: 'PENDING' to satisfy NOT NULL constraint without bypassing Onboarding
     const { data: newUser, error } = await supabase
       .from('User')
       .insert({
         id: newId,
         deviceIdentity: targetIdentity,
         publicKey,
-        anonymousAlias: null,
+        anonymousAlias: 'PENDING',
         updatedAt: now
       })
       .select()

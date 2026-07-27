@@ -71,13 +71,17 @@ export const App: React.FC = () => {
       setAnsweredQuestionIds(ansRes.answers.map((a: any) => a.questionId));
     }
 
-    // 2. Restore Profile if exists in DB or LocalStorage
+    // 2. Restore Profile if exists in DB or LocalStorage (and NOT PENDING)
     const savedProf = localStorage.getItem('mykink_user_profile');
     if (savedProf) {
       const parsed = JSON.parse(savedProf);
       setUserProfile(parsed);
       setActiveTab('swipe');
-    } else if (userRecord.anonymousAlias) {
+    } else if (
+      userRecord.anonymousAlias &&
+      userRecord.anonymousAlias !== 'PENDING' &&
+      userRecord.anonymousAlias.trim() !== ''
+    ) {
       const restoredProf = {
         alias: userRecord.anonymousAlias,
         role: 'SWITCH',
@@ -87,6 +91,8 @@ export const App: React.FC = () => {
       setUserProfile(restoredProf);
       localStorage.setItem('mykink_user_profile', JSON.stringify(restoredProf));
       setActiveTab('swipe');
+    } else {
+      setActiveTab('onboarding');
     }
 
     // 3. Connect Couple if exists
