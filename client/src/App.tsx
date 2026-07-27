@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Header } from './components/Header';
 import { Onboarding } from './components/Onboarding';
 import { PairingModal } from './components/PairingModal';
+import { ConfirmModal } from './components/ConfirmModal';
 import { SwipeDeck } from './components/SwipeDeck';
 import { MatchesView, SharedMatchItem } from './components/MatchesView';
 import { DaresView, ChallengeItem } from './components/DaresView';
@@ -27,6 +28,7 @@ import { supabase } from './services/supabase';
 export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('onboarding');
   const [isPairingModalOpen, setIsPairingModalOpen] = useState(false);
+  const [isResetModalOpen, setIsResetModalOpen] = useState(false);
 
   // i18n Language State
   const [lang, setLang] = useState<Language>('en');
@@ -178,24 +180,17 @@ export const App: React.FC = () => {
     setActiveTab('onboarding');
   };
 
-  // Reset Account & Restart Onboarding Handler
-  const handleResetAccount = async () => {
-    const confirmMsg =
-      lang === 'he'
-        ? 'האם אתה בטוח שברצונך למחוק לחלוטין את החשבון והתשובות מ-Database ולהתחיל Onboarding מחדש?'
-        : 'Are you sure you want to delete your account and answers from the database completely and restart Onboarding?';
-
-    if (window.confirm(confirmMsg)) {
-      if (userId) {
-        try {
-          await supabase.from('UserAnswer').delete().eq('userId', userId);
-          await supabase.from('User').delete().eq('id', userId);
-        } catch (e) {
-          console.warn('Delete user data error:', e);
-        }
+  // Execute Account Reset & Wiping DB records
+  const executeResetAccount = async () => {
+    if (userId) {
+      try {
+        await supabase.from('UserAnswer').delete().eq('userId', userId);
+        await supabase.from('User').delete().eq('id', userId);
+      } catch (e) {
+        console.warn('Delete user data error:', e);
       }
-      await handleSignOut();
     }
+    await handleSignOut();
   };
 
   // 2. Load Questions catalog
@@ -328,7 +323,7 @@ export const App: React.FC = () => {
           lang={lang}
           onToggleLang={handleToggleLang}
           onSignOut={handleSignOut}
-          onResetAccount={handleResetAccount}
+          onResetAccount={() => setIsResetModalOpen(true)}
         />
       )}
 
@@ -375,6 +370,22 @@ export const App: React.FC = () => {
         pairCode={pairCode}
         onCreateCouple={handleCreateCouple}
         onJoinCouple={handleJoinCouple}
+      />
+
+      {/* Styled Reset / Delete Account Confirmation Modal */}
+      <ConfirmModal
+        isOpen={isResetModalOpen}
+        onClose={() => setIsResetModalOpen(false)}
+        onConfirm={executeResetAccount}
+        title={lang === 'he' ? 'איפוס ומחיקת חשבון מוחלטת' : 'Reset Account & Delete Data'}
+        description={
+          lang === 'he'
+            ? 'פעולה זו תמחק לחלוטין את החשבון והתשובות שלך מ-PostgreSQL ותחזיר אותך לתהליך ה-Onboarding מהתחלה. האם להמשיך?'
+            : 'This action will permanently delete your user profile and answers from PostgreSQL and return you to the initial Onboarding flow. Proceed?'
+        }
+        confirmText={lang === 'he' ? 'מחק והתחל מחדש' : 'Delete & Restart'}
+        cancelText={lang === 'he' ? 'ביטול' : 'Cancel'}
+        lang={lang}
       />
     </div>
   );
