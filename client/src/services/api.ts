@@ -176,12 +176,47 @@ export async function updateUserProfileInDB(userId: string | null, alias: string
   }
 }
 
-// 1c. Reset User Account and answers completely from DB
+async function deleteUserAndCleanCouples(targetUserId: string) {
+  try {
+    // 1. Fetch user to get associated coupleId
+    const { data: userObj } = await supabase
+      .from('User')
+      .select('coupleId')
+      .eq('id', targetUserId)
+      .maybeSingle();
+
+    const coupleId = userObj?.coupleId;
+
+    // 2. Delete UserAnswer and User
+    await supabase.from('UserAnswer').delete().eq('userId', targetUserId);
+    await supabase.from('User').delete().eq('id', targetUserId);
+
+    // 3. If user was attached to a couple, check if any remaining users are linked to it
+    if (coupleId) {
+      const { data: remainingUsers } = await supabase
+        .from('User')
+        .select('id')
+        .eq('coupleId', coupleId);
+
+      // If no other users are linked to this couple, clean up couple and its child records
+      if (!remainingUsers || remainingUsers.length === 0) {
+        await supabase.from('SharedMatch').delete().eq('coupleId', coupleId);
+        await supabase.from('CoupleChallenge').delete().eq('coupleId', coupleId);
+        await supabase.from('IntimacyLog').delete().eq('coupleId', coupleId);
+        await supabase.from('EphemeralMessage').delete().eq('coupleId', coupleId);
+        await supabase.from('Couple').delete().eq('id', coupleId);
+      }
+    }
+  } catch (e) {
+    console.warn('deleteUserAndCleanCouples error:', e);
+  }
+}
+
+// 1c. Reset User Account, answers, and orphaned couples completely from DB
 export async function resetUserAccountInDB(userId: string | null, googleUserId?: string | null) {
   try {
     if (userId) {
-      await supabase.from('UserAnswer').delete().eq('userId', userId);
-      await supabase.from('User').delete().eq('id', userId);
+      await deleteUserAndCleanCouples(userId);
     }
     if (googleUserId) {
       const { data: gUser } = await supabase
@@ -191,8 +226,7 @@ export async function resetUserAccountInDB(userId: string | null, googleUserId?:
         .maybeSingle();
 
       if (gUser && gUser.id !== userId) {
-        await supabase.from('UserAnswer').delete().eq('userId', gUser.id);
-        await supabase.from('User').delete().eq('id', gUser.id);
+        await deleteUserAndCleanCouples(gUser.id);
       }
     }
   } catch (e) {
