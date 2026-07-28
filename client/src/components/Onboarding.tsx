@@ -14,10 +14,7 @@ import {
   AlertCircle,
   Heart,
   Target,
-  Compass,
-  HelpCircle,
-  Shield,
-  Key
+  Compass
 } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { Language, translations } from '../services/i18n';
@@ -42,6 +39,29 @@ interface OnboardingProps {
   googleUser?: any;
 }
 
+// Avatar Illustrations for Woman & Man
+const WomanIllustration: React.FC<{ isSelected: boolean }> = ({ isSelected }) => (
+  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center p-1 transition ${isSelected ? 'bg-[#e8b4b8]/20 ring-2 ring-[#e8b4b8]' : 'bg-[#2b292f]'}`}>
+    <svg className="w-10 h-10" viewBox="0 0 64 64" fill="none">
+      <circle cx="32" cy="22" r="11" fill={isSelected ? '#e8b4b8' : '#cbd5e1'} />
+      <path d="M16 54C16 43 23 38 32 38C41 38 48 43 48 54" stroke={isSelected ? '#e8b4b8' : '#94a3b8'} strokeWidth="4" strokeLinecap="round" />
+      <path d="M21 21C18 28 19 33 24 37M43 21C46 28 45 33 40 37" stroke={isSelected ? '#f472b6' : '#64748b'} strokeWidth="3.5" strokeLinecap="round" />
+      <circle cx="32" cy="19" r="2" fill="#48272a" />
+    </svg>
+  </div>
+);
+
+const ManIllustration: React.FC<{ isSelected: boolean }> = ({ isSelected }) => (
+  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center p-1 transition ${isSelected ? 'bg-[#e8b4b8]/20 ring-2 ring-[#e8b4b8]' : 'bg-[#2b292f]'}`}>
+    <svg className="w-10 h-10" viewBox="0 0 64 64" fill="none">
+      <circle cx="32" cy="22" r="11" fill={isSelected ? '#e8b4b8' : '#cbd5e1'} />
+      <path d="M16 54C16 43 23 38 32 38C41 38 48 43 48 54" stroke={isSelected ? '#e8b4b8' : '#94a3b8'} strokeWidth="4" strokeLinecap="round" />
+      <path d="M21 16L32 10L43 16" stroke={isSelected ? '#e8b4b8' : '#64748b'} strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx="32" cy="19" r="2" fill="#48272a" />
+    </svg>
+  </div>
+);
+
 export const Onboarding: React.FC<OnboardingProps> = ({
   pairCode,
   onCreateCouple,
@@ -56,12 +76,14 @@ export const Onboarding: React.FC<OnboardingProps> = ({
   // Profile Form State
   const [alias, setAlias] = useState('');
   const [aliasError, setAliasError] = useState(false);
-  const [gender, setGender] = useState<'MAN' | 'WOMAN' | 'NON_BINARY' | 'UNDISCLOSED'>('WOMAN');
-  const [pronouns, setPronouns] = useState<'HE' | 'SHE' | 'THEY'>('SHE');
-  const [goal, setGoal] = useState<'REIGNITE' | 'SECRET_FANTASIES' | 'ROLEPLAY' | 'EXPLORE_BOUNDARIES'>('REIGNITE');
-  const [relationshipDynamic, setRelationshipDynamic] = useState<'NEW' | 'LONG_TERM' | 'OPEN' | 'BDSM'>('LONG_TERM');
+  const [gender, setGender] = useState<'MAN' | 'WOMAN'>('WOMAN');
+  
+  // Multi-select states
+  const [selectedGoals, setSelectedGoals] = useState<string[]>(['REIGNITE']);
+  const [selectedDynamics, setSelectedDynamics] = useState<string[]>(['LONG_TERM']);
+  const [selectedLocations, setSelectedLocations] = useState<string[]>(['HOTEL']);
+
   const [role, setRole] = useState<'GIVER' | 'RECEIVER' | 'SWITCH'>('SWITCH');
-  const [warmupAnswer, setWarmupAnswer] = useState<'HOTEL' | 'CAR' | 'SOFA' | 'NATURE'>('HOTEL');
   const [selectedCategories, setSelectedCategories] = useState<string[]>(['Sensual', 'BDSM']);
   const [intensity, setIntensity] = useState<'VANILLA' | 'SPICY' | 'ADVENTUROUS'>('SPICY');
   const [agreedSafewords, setAgreedSafewords] = useState(true);
@@ -114,6 +136,42 @@ export const Onboarding: React.FC<OnboardingProps> = ({
     setTimeout(() => setCopied(false), 2000);
   };
 
+  // Toggle Multi-select Helpers
+  const toggleGoal = (goalId: string) => {
+    if (selectedGoals.includes(goalId)) {
+      if (selectedGoals.length > 1) {
+        setSelectedGoals(selectedGoals.filter((g) => g !== goalId));
+      }
+    } else {
+      setSelectedGoals([...selectedGoals, goalId]);
+    }
+  };
+
+  const toggleDynamic = (dynamicId: string) => {
+    if (selectedDynamics.includes(dynamicId)) {
+      if (selectedDynamics.length > 1) {
+        setSelectedDynamics(selectedDynamics.filter((d) => d !== dynamicId));
+      }
+    } else {
+      setSelectedDynamics([...selectedDynamics, dynamicId]);
+    }
+  };
+
+  const toggleLocation = (locationId: string) => {
+    if (selectedLocations.includes(locationId)) {
+      if (selectedLocations.length > 1) {
+        setSelectedLocations(selectedLocations.filter((l) => l !== locationId));
+      }
+    } else {
+      if (selectedLocations.length < 2) {
+        setSelectedLocations([...selectedLocations, locationId]);
+      } else {
+        // Swap second selection to maintain max 2
+        setSelectedLocations([selectedLocations[1], locationId]);
+      }
+    }
+  };
+
   const toggleCategory = (catId: string) => {
     if (selectedCategories.includes(catId)) {
       if (selectedCategories.length > 1) {
@@ -144,10 +202,10 @@ export const Onboarding: React.FC<OnboardingProps> = ({
       categories: selectedCategories,
       intensity,
       gender,
-      pronouns,
-      goal,
-      relationshipDynamic,
-      warmupAnswer
+      pronouns: gender === 'MAN' ? 'HE' : 'SHE',
+      goal: selectedGoals.join(','),
+      relationshipDynamic: selectedDynamics.join(','),
+      warmupAnswer: selectedLocations.join(',')
     });
   };
 
@@ -165,11 +223,12 @@ export const Onboarding: React.FC<OnboardingProps> = ({
     return t.intensityAdventurous;
   };
 
+  // Step Indicators Titles without "Step X" prefix
   const stepTitles = [
     lang === 'he' ? 'זהות וכינוי' : 'Identity & Alias',
-    lang === 'he' ? 'מטרה וווייב' : 'Intimacy Goals',
+    lang === 'he' ? 'מטרה זוגית' : 'Intimacy Goals',
     lang === 'he' ? 'אופי הקשר' : 'Relationship Dynamic',
-    lang === 'he' ? 'חימום סודי' : 'Teaser Quiz',
+    lang === 'he' ? 'דייט נועז' : 'Teaser Quiz',
     lang === 'he' ? 'פנטזיות' : 'Fantasies & Limits',
     lang === 'he' ? 'צימוד' : 'Pairing'
   ];
@@ -201,7 +260,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({
           ))}
         </div>
 
-        {/* STEP 1: GENDER, PRONOUNS, GOOGLE AUTH & SEXY ALIAS */}
+        {/* STEP 1: GENDER (WITH ILLUSTRATIONS), GOOGLE AUTH & SEXY ALIAS */}
         {step === 1 && (
           <div className="solid-card p-5 sm:p-8 space-y-5 card-appear border border-[#36343a]">
             <div className="text-center">
@@ -242,35 +301,48 @@ export const Onboarding: React.FC<OnboardingProps> = ({
               )}
             </div>
 
-            {/* Gender Selection */}
+            {/* Gender Selection with Illustrations & Matching Dynamic Role Border Highlight */}
             <div className="space-y-4">
               <div>
                 <label className="text-xs font-semibold text-slate-300 block mb-2">
-                  {lang === 'he' ? 'מגדר (Gender)' : 'Gender Selection'}
+                  {lang === 'he' ? 'בחירת מגדר' : 'Gender Selection'}
                 </label>
-                <div className="grid grid-cols-4 gap-2 text-center">
-                  {[
-                    { id: 'WOMAN', label: lang === 'he' ? 'אישה ♀️' : 'Woman ♀️', p: 'SHE' },
-                    { id: 'MAN', label: lang === 'he' ? 'גבר ♂️' : 'Man ♂️', p: 'HE' },
-                    { id: 'NON_BINARY', label: lang === 'he' ? 'א-בינארי ⚧️' : 'Non-binary ⚧️', p: 'THEY' },
-                    { id: 'UNDISCLOSED', label: lang === 'he' ? 'דיסקרטי 🤫' : 'Secret 🤫', p: 'THEY' }
-                  ].map((g) => (
-                    <button
-                      key={g.id}
-                      type="button"
-                      onClick={() => {
-                        setGender(g.id as any);
-                        setPronouns(g.p as any);
-                      }}
-                      className={`py-2.5 px-2 rounded-xl text-xs font-bold transition border ${
-                        gender === g.id
-                          ? 'bg-[#e8b4b8] text-[#48272a] border-[#e8b4b8] shadow-sm'
-                          : 'bg-[#141218] border-[#36343a] text-slate-300 hover:border-[#e8b4b8]/40'
-                      }`}
-                    >
-                      {g.label}
-                    </button>
-                  ))}
+                <div className="grid grid-cols-2 gap-3 text-center">
+                  {/* WOMAN */}
+                  <button
+                    type="button"
+                    onClick={() => setGender('WOMAN')}
+                    style={{
+                      borderColor: gender === 'WOMAN' ? '#e8b4b8' : '#36343a',
+                      borderWidth: '2px',
+                      borderStyle: 'solid',
+                      backgroundColor: gender === 'WOMAN' ? '#2b292f' : '#141218'
+                    }}
+                    className="p-4 rounded-2xl text-center transition-all duration-150 flex flex-col justify-center items-center h-28 cursor-pointer"
+                  >
+                    <WomanIllustration isSelected={gender === 'WOMAN'} />
+                    <span className={`text-xs font-bold block mt-2 ${gender === 'WOMAN' ? 'text-[#e8b4b8]' : 'text-slate-200'}`}>
+                      {lang === 'he' ? 'אישה ♀️' : 'Woman ♀️'}
+                    </span>
+                  </button>
+
+                  {/* MAN */}
+                  <button
+                    type="button"
+                    onClick={() => setGender('MAN')}
+                    style={{
+                      borderColor: gender === 'MAN' ? '#e8b4b8' : '#36343a',
+                      borderWidth: '2px',
+                      borderStyle: 'solid',
+                      backgroundColor: gender === 'MAN' ? '#2b292f' : '#141218'
+                    }}
+                    className="p-4 rounded-2xl text-center transition-all duration-150 flex flex-col justify-center items-center h-28 cursor-pointer"
+                  >
+                    <ManIllustration isSelected={gender === 'MAN'} />
+                    <span className={`text-xs font-bold block mt-2 ${gender === 'MAN' ? 'text-[#e8b4b8]' : 'text-slate-200'}`}>
+                      {lang === 'he' ? 'גבר ♂️' : 'Man ♂️'}
+                    </span>
+                  </button>
                 </div>
               </div>
 
@@ -347,7 +419,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({
           </div>
         )}
 
-        {/* STEP 2: INTIMACY GOALS & VIBE */}
+        {/* STEP 2: INTIMACY GOALS (MULTI-SELECT WITH MATCHING BORDER HIGHLIGHT) */}
         {step === 2 && (
           <div className="solid-card p-5 sm:p-8 space-y-5 card-appear border border-[#36343a]">
             <div className="text-center">
@@ -359,8 +431,8 @@ export const Onboarding: React.FC<OnboardingProps> = ({
               </h2>
               <p className="text-xs text-slate-300 max-w-sm mx-auto mt-1">
                 {lang === 'he'
-                  ? 'בחרו את התפיסה העיקרית שברצונכם להגשים באמצעות MyKink'
-                  : 'Select what you want to achieve together in MyKink'}
+                  ? 'אפשר לבחור מספר מטרות שתרצו להגשים יחד באמצעות האפליקציה (בחירה מרובה)'
+                  : 'Select one or more goals you wish to achieve together (Multi-select)'}
               </p>
             </div>
 
@@ -387,18 +459,18 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                   desc: lang === 'he' ? 'חקירת עולמות BDSM ותשוקות בדיסקרטיות מלאה' : 'Explore BDSM & taboos with total encryption & safety'
                 }
               ].map((g) => {
-                const isSelected = goal === g.id;
+                const isSelected = selectedGoals.includes(g.id);
                 return (
                   <div
                     key={g.id}
-                    onClick={() => setGoal(g.id as any)}
+                    onClick={() => toggleGoal(g.id)}
                     style={{
                       borderColor: isSelected ? '#e8b4b8' : '#36343a',
                       borderWidth: '2px',
                       borderStyle: 'solid',
                       backgroundColor: isSelected ? '#2b292f' : '#141218'
                     }}
-                    className="p-3.5 rounded-2xl cursor-pointer flex items-center justify-between transition"
+                    className="p-3.5 rounded-2xl cursor-pointer flex items-center justify-between transition-all duration-150"
                   >
                     <div>
                       <span className={`text-xs font-bold block ${isSelected ? 'text-[#e8b4b8]' : 'text-white'}`}>
@@ -406,9 +478,11 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                       </span>
                       <span className="text-[11px] text-slate-400 block mt-0.5">{g.desc}</span>
                     </div>
-                    <div className={`w-5 h-5 rounded-full border flex items-center justify-center ${isSelected ? 'border-[#e8b4b8] bg-[#e8b4b8]' : 'border-slate-600'}`}>
-                      {isSelected && <Check className="w-3 h-3 text-[#48272a]" />}
-                    </div>
+                    {isSelected ? (
+                      <CheckSquare className="w-5 h-5 text-[#e8b4b8] shrink-0" />
+                    ) : (
+                      <Square className="w-5 h-5 text-slate-600 shrink-0" />
+                    )}
                   </div>
                 );
               })}
@@ -433,7 +507,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({
           </div>
         )}
 
-        {/* STEP 3: RELATIONSHIP DYNAMIC & INTIMACY ROLE */}
+        {/* STEP 3: RELATIONSHIP DYNAMIC (MULTI-SELECT WITH MATCHING BORDER HIGHLIGHT) */}
         {step === 3 && (
           <div className="solid-card p-5 sm:p-8 space-y-5 card-appear border border-[#36343a]">
             <div className="text-center">
@@ -445,37 +519,44 @@ export const Onboarding: React.FC<OnboardingProps> = ({
               </h2>
               <p className="text-xs text-slate-300 max-w-sm mx-auto mt-1">
                 {lang === 'he'
-                  ? 'הגדרה זו תעזור למנוע ההתאמות להתאים לכם שאלות ותרחישים מדוייקים'
-                  : 'Helps us tailor double-blind scenarios to your exact dynamic'}
+                  ? 'אפשר לסמן מספר מאפיינים שמתארים את אופי הזוגיות שלכם (בחירה מרובה)'
+                  : 'Select all characteristics describing your dynamic (Multi-select)'}
               </p>
             </div>
 
             <div className="space-y-4">
               <div>
                 <label className="text-xs font-semibold text-slate-300 block mb-2">
-                  {lang === 'he' ? 'אופי הזוגיות (Relationship Dynamic)' : 'Relationship Type'}
+                  {lang === 'he' ? 'אופי הזוגיות (בחירה מרובה)' : 'Relationship Dynamic (Multi-select)'}
                 </label>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 gap-2.5">
                   {[
                     { id: 'NEW', title: lang === 'he' ? '✨ זוג בתחילת הדרך' : '✨ New Romance', desc: lang === 'he' ? 'מגלים אחד את השנייה' : 'Exploring each other' },
                     { id: 'LONG_TERM', title: lang === 'he' ? '🚀 זוגיות ממושכת' : '🚀 Long-Term / Married', desc: lang === 'he' ? 'שבירת רוטינה וריענון' : 'Breaking routine' },
                     { id: 'OPEN', title: lang === 'he' ? '🔓 קשר פתוח / ENM' : '🔓 Open / Non-Monogamous', desc: lang === 'he' ? 'חופש ופתיחות' : 'Open exploration' },
                     { id: 'BDSM', title: lang === 'he' ? '⛓️ דינמיקת D/s & BDSM' : '⛓️ Dominance & Submission', desc: lang === 'he' ? 'שליטה ותשוקה' : 'Power exchange' }
-                  ].map((rd) => (
-                    <button
-                      key={rd.id}
-                      type="button"
-                      onClick={() => setRelationshipDynamic(rd.id as any)}
-                      className={`p-3 rounded-2xl text-right transition border text-xs font-bold flex flex-col justify-center ${
-                        relationshipDynamic === rd.id
-                          ? 'bg-[#2b292f] border-[#e8b4b8] text-[#e8b4b8]'
-                          : 'bg-[#141218] border-[#36343a] text-slate-300 hover:border-[#e8b4b8]/40'
-                      }`}
-                    >
-                      <span className="block">{rd.title}</span>
-                      <span className="text-[10px] text-slate-400 block font-normal mt-0.5">{rd.desc}</span>
-                    </button>
-                  ))}
+                  ].map((rd) => {
+                    const isSelected = selectedDynamics.includes(rd.id);
+                    return (
+                      <button
+                        key={rd.id}
+                        type="button"
+                        onClick={() => toggleDynamic(rd.id)}
+                        style={{
+                          borderColor: isSelected ? '#e8b4b8' : '#36343a',
+                          borderWidth: '2px',
+                          borderStyle: 'solid',
+                          backgroundColor: isSelected ? '#2b292f' : '#141218'
+                        }}
+                        className="p-3.5 rounded-2xl text-right transition-all duration-150 flex flex-col justify-center h-22 cursor-pointer"
+                      >
+                        <span className={`text-xs font-bold block ${isSelected ? 'text-[#e8b4b8]' : 'text-white'}`}>
+                          {rd.title}
+                        </span>
+                        <span className="text-[10px] text-slate-400 block font-normal mt-0.5">{rd.desc}</span>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -566,7 +647,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({
           </div>
         )}
 
-        {/* STEP 4: INTERACTIVE WARM-UP TEASER QUESTION */}
+        {/* STEP 4: INTERACTIVE WARM-UP TEASER QUESTION (UP TO 2 SELECTIONS & MATCHING BORDER HIGHLIGHT) */}
         {step === 4 && (
           <div className="solid-card p-5 sm:p-8 space-y-5 card-appear border border-[#36343a]">
             <div className="text-center">
@@ -577,12 +658,12 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                 {lang === 'he' ? '🌶️ שאלת חימום סודית' : '🌶️ Teaser Question'}
               </span>
               <h2 className="text-xl sm:text-2xl font-bold text-white font-headline mt-1">
-                {lang === 'he' ? 'איפה הייתם רוצים שהדייט הנועז הבא שלכם יתרחש?' : 'Where should your next wild date date take place?'}
+                {lang === 'he' ? 'איפה הייתם רוצים שהדייט הנועז הבא שלכם יתרחש?' : 'Where should your next wild date take place?'}
               </h2>
               <p className="text-xs text-slate-300 max-w-sm mx-auto mt-1">
                 {lang === 'he'
-                  ? 'בחרו את הלוקיישן החלומי שלכם – התשובה תושווה באופן סודי מול הפרטנר/ית!'
-                  : 'Pick your dream location – this will be double-blind matched with your partner!'}
+                  ? 'אפשר לסמן עד 2 תשובות שמוצאות חן בעיניכם (בחירה של עד 2 תשובות)'
+                  : 'Select up to 2 date locations you would love to experience'}
               </p>
             </div>
 
@@ -593,19 +674,19 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                 { id: 'SOFA', title: lang === 'he' ? '🛋️ על הספה בסלון' : '🛋️ Living Room Sofa', desc: lang === 'he' ? 'שניכם לבד בבית בלי הפרעות' : 'Spontaneous passion when home alone' },
                 { id: 'NATURE', title: lang === 'he' ? '🌲 בטבע תחת השמיים' : '🌲 Outdoors & Stars', desc: lang === 'he' ? 'חוף ים מוצנע או יער שקט' : 'Secluded beach or quiet forest' }
               ].map((wa) => {
-                const isSelected = warmupAnswer === wa.id;
+                const isSelected = selectedLocations.includes(wa.id);
                 return (
                   <button
                     key={wa.id}
                     type="button"
-                    onClick={() => setWarmupAnswer(wa.id as any)}
+                    onClick={() => toggleLocation(wa.id)}
                     style={{
                       borderColor: isSelected ? '#e8b4b8' : '#36343a',
                       borderWidth: '2px',
                       borderStyle: 'solid',
                       backgroundColor: isSelected ? '#2b292f' : '#141218'
                     }}
-                    className="p-3.5 rounded-2xl text-right transition flex flex-col justify-between h-28"
+                    className="p-3.5 rounded-2xl text-right transition flex flex-col justify-between h-28 cursor-pointer"
                   >
                     <span className={`text-xs font-bold block ${isSelected ? 'text-[#e8b4b8]' : 'text-white'}`}>
                       {wa.title}
@@ -661,7 +742,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                       borderStyle: 'solid',
                       backgroundColor: isSelected ? '#2b292f' : '#141218'
                     }}
-                    className="p-3.5 rounded-2xl cursor-pointer flex items-center justify-between transition"
+                    className="p-3.5 rounded-2xl cursor-pointer flex items-center justify-between transition-all duration-150"
                   >
                     <div>
                       <span className={`text-xs font-bold block ${isSelected ? 'text-[#e8b4b8]' : 'text-white'}`}>

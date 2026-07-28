@@ -127,7 +127,7 @@ export const translations: Record<Language, TranslationDictionary> = {
     tabChallenges: 'Challenges',
     tabAria: 'Aria AI',
 
-    onboardingStep1Title: 'Step 1: Google Account & Secret Alias',
+    onboardingStep1Title: 'Google Account & Secret Alias',
     onboardingStep1Sub: 'Sign in with your Google account for 1-to-1 unique identity, and choose an anonymous sexy nickname.',
     googleSignInBtn: 'Sign in with Google',
     googleSignedInAs: 'Signed in as:',
@@ -141,10 +141,10 @@ export const translations: Record<Language, TranslationDictionary> = {
     roleSwitch: 'Switch / Versatile',
     roleSwitchSub: 'Both roles',
 
-    onboardingStep2Title: 'Step 2: Select Favorite Categories',
+    onboardingStep2Title: 'Select Favorite Categories',
     onboardingStep2Sub: 'Select the fantasy categories you are interested in exploring together.',
 
-    onboardingStep3Title: 'Step 3: Boundaries & Intensity',
+    onboardingStep3Title: 'Boundaries & Intensity',
     onboardingStep3Sub: 'Define your preferred intensity level and agree to fundamental safety principles.',
     intensityLabel: 'Preferred Intensity Level:',
     intensityVanilla: 'Vanilla & Mild',
@@ -153,7 +153,7 @@ export const translations: Record<Language, TranslationDictionary> = {
     safewordTitle: 'Safeword & Consent Agreement',
     safewordSub: 'I agree that Red means stop immediately, Yellow means slow down, and Green means continue.',
 
-    onboardingStep4Title: 'Step 4: Anonymous Couple Pairing',
+    onboardingStep4Title: 'Anonymous Couple Pairing',
     onboardingStep4Sub: "Share your invite link or enter your partner's code to unlock mutual matches.",
     yourCoupleCode: 'Your Unique Couple Code:',
     copyInviteLink: 'Copy Partner Invite Link',
@@ -231,7 +231,7 @@ export const translations: Record<Language, TranslationDictionary> = {
     tabChallenges: 'אתגרים',
     tabAria: 'אריאל AI',
 
-    onboardingStep1Title: 'שלב 1: חשבון Google וכינוי סקסי',
+    onboardingStep1Title: 'חשבון Google וכינוי סקסי',
     onboardingStep1Sub: 'התחברו עם חשבון גוגל לזיהוי חד-ערכי ייחודי, ובחרו כינוי אנונימי שיוצג לבן/בת הזוג.',
     googleSignInBtn: 'התחברות מהירה באמצעות Google',
     googleSignedInAs: 'מחובר כחשבון:',
@@ -245,10 +245,10 @@ export const translations: Record<Language, TranslationDictionary> = {
     roleSwitch: 'משתנה / ורסטילי',
     roleSwitchSub: 'שני התפקידים',
 
-    onboardingStep2Title: 'שלב 2: בחירת קטגוריות מועדפות',
+    onboardingStep2Title: 'בחירת קטגוריות מועדפות',
     onboardingStep2Sub: 'סמנו את הקטגוריות והפנטזיות שתרצו לחקור יחד.',
 
-    onboardingStep3Title: 'שלב 3: גבולות ועוצמה',
+    onboardingStep3Title: 'גבולות ועוצמה',
     onboardingStep3Sub: 'הגדירו את רמת העוצמה המבוקשת ואשרו את הסכם הבטיחות.',
     intensityLabel: 'רמת עוצמה מועדפת:',
     intensityVanilla: 'מעודן (ווניל)',
@@ -257,7 +257,7 @@ export const translations: Record<Language, TranslationDictionary> = {
     safewordTitle: 'הסכם מילות בטיחות והסכמה',
     safewordSub: 'אני מאשר/ת שאדום פירושו עצירה מיידית, צהוב פירושו האטה, וירוק פירושו להמשיך.',
 
-    onboardingStep4Title: 'שלב 4: צימוד זוגי אנונימי',
+    onboardingStep4Title: 'צימוד זוגי אנונימי',
     onboardingStep4Sub: 'שתפו את קישור ההזמנה או הזינו את הקוד של בן/בת הזוג לגילוי התאמות.',
     yourCoupleCode: 'קוד הצימוד הייחודי שלכם:',
     copyInviteLink: 'העתק קישור הזמנה לזוג',
