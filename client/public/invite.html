@@ -23,14 +23,13 @@
       .font-headline {
         font-family: 'Hanken Grotesk', 'Assistant', sans-serif;
       }
-      .glass-card {
-        background: rgba(33, 31, 37, 0.85);
-        backdrop-filter: blur(16px);
-        border: 1px solid rgba(232, 180, 184, 0.25);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      .solid-card {
+        background: #1c1a22;
+        border: 1px solid rgba(232, 180, 184, 0.3);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6);
       }
-      .glass-card:hover {
-        border-color: rgba(232, 180, 184, 0.5);
+      .solid-card:hover {
+        border-color: rgba(232, 180, 184, 0.6);
       }
       .btn-rose-glow {
         background: linear-gradient(135deg, #e8b4b8 0%, #d1979b 100%);
@@ -93,7 +92,7 @@
       </div>
 
       <!-- CARICATURE COUPLE POLAROID CARD -->
-      <div class="glass-card p-6 sm:p-7 rounded-3xl space-y-4 text-center border-2 border-[#e8b4b8]/40 shadow-2xl">
+      <div class="solid-card p-6 sm:p-7 rounded-3xl space-y-4 text-center border-2 border-[#e8b4b8]/40 shadow-2xl">
         <div class="flex items-center justify-center gap-3 sm:gap-6 py-2">
           <!-- Husband Caricature -->
           <div class="relative group">
@@ -127,14 +126,44 @@
         </div>
       </div>
 
-      <!-- FEATURES GRID -->
+      <!-- FEATURES GRID WITH LATEST INNOVATIONS -->
       <div class="space-y-4">
-        <h2 class="text-xl font-bold text-white text-center font-headline">מה מחכה לנו באפליקציה? ✨</h2>
+        <h2 class="text-xl font-bold text-white text-center font-headline">מה חדש ומחכה לנו באפליקציה? ✨</h2>
 
         <div class="grid grid-cols-1 gap-3.5">
 
-          <!-- Feature 1: Double Opt-In Matching -->
-          <div class="glass-card p-4 rounded-2xl flex items-start gap-3.5">
+          <!-- Feature 1: Expanded 6-Step Interactive Onboarding -->
+          <div class="solid-card p-4 rounded-2xl flex items-start gap-3.5">
+            <div class="w-10 h-10 rounded-xl bg-[#2b292f] border border-[#e8b4b8]/40 text-[#e8b4b8] flex items-center justify-center shrink-0 shadow-md">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+              </svg>
+            </div>
+            <div class="text-xs space-y-1">
+              <h3 class="text-sm font-bold text-white font-headline">אונבורדינג מותאם אישית (6 שלבים)</h3>
+              <p class="text-slate-300 leading-relaxed">
+                בחירת מגדר (אישה ♀️ / גבר ♂️) עם איורים מעוצבים, הגדרת מטרות זוגיות, אופי הקשר (בחירה מרובה) ושאלת חימום סודית (Teaser Quiz) לדייט הבא!
+              </p>
+            </div>
+          </div>
+
+          <!-- Feature 2: Dynamic Sexy Aliases & Shuffle -->
+          <div class="solid-card p-4 rounded-2xl flex items-start gap-3.5">
+            <div class="w-10 h-10 rounded-xl bg-[#2b292f] border border-[#e8b4b8]/40 text-[#e8b4b8] flex items-center justify-center shrink-0 shadow-md">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L5.602 15.12a2 2 0 00-1.189.231l-1.396.837a1 1 0 00-.236 1.488l.685.822A2 2 0 005.01 19h13.98a2 2 0 001.544-.735l.685-.822a1 1 0 00-.236-1.488l-1.555-.933zM12 2a4 4 0 100 8 4 4 0 000-8z"/>
+              </svg>
+            </div>
+            <div class="text-xs space-y-1">
+              <h3 class="text-sm font-bold text-white font-headline">מחולל כינויים סקסיים דינאמי 🎲</h3>
+              <p class="text-slate-300 leading-relaxed">
+                הצעות לכינויים אינטימיים בעברית ובאנגלית המתחלפות אקראית בכל כניסה, לצד כפתור ערבוב (🎲) לבחירת כינוי מושלם בנגיעה.
+              </p>
+            </div>
+          </div>
+
+          <!-- Feature 3: Double Opt-In Matching -->
+          <div class="solid-card p-4 rounded-2xl flex items-start gap-3.5">
             <div class="w-10 h-10 rounded-xl bg-[#2b292f] border border-[#e8b4b8]/40 text-[#e8b4b8] flex items-center justify-center shrink-0 shadow-md">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
@@ -143,13 +172,13 @@
             <div class="text-xs space-y-1">
               <h3 class="text-sm font-bold text-white font-headline">גילוי תשוקות ללא מבוכה (Double Opt-In)</h3>
               <p class="text-slate-300 leading-relaxed">
-                אנחנו עונים על שאלון פנטזיות דיסקרטי. התאמה נחשפת **רק במידה ושנינו ענינו "כן" או "אולי"**. אם אחד ענה "לא", התשובה נשארת חסויה לחלוטין!
+                מענה על שאלון פנטזיות דיסקרטי. התאמה נחשפת **רק במידה ושנינו ענינו "כן" או "אולי"**. תשובות "לא" נשארות מוצפנות וחסויות לחלוטין!
               </p>
             </div>
           </div>
 
-          <!-- Feature 2: Evening Scenario Generator & Aria AI -->
-          <div class="glass-card p-4 rounded-2xl flex items-start gap-3.5">
+          <!-- Feature 4: Evening Scenario Generator & Aria AI -->
+          <div class="solid-card p-4 rounded-2xl flex items-start gap-3.5">
             <div class="w-10 h-10 rounded-xl bg-[#2b292f] border border-[#e8b4b8]/40 text-[#e8b4b8] flex items-center justify-center shrink-0 shadow-md">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
@@ -163,23 +192,8 @@
             </div>
           </div>
 
-          <!-- Feature 3: Challenges & Rewards -->
-          <div class="glass-card p-4 rounded-2xl flex items-start gap-3.5">
-            <div class="w-10 h-10 rounded-xl bg-[#2b292f] border border-[#e8b4b8]/40 text-[#e8b4b8] flex items-center justify-center shrink-0 shadow-md">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/>
-              </svg>
-            </div>
-            <div class="text-xs space-y-1">
-              <h3 class="text-sm font-bold text-white font-headline">אתגרים זוגיים ופתקי תשוקה</h3>
-              <p class="text-slate-300 leading-relaxed">
-                משימות רומנטיות, גירויים חושיים ופתקי אהבה סודיים שנוכל לשלוח אחד לשנייה עם נקודות פרס וצבירת חוויות משותפות.
-              </p>
-            </div>
-          </div>
-
-          <!-- Feature 4: Sexy Aliases & Absolute Privacy -->
-          <div class="glass-card p-4 rounded-2xl flex items-start gap-3.5">
+          <!-- Feature 5: Absolute Privacy & Opaque Dialogs -->
+          <div class="solid-card p-4 rounded-2xl flex items-start gap-3.5">
             <div class="w-10 h-10 rounded-xl bg-[#2b292f] border border-[#e8b4b8]/40 text-[#e8b4b8] flex items-center justify-center shrink-0 shadow-md">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
@@ -188,7 +202,7 @@
             <div class="text-xs space-y-1">
               <h3 class="text-sm font-bold text-white font-headline">אבטחה והצפנה ברמה הגבוהה ביותר</h3>
               <p class="text-slate-300 leading-relaxed">
-                אפליקציה דיסקרטית לחלוטין עם כינויים סקסיים אישיים והצפנה מלאה — מקדש בטוח ששייך אך ורק לשנינו.
+                אפליקציה דיסקרטית לחלוטין, דיאלוגים אטומים וקוד צימוד מאובטח — מקדש בטוח ששייך אך ורק לשנינו.
               </p>
             </div>
           </div>
@@ -197,7 +211,7 @@
       </div>
 
       <!-- CALL TO ACTION SECTION -->
-      <div class="glass-card p-6 sm:p-8 rounded-3xl text-center space-y-5 border-2 border-[#e8b4b8]/50 shadow-2xl">
+      <div class="solid-card p-6 sm:p-8 rounded-3xl text-center space-y-5 border-2 border-[#e8b4b8]/50 shadow-2xl">
         <div class="w-14 h-14 rounded-full bg-[#2b292f] border border-[#e8b4b8] text-[#e8b4b8] flex items-center justify-center mx-auto shadow-lg">
           <svg class="w-7 h-7 fill-current" viewBox="0 0 24 24">
             <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
@@ -213,6 +227,7 @@
 
         <!-- MAIN ACTION BUTTON THAT OPENS THE APP IN A NEW TAB -->
         <a
+          id="start-btn"
           href="/"
           target="_blank"
           rel="noopener noreferrer"
@@ -233,5 +248,16 @@
 
     </div>
 
+    <!-- Script to preserve pair code if provided in URL parameter ?pair=XYZ -->
+    <script>
+      window.addEventListener('DOMContentLoaded', () => {
+        const params = new URLSearchParams(window.location.search);
+        const pair = params.get('pair');
+        const btn = document.getElementById('start-btn');
+        if (pair && btn) {
+          btn.href = `/?pair=${encodeURIComponent(pair)}`;
+        }
+      });
+    </script>
   </body>
 </html>
