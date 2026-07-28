@@ -106,7 +106,7 @@ export async function getGoogleUser() {
 }
 
 // 1. Register Device / Google User 1-to-1 Mapping with Upsert
-export async function registerDevice(deviceId: string, publicKey: string) {
+export async function registerDevice(deviceId: string, publicKey: string, createIfMissing: boolean = false) {
   try {
     const gUser = await getGoogleUser();
     const targetIdentity = gUser ? `google_${gUser.id}` : deviceId;
@@ -118,6 +118,11 @@ export async function registerDevice(deviceId: string, publicKey: string) {
 
     if (existingUsers && existingUsers.length > 0) {
       return { success: true, user: existingUsers[0], googleUser: gUser };
+    }
+
+    // Do not pollute DB with anonymous user on initial load if gUser is missing and createIfMissing is false
+    if (!gUser && !createIfMissing) {
+      return { success: true, user: null, googleUser: null };
     }
 
     const newId = generateUUID();
@@ -151,15 +156,47 @@ export async function registerDevice(deviceId: string, publicKey: string) {
 }
 
 // 1b. Update User Profile in DB
-export async function updateUserProfileInDB(userId: string, alias: string) {
+export async function updateUserProfileInDB(userId: string | null, alias: string, deviceId?: string, pubKey?: string) {
   try {
-    const now = new Date().toISOString();
-    await supabase.from('User').update({
-      anonymousAlias: alias,
-      updatedAt: now
-    }).eq('id', userId);
+    let activeId = userId;
+    if (!activeId && deviceId && pubKey) {
+      const reg = await registerDevice(deviceId, pubKey, true);
+      activeId = reg.user?.id || null;
+    }
+    if (activeId) {
+      const now = new Date().toISOString();
+      await supabase.from('User').update({
+        anonymousAlias: alias,
+        updatedAt: now
+      }).eq('id', activeId);
+    }
+    return activeId;
   } catch (e) {
     console.warn('Update user profile error:', e);
+  }
+}
+
+// 1c. Reset User Account and answers completely from DB
+export async function resetUserAccountInDB(userId: string | null, googleUserId?: string | null) {
+  try {
+    if (userId) {
+      await supabase.from('UserAnswer').delete().eq('userId', userId);
+      await supabase.from('User').delete().eq('id', userId);
+    }
+    if (googleUserId) {
+      const { data: gUser } = await supabase
+        .from('User')
+        .select('id')
+        .eq('deviceIdentity', `google_${googleUserId}`)
+        .maybeSingle();
+
+      if (gUser && gUser.id !== userId) {
+        await supabase.from('UserAnswer').delete().eq('userId', gUser.id);
+        await supabase.from('User').delete().eq('id', gUser.id);
+      }
+    }
+  } catch (e) {
+    console.warn('Reset user account error:', e);
   }
 }
 

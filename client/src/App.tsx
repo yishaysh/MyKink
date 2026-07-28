@@ -20,6 +20,7 @@ import {
   updateDareStatus,
   updateUserProfileInDB,
   fetchUserAnswers,
+  resetUserAccountInDB,
   CatalogQuestion
 } from './services/api';
 import { getOrCreateDeviceId, getOrCreatePublicKey, computeAnswerHash, encryptPayload } from './services/crypto';
@@ -132,7 +133,7 @@ export const App: React.FC = () => {
 
         const deviceId = getOrCreateDeviceId();
         const pubKey = getOrCreatePublicKey();
-        const res = await registerDevice(deviceId, pubKey);
+        const res = await registerDevice(deviceId, pubKey, false);
 
         if (res.success && res.user) {
           await syncUserDBState(res.user, res.googleUser);
@@ -156,7 +157,7 @@ export const App: React.FC = () => {
         setGoogleUser(session.user);
         const deviceId = getOrCreateDeviceId();
         const pubKey = getOrCreatePublicKey();
-        const res = await registerDevice(deviceId, pubKey);
+        const res = await registerDevice(deviceId, pubKey, true);
 
         if (res.user) {
           await syncUserDBState(res.user, session.user);
@@ -206,13 +207,10 @@ export const App: React.FC = () => {
 
   // Execute Account Reset & Wiping DB records
   const executeResetAccount = async () => {
-    if (userId) {
-      try {
-        await supabase.from('UserAnswer').delete().eq('userId', userId);
-        await supabase.from('User').delete().eq('id', userId);
-      } catch (e) {
-        console.warn('Delete user data error:', e);
-      }
+    try {
+      await resetUserAccountInDB(userId, googleUser?.id);
+    } catch (e) {
+      console.warn('Delete user data error:', e);
     }
     await handleSignOut();
   };
@@ -265,11 +263,25 @@ export const App: React.FC = () => {
     }
   };
 
+  // Helper to ensure a registered DB user ID exists when user takes action
+  const ensureActiveUserId = async (): Promise<string | null> => {
+    if (userId) return userId;
+    const deviceId = getOrCreateDeviceId();
+    const pubKey = getOrCreatePublicKey();
+    const res = await registerDevice(deviceId, pubKey, true);
+    if (res.user?.id) {
+      setUserId(res.user.id);
+      return res.user.id;
+    }
+    return null;
+  };
+
   // Handlers for Pairing
   const handleCreateCouple = async () => {
-    if (!userId) return;
+    const activeId = await ensureActiveUserId();
+    if (!activeId) return;
     try {
-      const res = await createCouple(userId);
+      const res = await createCouple(activeId);
       if (res.success && res.couple) {
         setCoupleId(res.couple.id);
         setPairCode(res.couple.pairCode);
@@ -281,9 +293,10 @@ export const App: React.FC = () => {
   };
 
   const handleJoinCouple = async (code: string) => {
-    if (!userId) return;
+    const activeId = await ensureActiveUserId();
+    if (!activeId) return;
     try {
-      const res = await joinCouple(userId, code);
+      const res = await joinCouple(activeId, code);
       if (res.success && res.couple) {
         setCoupleId(res.couple.id);
         setPairCode(res.couple.pairCode);
@@ -307,8 +320,9 @@ export const App: React.FC = () => {
     setUserProfile(profile);
     localStorage.setItem('mykink_user_profile', JSON.stringify(profile));
 
-    if (userId) {
-      await updateUserProfileInDB(userId, profile.alias);
+    const activeId = await ensureActiveUserId();
+    if (activeId) {
+      await updateUserProfileInDB(activeId, profile.alias);
     }
 
     changeActiveTab('swipe');
