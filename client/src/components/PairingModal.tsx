@@ -44,8 +44,8 @@ export const PairingModal: React.FC<PairingModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md">
-      <div className="glass-card max-w-md w-full p-6 border border-[#36343a] relative card-appear">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+      <div className="solid-card bg-[#1c1a22] max-w-md w-full p-6 border border-[#36343a] shadow-2xl relative card-appear">
         <button
           onClick={onClose}
           className="absolute top-4 left-4 p-2 rounded-full text-slate-400 hover:text-white hover:bg-[#2b292f] transition"
