@@ -316,6 +316,11 @@ export const App: React.FC = () => {
     role: string;
     categories: string[];
     intensity: string;
+    gender?: string;
+    pronouns?: string;
+    goal?: string;
+    relationshipDynamic?: string;
+    warmupAnswer?: string;
   }) => {
     setUserProfile(profile);
     localStorage.setItem('mykink_user_profile', JSON.stringify(profile));
