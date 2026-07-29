@@ -410,15 +410,12 @@ export const Onboarding: React.FC<OnboardingProps> = ({
 
         {/* STEP 2: INTIMACY GOALS (MULTI-SELECT WITH MATCHING BORDER HIGHLIGHT) */}
         {step === 2 && (
-          <div className="solid-card p-5 sm:p-8 space-y-5 card-appear border border-[#36343a]">
+          <div className="solid-card p-5 sm:p-8 space-y-6 card-appear border border-[#36343a]">
             <div className="text-center">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-[#2b292f] border border-[#e8b4b8]/30 text-[#e8b4b8] flex items-center justify-center mx-auto mb-2.5 shadow-md">
-                <Target className="w-6 h-6 sm:w-7 sm:h-7" />
-              </div>
               <h2 className="text-xl sm:text-2xl font-bold text-white font-headline">
                 {lang === 'he' ? 'מה המטרה הזוגית שלכם?' : 'What is your intimacy goal?'}
               </h2>
-              <p className="text-xs text-slate-300 max-w-sm mx-auto mt-1">
+              <p className="text-xs sm:text-sm text-slate-300 max-w-sm mx-auto mt-1">
                 {lang === 'he'
                   ? 'אפשר לבחור מספר מטרות שתרצו להגשים יחד באמצעות האפליקציה (בחירה מרובה)'
                   : 'Select one or more goals you wish to achieve together (Multi-select)'}
@@ -459,13 +456,13 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                       borderStyle: 'solid',
                       backgroundColor: isSelected ? '#2b292f' : '#141218'
                     }}
-                    className="p-3.5 rounded-2xl cursor-pointer flex items-center justify-between transition-all duration-150"
+                    className="p-4 rounded-2xl cursor-pointer flex items-center justify-between transition-all duration-150"
                   >
                     <div>
-                      <span className={`text-xs font-bold block ${isSelected ? 'text-[#e8b4b8]' : 'text-white'}`}>
+                      <span className={`text-xs sm:text-sm font-bold block ${isSelected ? 'text-[#e8b4b8]' : 'text-white'}`}>
                         {g.title}
                       </span>
-                      <span className="text-[11px] text-slate-400 block mt-0.5">{g.desc}</span>
+                      <span className="text-xs text-slate-400 block mt-1 leading-snug">{g.desc}</span>
                     </div>
                     {isSelected ? (
                       <CheckSquare className="w-5 h-5 text-[#e8b4b8] shrink-0" />
@@ -477,17 +474,17 @@ export const Onboarding: React.FC<OnboardingProps> = ({
               })}
             </div>
 
-            <div className="flex gap-2">
+            <div className="flex gap-3 pt-2">
               <button
                 onClick={() => setStep(1)}
-                className="btn-soft px-4 py-3 text-xs flex items-center gap-1"
+                className="btn-soft px-4 py-3.5 text-xs flex items-center gap-1"
               >
                 {lang === 'he' ? <ArrowRight className="w-4 h-4" /> : <ArrowLeft className="w-4 h-4" />}
                 <span>{t.back}</span>
               </button>
               <button
                 onClick={() => setStep(3)}
-                className="btn-rose flex-1 py-3 text-xs font-bold flex items-center justify-center gap-2"
+                className="btn-rose flex-1 py-3.5 text-xs font-bold flex items-center justify-center gap-2"
               >
                 <span>{t.continue}</span>
                 {lang === 'he' ? <ArrowLeft className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
@@ -498,27 +495,24 @@ export const Onboarding: React.FC<OnboardingProps> = ({
 
         {/* STEP 3: RELATIONSHIP DYNAMIC (MULTI-SELECT WITH MATCHING BORDER HIGHLIGHT) */}
         {step === 3 && (
-          <div className="solid-card p-5 sm:p-8 space-y-5 card-appear border border-[#36343a]">
+          <div className="solid-card p-5 sm:p-8 space-y-6 card-appear border border-[#36343a]">
             <div className="text-center">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-[#2b292f] border border-[#e8b4b8]/30 text-[#e8b4b8] flex items-center justify-center mx-auto mb-2.5 shadow-md">
-                <Heart className="w-6 h-6 sm:w-7 sm:h-7" />
-              </div>
               <h2 className="text-xl sm:text-2xl font-bold text-white font-headline">
                 {lang === 'he' ? 'אופי הקשר ותפקיד במיטה' : 'Relationship Dynamic & Role'}
               </h2>
-              <p className="text-xs text-slate-300 max-w-sm mx-auto mt-1">
+              <p className="text-xs sm:text-sm text-slate-300 max-w-sm mx-auto mt-1">
                 {lang === 'he'
                   ? 'אפשר לסמן מספר מאפיינים שמתארים את אופי הזוגיות שלכם (בחירה מרובה)'
                   : 'Select all characteristics describing your dynamic (Multi-select)'}
               </p>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-5">
               <div>
-                <label className="text-xs font-semibold text-slate-300 block mb-2">
+                <label className="text-xs sm:text-sm font-semibold text-slate-300 block mb-2.5">
                   {lang === 'he' ? 'אופי הזוגיות (בחירה מרובה)' : 'Relationship Dynamic (Multi-select)'}
                 </label>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-3 sm:gap-4">
                   {[
                     { id: 'NEW', title: lang === 'he' ? '✨ זוג בתחילת הדרך' : '✨ New Romance', desc: lang === 'he' ? 'מגלים אחד את השנייה' : 'Exploring each other' },
                     { id: 'LONG_TERM', title: lang === 'he' ? '🚀 זוגיות ממושכת' : '🚀 Long-Term / Married', desc: lang === 'he' ? 'שבירת רוטינה וריענון' : 'Breaking routine' },
@@ -537,12 +531,12 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                           borderStyle: 'solid',
                           backgroundColor: isSelected ? '#2b292f' : '#141218'
                         }}
-                        className="p-3 sm:p-4 rounded-2xl text-right transition-all duration-150 flex flex-col justify-center h-20 sm:h-22 cursor-pointer"
+                        className="p-4 sm:p-5 rounded-2xl text-right transition-all duration-150 flex flex-col justify-center min-h-[5.5rem] cursor-pointer"
                       >
-                        <span className={`text-xs font-bold block ${isSelected ? 'text-[#e8b4b8]' : 'text-white'}`}>
+                        <span className={`text-xs sm:text-sm font-bold block ${isSelected ? 'text-[#e8b4b8]' : 'text-white'}`}>
                           {rd.title}
                         </span>
-                        <span className="text-[10px] text-slate-400 block font-normal mt-0.5">{rd.desc}</span>
+                        <span className="text-xs text-slate-400 block font-normal mt-1 leading-snug">{rd.desc}</span>
                       </button>
                     );
                   })}
@@ -550,10 +544,10 @@ export const Onboarding: React.FC<OnboardingProps> = ({
               </div>
 
               <div>
-                <label className="text-xs font-[#e8b4b8] font-bold block mb-2">
+                <label className="text-xs sm:text-sm font-[#e8b4b8] font-bold block mb-2.5">
                   {t.intimacyRoleLabel}
                 </label>
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-3 gap-2.5 sm:gap-3">
                   {/* GIVER */}
                   <button
                     type="button"
@@ -564,12 +558,12 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                       borderStyle: 'solid',
                       backgroundColor: role === 'GIVER' ? '#2b292f' : '#141218'
                     }}
-                    className="p-3 rounded-2xl text-center transition-all flex flex-col justify-center items-center h-20 sm:h-24"
+                    className="p-3.5 sm:p-4 rounded-2xl text-center transition-all flex flex-col justify-center items-center min-h-[5.5rem] cursor-pointer"
                   >
-                    <span className={`text-xs font-bold block ${role === 'GIVER' ? 'text-[#e8b4b8]' : 'text-slate-200'}`}>
+                    <span className={`text-xs sm:text-sm font-bold block ${role === 'GIVER' ? 'text-[#e8b4b8]' : 'text-slate-200'}`}>
                       {t.roleGiver}
                     </span>
-                    <span className="text-[10px] text-slate-400 block mt-0.5">
+                    <span className="text-[11px] text-slate-400 block mt-1 leading-snug">
                       {t.roleGiverSub}
                     </span>
                   </button>
@@ -584,12 +578,12 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                       borderStyle: 'solid',
                       backgroundColor: role === 'RECEIVER' ? '#2b292f' : '#141218'
                     }}
-                    className="p-3 rounded-2xl text-center transition-all flex flex-col justify-center items-center h-20 sm:h-24"
+                    className="p-3.5 sm:p-4 rounded-2xl text-center transition-all flex flex-col justify-center items-center min-h-[5.5rem] cursor-pointer"
                   >
-                    <span className={`text-xs font-bold block ${role === 'RECEIVER' ? 'text-[#e8b4b8]' : 'text-slate-200'}`}>
+                    <span className={`text-xs sm:text-sm font-bold block ${role === 'RECEIVER' ? 'text-[#e8b4b8]' : 'text-slate-200'}`}>
                       {t.roleReceiver}
                     </span>
-                    <span className="text-[10px] text-slate-400 block mt-0.5">
+                    <span className="text-[11px] text-slate-400 block mt-1 leading-snug">
                       {t.roleReceiverSub}
                     </span>
                   </button>
@@ -604,12 +598,12 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                       borderStyle: 'solid',
                       backgroundColor: role === 'SWITCH' ? '#2b292f' : '#141218'
                     }}
-                    className="p-3 rounded-2xl text-center transition-all flex flex-col justify-center items-center h-20 sm:h-24"
+                    className="p-3.5 sm:p-4 rounded-2xl text-center transition-all flex flex-col justify-center items-center min-h-[5.5rem] cursor-pointer"
                   >
-                    <span className={`text-xs font-bold block ${role === 'SWITCH' ? 'text-[#e8b4b8]' : 'text-slate-200'}`}>
+                    <span className={`text-xs sm:text-sm font-bold block ${role === 'SWITCH' ? 'text-[#e8b4b8]' : 'text-slate-200'}`}>
                       {t.roleSwitch}
                     </span>
-                    <span className="text-[10px] text-slate-400 block mt-0.5">
+                    <span className="text-[11px] text-slate-400 block mt-1 leading-snug">
                       {t.roleSwitchSub}
                     </span>
                   </button>
@@ -617,17 +611,17 @@ export const Onboarding: React.FC<OnboardingProps> = ({
               </div>
             </div>
 
-            <div className="flex gap-2">
+            <div className="flex gap-3 pt-2">
               <button
                 onClick={() => setStep(2)}
-                className="btn-soft px-4 py-3 text-xs flex items-center gap-1"
+                className="btn-soft px-4 py-3.5 text-xs flex items-center gap-1"
               >
                 {lang === 'he' ? <ArrowRight className="w-4 h-4" /> : <ArrowLeft className="w-4 h-4" />}
                 <span>{t.back}</span>
               </button>
               <button
                 onClick={() => setStep(4)}
-                className="btn-rose flex-1 py-3 text-xs font-bold flex items-center justify-center gap-2"
+                className="btn-rose flex-1 py-3.5 text-xs font-bold flex items-center justify-center gap-2"
               >
                 <span>{t.continue}</span>
                 {lang === 'he' ? <ArrowLeft className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
@@ -638,25 +632,22 @@ export const Onboarding: React.FC<OnboardingProps> = ({
 
         {/* STEP 4: INTERACTIVE WARM-UP TEASER QUESTION (UP TO 2 SELECTIONS & MATCHING BORDER HIGHLIGHT) */}
         {step === 4 && (
-          <div className="solid-card p-5 sm:p-8 space-y-5 card-appear border border-[#36343a]">
+          <div className="solid-card p-5 sm:p-8 space-y-6 card-appear border border-[#36343a]">
             <div className="text-center">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-[#2b292f] border border-[#e8b4b8]/30 text-[#e8b4b8] flex items-center justify-center mx-auto mb-2.5 shadow-md">
-                <Compass className="w-6 h-6 sm:w-7 sm:h-7 animate-pulse" />
-              </div>
-              <span className="text-[10px] uppercase tracking-widest font-extrabold text-[#e8b4b8] block">
+              <span className="text-[11px] uppercase tracking-widest font-extrabold text-[#e8b4b8] block mb-1">
                 {lang === 'he' ? '🌶️ שאלת חימום סודית' : '🌶️ Teaser Question'}
               </span>
-              <h2 className="text-xl sm:text-2xl font-bold text-white font-headline mt-1">
+              <h2 className="text-xl sm:text-2xl font-bold text-white font-headline">
                 {lang === 'he' ? 'איפה הייתם רוצים שהדייט הנועז הבא שלכם יתרחש?' : 'Where should your next wild date take place?'}
               </h2>
-              <p className="text-xs text-slate-300 max-w-sm mx-auto mt-1">
+              <p className="text-xs sm:text-sm text-slate-300 max-w-sm mx-auto mt-1">
                 {lang === 'he'
                   ? 'אפשר לסמן עד 2 תשובות שמוצאות חן בעיניכם (בחירה של עד 2 תשובות)'
                   : 'Select up to 2 date locations you would love to experience'}
               </p>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4">
               {[
                 { id: 'HOTEL', title: lang === 'he' ? '🏨 חדר מלון מבודד' : '🏨 Luxury Hotel Room', desc: lang === 'he' ? 'סדיני משי, ג׳קוזי ועיסוי חושי' : 'Silk sheets, jacuzzi & massage' },
                 { id: 'CAR', title: lang === 'he' ? '🚗 במושב האחורי בלילה' : '🚗 Back Seat at Night', desc: lang === 'he' ? 'חלונות מטושטשים, חושך ומתח' : 'Steamy windows & night adrenaline' },
@@ -675,28 +666,28 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                       borderStyle: 'solid',
                       backgroundColor: isSelected ? '#2b292f' : '#141218'
                     }}
-                    className="p-3.5 sm:p-4 rounded-2xl text-right transition flex flex-col justify-between h-24 sm:h-28 cursor-pointer"
+                    className="p-4 sm:p-5 rounded-2xl text-right transition flex flex-col justify-between min-h-[6.5rem] cursor-pointer"
                   >
-                    <span className={`text-xs font-bold block ${isSelected ? 'text-[#e8b4b8]' : 'text-white'}`}>
+                    <span className={`text-xs sm:text-sm font-bold block ${isSelected ? 'text-[#e8b4b8]' : 'text-white'}`}>
                       {wa.title}
                     </span>
-                    <span className="text-[10px] text-slate-400 block mt-0.5">{wa.desc}</span>
+                    <span className="text-xs text-slate-400 block mt-1 leading-snug">{wa.desc}</span>
                   </button>
                 );
               })}
             </div>
 
-            <div className="flex gap-2">
+            <div className="flex gap-3 pt-2">
               <button
                 onClick={() => setStep(3)}
-                className="btn-soft px-4 py-3 text-xs flex items-center gap-1"
+                className="btn-soft px-4 py-3.5 text-xs flex items-center gap-1"
               >
                 {lang === 'he' ? <ArrowRight className="w-4 h-4" /> : <ArrowLeft className="w-4 h-4" />}
                 <span>{t.back}</span>
               </button>
               <button
                 onClick={() => setStep(5)}
-                className="btn-rose flex-1 py-3 text-xs font-bold flex items-center justify-center gap-2"
+                className="btn-rose flex-1 py-3.5 text-xs font-bold flex items-center justify-center gap-2"
               >
                 <span>{t.continue}</span>
                 {lang === 'he' ? <ArrowLeft className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
@@ -707,18 +698,15 @@ export const Onboarding: React.FC<OnboardingProps> = ({
 
         {/* STEP 5: FANTASY CATEGORIES, INTENSITY & SAFEWORD PLEDGE */}
         {step === 5 && (
-          <div className="solid-card p-5 sm:p-8 space-y-5 card-appear border border-[#36343a]">
+          <div className="solid-card p-5 sm:p-8 space-y-6 card-appear border border-[#36343a]">
             <div className="text-center">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-[#2b292f] border border-[#e8b4b8]/30 text-[#e8b4b8] flex items-center justify-center mx-auto mb-2.5 shadow-md">
-                <Sparkles className="w-6 h-6 sm:w-7 sm:h-7" />
-              </div>
               <h2 className="text-xl sm:text-2xl font-bold text-white font-headline">{t.onboardingStep2Title}</h2>
-              <p className="text-xs text-slate-300 max-w-sm mx-auto mt-1">
+              <p className="text-xs sm:text-sm text-slate-300 max-w-sm mx-auto mt-1">
                 {t.onboardingStep2Sub}
               </p>
             </div>
 
-            <div className="space-y-2.5">
+            <div className="space-y-3">
               {availableCategories.map((cat) => {
                 const isSelected = selectedCategories.includes(cat.id);
                 return (
@@ -731,13 +719,13 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                       borderStyle: 'solid',
                       backgroundColor: isSelected ? '#2b292f' : '#141218'
                     }}
-                    className="p-3.5 rounded-2xl cursor-pointer flex items-center justify-between transition-all duration-150"
+                    className="p-4 rounded-2xl cursor-pointer flex items-center justify-between transition-all duration-150"
                   >
                     <div>
-                      <span className={`text-xs font-bold block ${isSelected ? 'text-[#e8b4b8]' : 'text-white'}`}>
+                      <span className={`text-xs sm:text-sm font-bold block ${isSelected ? 'text-[#e8b4b8]' : 'text-white'}`}>
                         {cat.title}
                       </span>
-                      <span className="text-[11px] text-slate-400 block mt-0.5">{cat.desc}</span>
+                      <span className="text-xs text-slate-400 block mt-1 leading-snug">{cat.desc}</span>
                     </div>
                     {isSelected ? (
                       <CheckSquare className="w-5 h-5 text-[#e8b4b8] shrink-0" />
@@ -750,12 +738,12 @@ export const Onboarding: React.FC<OnboardingProps> = ({
             </div>
 
             {/* Intensity & Safeword */}
-            <div className="space-y-3 pt-2 border-t border-[#36343a]">
+            <div className="space-y-4 pt-3 border-t border-[#36343a]">
               <div>
-                <label className="text-xs font-semibold text-slate-300 block mb-1.5">
+                <label className="text-xs sm:text-sm font-semibold text-slate-300 block mb-2">
                   {t.intensityLabel}
                 </label>
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-3 gap-2.5">
                   {(['VANILLA', 'SPICY', 'ADVENTUROUS'] as const).map((lvl) => (
                     <button
                       key={lvl}
@@ -767,9 +755,9 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                         borderStyle: 'solid',
                         backgroundColor: intensity === lvl ? '#2b292f' : '#141218'
                       }}
-                      className="p-2 rounded-xl text-center transition h-12 flex flex-col items-center justify-center"
+                      className="p-3 rounded-xl text-center transition min-h-[3.25rem] flex flex-col items-center justify-center cursor-pointer"
                     >
-                      <span className={`text-xs font-bold block text-center ${intensity === lvl ? 'text-[#e8b4b8]' : 'text-slate-300'}`}>
+                      <span className={`text-xs sm:text-sm font-bold block text-center ${intensity === lvl ? 'text-[#e8b4b8]' : 'text-slate-300'}`}>
                         {getIntensityText(lvl)}
                       </span>
                     </button>
@@ -779,26 +767,26 @@ export const Onboarding: React.FC<OnboardingProps> = ({
 
               <div
                 onClick={() => setAgreedSafewords(!agreedSafewords)}
-                className="p-3.5 rounded-2xl bg-[#141218] border-2 border-[#36343a] flex items-center gap-3 cursor-pointer"
+                className="p-4 rounded-2xl bg-[#141218] border-2 border-[#36343a] flex items-center gap-3 cursor-pointer"
               >
                 {agreedSafewords ? (
                   <CheckSquare className="w-5 h-5 text-emerald-400 shrink-0" />
                 ) : (
                   <Square className="w-5 h-5 text-slate-600 shrink-0" />
                 )}
-                <div className="text-xs">
+                <div className="text-xs sm:text-sm">
                   <span className="font-bold text-white block">{t.safewordTitle}</span>
-                  <span className="text-slate-400 block text-[11px] mt-0.5">
+                  <span className="text-slate-400 block text-xs mt-0.5">
                     {t.safewordSub}
                   </span>
                 </div>
               </div>
             </div>
 
-            <div className="flex gap-2">
+            <div className="flex gap-3 pt-2">
               <button
                 onClick={() => setStep(4)}
-                className="btn-soft px-4 py-3 text-xs flex items-center gap-1"
+                className="btn-soft px-4 py-3.5 text-xs flex items-center gap-1"
               >
                 {lang === 'he' ? <ArrowRight className="w-4 h-4" /> : <ArrowLeft className="w-4 h-4" />}
                 <span>{t.back}</span>
@@ -808,7 +796,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                   if (!pairCode) onCreateCouple();
                   setStep(6);
                 }}
-                className="btn-rose flex-1 py-3 text-xs font-bold flex items-center justify-center gap-2"
+                className="btn-rose flex-1 py-3.5 text-xs font-bold flex items-center justify-center gap-2"
               >
                 <span>{t.continue}</span>
                 {lang === 'he' ? <ArrowLeft className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
@@ -819,14 +807,10 @@ export const Onboarding: React.FC<OnboardingProps> = ({
 
         {/* STEP 6: COUPLE PAIRING */}
         {step === 6 && (
-          <div className="solid-card p-5 sm:p-8 text-center space-y-5 card-appear border border-[#36343a]">
-            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-[#2b292f] border border-[#e8b4b8]/30 text-[#e8b4b8] flex items-center justify-center mx-auto shadow-md">
-              <Share2 className="w-6 h-6 sm:w-7 sm:h-7" />
-            </div>
-
+          <div className="solid-card p-5 sm:p-8 text-center space-y-6 card-appear border border-[#36343a]">
             <div>
               <h2 className="text-xl sm:text-2xl font-bold text-white font-headline">{t.onboardingStep4Title}</h2>
-              <p className="text-xs text-slate-300 max-w-sm mx-auto mt-1">
+              <p className="text-xs sm:text-sm text-slate-300 max-w-sm mx-auto mt-1">
                 {t.onboardingStep4Sub}
               </p>
             </div>
@@ -841,7 +825,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({
 
               <button
                 onClick={handleCopyLink}
-                className="btn-rose px-5 py-2.5 text-xs flex items-center justify-center gap-2 mx-auto"
+                className="btn-rose px-5 py-2.5 text-xs flex items-center justify-center gap-2 mx-auto font-bold"
               >
                 {copied ? <Check className="w-4 h-4 text-[#48272a]" /> : <Copy className="w-4 h-4" />}
                 <span>{copied ? t.linkCopied : t.copyInviteLink}</span>
@@ -873,7 +857,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                   maxLength={8}
                   className="flex-1 px-4 py-2.5 input-solid font-mono text-center tracking-widest text-xs"
                 />
-                <button type="submit" className="btn-rose px-4 py-2.5 text-xs">
+                <button type="submit" className="btn-rose px-4 py-2.5 text-xs font-bold">
                   {t.connect}
                 </button>
               </div>
