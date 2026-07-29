@@ -15,14 +15,25 @@ export interface ChatMessage {
   text: string;
 }
 
-// Resilient API Caller trying supported Gemini model endpoints & handling 429 rate limits
+function hasValidApiKey(): boolean {
+  if (!GEMINI_API_KEY) return false;
+  if (GEMINI_API_KEY === DEFAULT_KEY) return false;
+  if (GEMINI_API_KEY.startsWith('AQ.')) return false;
+  return true;
+}
+
+// Resilient API Caller trying supported Gemini model endpoints when a valid key is provided
 async function callGeminiApi(payload: any): Promise<any> {
+  if (!hasValidApiKey()) {
+    // Skip external network calls when placeholder key is used to avoid console 429/404 errors
+    return null;
+  }
+
   const models = [
-    'gemini-2.0-flash',
-    'gemini-2.0-flash-lite',
+    'gemini-1.5-flash-latest',
     'gemini-1.5-flash',
-    'gemini-1.5-flash-8b',
-    'gemini-1.5-pro'
+    'gemini-2.0-flash-exp',
+    'gemini-1.5-pro-latest'
   ];
 
   for (const model of models) {
@@ -38,17 +49,6 @@ async function callGeminiApi(payload: any): Promise<any> {
 
       if (response.ok) {
         return await response.json();
-      }
-
-      if (response.status === 429) {
-        console.warn(`Gemini API rate limited (429) on ${model}, trying next model...`);
-        await new Promise((resolve) => setTimeout(resolve, 350));
-        continue;
-      }
-
-      if (response.status === 404) {
-        console.warn(`Gemini API model ${model} not found (404), trying next model...`);
-        continue;
       }
     } catch (err) {
       console.warn(`Gemini API model ${model} error:`, err);
