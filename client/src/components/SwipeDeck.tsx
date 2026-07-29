@@ -50,19 +50,19 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
   }, [questions, answeredQuestionIds]);
 
   const categories = [
-    { id: 'ALL', label: t.allCategories },
-    { id: 'Sensual', label: lang === 'he' ? 'חושים ומגע' : 'Sensual' },
+    { id: 'ALL', label: lang === 'he' ? 'הכל' : 'All' },
+    { id: 'Sensual', label: lang === 'he' ? 'חושים' : 'Sensual' },
     { id: 'BDSM', label: 'BDSM' },
-    { id: 'Roleplay', label: lang === 'he' ? 'משחקי תפקידים' : 'Roleplay' },
+    { id: 'Roleplay', label: lang === 'he' ? 'משחקים' : 'Roleplay' },
     { id: 'Toys', label: lang === 'he' ? 'צעצועים' : 'Toys' },
-    { id: 'ENM', label: lang === 'he' ? 'פנטזיות פתוחות' : 'Open / ENM' }
+    { id: 'ENM', label: lang === 'he' ? 'פנטזיות' : 'Fantasies' }
   ];
 
   const intensities = [
-    { id: 'ALL', label: t.allIntensities },
-    { id: 'VANILLA', label: t.intensityVanilla },
-    { id: 'SPICY', label: t.intensitySpicy },
-    { id: 'ADVENTUROUS', label: t.intensityAdventurous }
+    { id: 'ALL', label: lang === 'he' ? 'הכל' : 'All' },
+    { id: 'VANILLA', label: lang === 'he' ? 'וונילה' : 'Vanilla' },
+    { id: 'SPICY', label: lang === 'he' ? 'לוהט' : 'Spicy' },
+    { id: 'ADVENTUROUS', label: lang === 'he' ? 'נועז' : 'Adventurous' }
   ];
 
   const rawQ = questions[currentIndex];
@@ -113,7 +113,7 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
                   onClick={() => { setSelectedCategory(cat.id); setCurrentIndex(0); }}
                   className={`p-2 rounded-xl text-center transition flex items-center justify-center min-h-[2.5rem] cursor-pointer text-xs font-bold ${
                     isSelected
-                      ? 'bg-[#2b292f] border-2 border-[#e8b4b8] text-[#e8b4b8] shadow-md'
+                      ? 'bg-[#e8b4b8]/15 border-2 border-[#e8b4b8] text-[#e8b4b8] shadow-md shadow-[#e8b4b8]/20'
                       : 'bg-[#141218] border border-[#36343a] text-slate-300 hover:border-slate-500'
                   }`}
                 >
@@ -139,7 +139,7 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
                   onClick={() => { setSelectedIntensity(lvl.id); setCurrentIndex(0); }}
                   className={`p-1.5 rounded-xl text-center transition flex items-center justify-center min-h-[2.25rem] cursor-pointer text-[11px] font-bold ${
                     isSelected
-                      ? 'bg-[#2b292f] border-2 border-[#e8b4b8] text-[#e8b4b8] shadow-md'
+                      ? 'bg-[#e8b4b8]/15 border-2 border-[#e8b4b8] text-[#e8b4b8] shadow-md shadow-[#e8b4b8]/20'
                       : 'bg-[#141218] border border-[#36343a] text-slate-400 hover:text-slate-200 hover:border-slate-500'
                   }`}
                 >
