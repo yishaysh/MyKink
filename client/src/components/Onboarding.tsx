@@ -234,31 +234,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({
   ];
 
   return (
-    /* Full-Screen Solid Modal Overlay covering background headers/bottom bars */
-    <div className="max-w-xl mx-auto px-4 py-2 space-y-5">
-      {/* Step Progress Indicators */}
-      <div dir="ltr" className="flex items-center justify-between mb-6 px-1">
-        {[1, 2, 3, 4, 5, 6].map((s) => (
-          <React.Fragment key={s}>
-            <div className="flex items-center gap-1.5">
-              <span
-                className={`w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs transition ${
-                  step >= s
-                    ? 'bg-[#e8b4b8] text-[#48272a] shadow-md shadow-[#e8b4b8]/30'
-                    : 'bg-[#2b292f] text-slate-400'
-                }`}
-              >
-                {s}
-              </span>
-              <span className="hidden md:inline text-[11px] font-semibold text-slate-300">
-                {stepTitles[s - 1]}
-              </span>
-            </div>
-            {s < 6 && <div className="flex-1 h-0.5 mx-1 bg-[#36343a]" />}
-          </React.Fragment>
-        ))}
-      </div>
-
+    <div className="max-w-xl mx-auto px-4 py-2 space-y-4">
       {/* STEP 1: GENDER (WITH ILLUSTRATIONS), GOOGLE AUTH & SEXY ALIAS */}
       {step === 1 && (
         <div className="solid-card p-5 sm:p-8 space-y-5 card-appear border border-[#36343a]">
