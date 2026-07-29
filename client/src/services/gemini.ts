@@ -15,13 +15,14 @@ export interface ChatMessage {
   text: string;
 }
 
-// Resilient API Caller trying supported Gemini model endpoints with seamless fallback
+// Resilient API Caller trying supported Gemini model endpoints & handling 429 rate limits
 async function callGeminiApi(payload: any): Promise<any> {
   const models = [
-    'gemini-2.5-flash',
     'gemini-2.0-flash',
-    'gemini-flash-latest',
-    'gemini-1.5-flash-latest'
+    'gemini-2.0-flash-lite',
+    'gemini-1.5-flash',
+    'gemini-1.5-flash-8b',
+    'gemini-1.5-pro'
   ];
 
   for (const model of models) {
@@ -34,14 +35,64 @@ async function callGeminiApi(payload: any): Promise<any> {
           body: JSON.stringify(payload)
         }
       );
+
       if (response.ok) {
         return await response.json();
+      }
+
+      if (response.status === 429) {
+        console.warn(`Gemini API rate limited (429) on ${model}, trying next model...`);
+        await new Promise((resolve) => setTimeout(resolve, 350));
+        continue;
+      }
+
+      if (response.status === 404) {
+        console.warn(`Gemini API model ${model} not found (404), trying next model...`);
+        continue;
       }
     } catch (err) {
       console.warn(`Gemini API model ${model} error:`, err);
     }
   }
+
   return null;
+}
+
+function getSmartFallbackAdvice(query: string, lang: 'en' | 'he'): string {
+  const lower = query.toLowerCase();
+
+  if (lang === 'he') {
+    if (lower.includes('פנטז') || lower.includes('לדבר') || lower.includes('מורחבת')) {
+      return `איך מתחילים לדבר על פנטזיות בזוגיות — מדריך מעשי ומעמיק:
+
+1. **יצירת מרחב בטוח וללא שיפוטיות:**
+   התחילו את השיחה ברגע רגוע (למשל במהלך הליכה, בנסיעה או בערב שקט בבית). הבהירו מראש שהמטרה היא לשתף מחשבות וסקרנות בטוחה, ללא שום חובה לבצע מיד.
+
+2. **שימוש בתיווך חיצוני (גשר תקשורתי):**
+   קל יותר להתחיל מנושא ניטרלי: "ראיתי בסרט / קראתי בספר קטע שגרם לי לחשוב...", או "נתקלתי באתגר מעניין באפליקציה". זה מוריד את הלחץ והמבוכה הראשונית.
+
+3. **התחלה בקטן ושילוב הדרגתי:**
+   שתפו תחילה פנטזיה מעודנת או תחושה שתרצו להעצים (כמו עיסוי בעיניים מכוסות או משחקי חושים), ושאלו את בן/בת הזוג: "איך זה נשמע לך?".
+
+4. **הקשבה פעילה וחיזוק חיובי:**
+   כשבן/בת הזוג משתפים, הודו להם על הפתיחות והאמון. הקשבה מעצימה בונה ביטחון רגשי ותשוקה עמוקה יותר לאורך זמן.`;
+    }
+
+    return `אני כאן איתכם לכל שאלה והתייעצות! 
+
+כדי לבנות תקשורת אינטימית בריאה ומעצימה, מומלץ להתמקד ב-3 עקרונות ליבה:
+• **פתיחות וכנות:** שתפו ברגשות, בסקרנות ובתשוקות שלכם ללא חשש.
+• **ביטחון וגבולות:** הגדירו מראש מילות בטיחות (אדום/צהוב/ירוק) כדי לשמור על נוחות מלאה של שניכם.
+• **הדרגתיות וחיבור:** התחילו מצעדים קטנים שמעצימים את החושים והחיבור הרגשי.
+
+ספרו לי על מה תרצו להרחיב ואשמח לתת לכם רעיונות והכוונות מותאמות!`;
+  }
+
+  return `Here is how to open up about intimacy and fantasies:
+
+1. **Create a Safe Environment:** Choose a relaxed moment without pressure to discuss desires openly.
+2. **Use External Bridges:** Reference a movie, book, or quiz to ease into the topic naturally.
+3. **Start Small & Listen:** Share a gentle preference first and ask how your partner feels about exploring it together.`;
 }
 
 export async function askGeminiAria(
@@ -115,9 +166,7 @@ Mandatory Guidelines:
     console.warn('Gemini API Error:', e);
   }
 
-  return lang === 'he'
-    ? "אני כאן איתכם! תקשורת פתוחה והקשבה הדדית הן המפתח. אשמח להרחיב ולענות על כל שאלה נוספת בלחישת פנטזיה או רעיון לחדר השינה."
-    : "I am here with you! Open communication and mutual listening are key. Feel free to ask any question!";
+  return getSmartFallbackAdvice(userQuery, lang);
 }
 
 // Research-Backed Erotic Arc Scenario Sets (Gottman & Esther Perel Framework)
@@ -152,7 +201,7 @@ const fallbackScenarioSetsHe: ScenarioStep[][] = [
     {
       stepNumber: 1,
       phase: 'אווירה, ציפייה וביטחון רגשי',
-      title: 'לחישות סודיות וכוס יין אדום',
+      title: 'לחישות סודיות וכוס ייין אדום',
       description: 'לגימת יין לאור עמום ולחישת 3 פנטזיות כמוסות באוזן במרחק נגיעה לבניית מתח חיובי וציפייה.'
     },
     {
