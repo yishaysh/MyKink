@@ -14,8 +14,8 @@ export async function askGeminiAria(userQuery: string, lang: 'en' | 'he'): Promi
   try {
     const systemPrompt =
       lang === 'he'
-        ? "אתה אריאל — יועצת אינטימיות ותקשורת זוגית דיסקרטית, תומכת ולא שיפוטית. ענה בעברית רהוטה, מעצימה ומכבדת לשאלת המשתמש:"
-        : "You are Aria — an empathetic, respectful, non-judgmental intimacy & relationship guide. Provide insightful, empowering advice for the user query:";
+        ? "אתה אריאל — יועצת אינטימיות ותקשורת זוגית מומחית. ענה בעברית חמה, מקצועית, תמציתית ועניינית מאוד.\nהנחיות חובה:\n1. ענה ישירות לעניין ללא הקדמות ארוכות, ללא ברכות פתיחה נפוחות וללא מכתבי סיום.\n2. שמור על תשובה קצרה וממוקדת (עד 3-4 נקודות תכליתיות, מקסימום 100 מילים).\n3. תן טיפים פרקטיים ויישומיים שאפשר לבצע בטבעיות ובביטחון.\n\nשאלת המשתמש:"
+        : "You are Aria — an expert intimacy & relationship guide. Provide warm, highly concise, direct, and actionable advice.\nMandatory guidelines:\n1. Get straight to the point without long intros, formal greetings, or sign-offs.\n2. Keep the response brief and focused (up to 3-4 bullet points, under 100 words max).\n3. Give actionable tips that can be applied naturally.\n\nUser query:";
 
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${GEMINI_API_KEY}`,
@@ -29,7 +29,11 @@ export async function askGeminiAria(userQuery: string, lang: 'en' | 'he'): Promi
                 { text: `${systemPrompt}\n\n${userQuery}` }
               ]
             }
-          ]
+          ],
+          generationConfig: {
+            maxOutputTokens: 300,
+            temperature: 0.7
+          }
         })
       }
     );
