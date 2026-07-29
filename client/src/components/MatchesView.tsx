@@ -53,30 +53,24 @@ export const MatchesView: React.FC<MatchesViewProps> = ({ matches, lang }) => {
         <div className="flex justify-center gap-2 pt-2 border-t border-[#36343a]">
           <button
             onClick={() => setFilter('ALL')}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition ${
-              filter === 'ALL'
-                ? 'bg-[#2b292f] border-2 border-[#e8b4b8] text-[#e8b4b8] shadow-md'
-                : 'btn-soft'
+            className={`px-3.5 py-1.5 rounded-full text-xs transition ${
+              filter === 'ALL' ? 'filter-box-selected' : 'filter-box-unselected'
             }`}
           >
             {t.filterAll} ({matches.length})
           </button>
           <button
             onClick={() => setFilter('YES')}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition ${
-              filter === 'YES'
-                ? 'bg-[#2b292f] border-2 border-[#e8b4b8] text-[#e8b4b8] shadow-md'
-                : 'btn-soft'
+            className={`px-3.5 py-1.5 rounded-full text-xs transition ${
+              filter === 'YES' ? 'filter-box-selected' : 'filter-box-unselected'
             }`}
           >
             {t.filterYes} ({matches.filter((m) => m.matchStatus === 'MUTUAL_YES').length})
           </button>
           <button
             onClick={() => setFilter('MAYBE')}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition ${
-              filter === 'MAYBE'
-                ? 'bg-[#2b292f] border-2 border-[#e8b4b8] text-[#e8b4b8] shadow-md'
-                : 'btn-soft'
+            className={`px-3.5 py-1.5 rounded-full text-xs transition ${
+              filter === 'MAYBE' ? 'filter-box-selected' : 'filter-box-unselected'
             }`}
           >
             {t.filterMaybe} ({matches.filter((m) => m.matchStatus === 'MUTUAL_MAYBE').length})

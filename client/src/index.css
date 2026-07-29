@@ -119,6 +119,27 @@ h1, h2, h3, h4, .font-headline {
   outline: none;
 }
 
+/* Filter Selected Choice Box / Pill (Vibrant Rose/Pink Border) */
+.filter-box-selected {
+  background-color: rgba(232, 180, 184, 0.25) !important;
+  border: 2.5px solid #e8b4b8 !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  box-shadow: 0 0 14px rgba(232, 180, 184, 0.45), inset 0 0 8px rgba(232, 180, 184, 0.2) !important;
+}
+
+.filter-box-unselected {
+  background-color: #141218 !important;
+  border: 1px solid #36343a !important;
+  color: #94a3b8 !important;
+  font-weight: 600 !important;
+}
+
+.filter-box-unselected:hover {
+  border-color: #64748b !important;
+  color: #f1f5f9 !important;
+}
+
 /* Card Entry Animation */
 .card-appear {
   animation: slideFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
