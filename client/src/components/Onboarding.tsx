@@ -107,35 +107,33 @@ export const Onboarding: React.FC<OnboardingProps> = ({
     }
   };
 
-  // Dynamic Aliases Pools (Strictly separated by Language & Gender)
+  // Dynamic Aliases Pools (Self-referential, without possessive 'שלי' or 'My')
   const poolHeMan = [
     'בייבי 💋', 'בייב 🔥', 'הוט סטף 🌶️', 'גורג\'ס ✨', 'סקסי 🖤',
-    'הנדסם 😉', 'חתיך שלי 🔥', 'מאהב שלי 💋', 'לוהט 🌶️', 'ילד רע 😈',
-    'תשוקה שלי 🖤', 'שובב 😉', 'חיים שלי ❤️', 'מאמי 💋', 'נשמה שלי 👑',
-    'סוויטי 🍯', 'האני 🍯', 'מלאך שלי 😇', 'עיניים שלי ✨', 'צרות שלי 😉',
-    'שוגר 🍬', 'לאב שלי ❤️'
+    'הנדסם 😉', 'חתיך 🔥', 'מאהב 💋', 'לוהט 🌶️', 'ילד רע 😈',
+    'תשוקה 🖤', 'שובב 😉', 'מאמי 💋', 'פנתר 🐆', 'נסיך 👑',
+    'מלך 👑', 'סוויטי 🍯', 'האני 🍯', 'מלאך 😇', 'שוגר 🍬'
   ];
 
   const poolHeWoman = [
     'בייבי 💋', 'בייב 🔥', 'הוט סטף 🌶️', 'גורג\'ס ✨', 'סקסית 🖤',
-    'יפה שלי 🌹', 'יפהפייה 🌹', 'מאהבת שלי 💋', 'לוהטת 🌶️', 'ילדה רעה 😈',
-    'תשוקה שלי 🖤', 'שובבה 💋', 'חיים שלי ❤️', 'מאמי 💋', 'נשמה שלי 👑',
-    'סוויטי 🍯', 'האני 🍯', 'מלאכית שלי 😇', 'עיניים שלי ✨', 'צרות שלי 😉',
-    'שוגר 🍬', 'לאב שלי ❤️'
+    'מהממת ✨', 'יפהפייה 🌹', 'מאהבת 💋', 'לוהטת 🌶️', 'ילדה רעה 😈',
+    'תשוקה 🖤', 'שובבה 💋', 'מאמי 💋', 'נסיכה 👑', 'מלכה 👑',
+    'סוויטי 🍯', 'האני 🍯', 'מלאכית 😇', 'שוגר 🍬'
   ];
 
   const poolEnMan = [
     'Baby 💋', 'Babe 🔥', 'Hot Stuff 🌶️', 'Handsome 😉', 'Sexy 🖤',
-    'Gorgeous ✨', 'Bad Boy 😈', 'My Lover 💋', 'Wild One 🐆', 'My Passion 🖤',
-    'Playful 😉', 'Sweetheart 🍯', 'Honey 🍯', 'My Angel 😇', 'Trouble 😉',
-    'Sugar 🍬', 'My Love ❤️'
+    'Gorgeous ✨', 'Bad Boy 😈', 'Lover 💋', 'Wild One 🐆', 'Passion 🖤',
+    'Playful 😉', 'Sweetheart 🍯', 'Honey 🍯', 'Angel 😇', 'Trouble 😉',
+    'Sugar 🍬', 'Prince 👑'
   ];
 
   const poolEnWoman = [
     'Baby 💋', 'Babe 🔥', 'Hot Stuff 🌶️', 'Gorgeous ✨', 'Sexy 🖤',
-    'My Beauty 🌹', 'Bad Girl 😈', 'My Lover 💋', 'Wild One 🐆', 'My Passion 🖤',
-    'Naughty Girl 💋', 'Sweetheart 🍯', 'Honey 🍯', 'My Angel 😇', 'Trouble 😉',
-    'Sugar 🍬', 'My Love ❤️'
+    'Beauty 🌹', 'Bad Girl 😈', 'Lover 💋', 'Wild One 🐆', 'Passion 🖤',
+    'Naughty Girl 💋', 'Sweetheart 🍯', 'Honey 🍯', 'Angel 😇', 'Trouble 😉',
+    'Sugar 🍬', 'Princess 👑'
   ];
 
   const getRandomAliases = (language: Language, g: 'MAN' | 'WOMAN') => {
