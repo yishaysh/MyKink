@@ -66,14 +66,10 @@ function getDeterministicAnswerId(userId: string, questionId: string): string {
 // Google OAuth Sign In with Dynamic Production Redirect
 export async function signInWithGoogle() {
   try {
-    const currentOrigin =
+    const redirectUrl =
       typeof window !== 'undefined' && window.location.origin
         ? window.location.origin
         : 'https://my-kink.vercel.app';
-
-    const redirectUrl = currentOrigin.includes('localhost')
-      ? 'https://my-kink.vercel.app'
-      : currentOrigin;
 
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',

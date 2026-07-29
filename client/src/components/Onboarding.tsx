@@ -14,7 +14,8 @@ import {
   AlertCircle,
   Heart,
   Target,
-  Compass
+  Compass,
+  Trash2
 } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { Language, translations } from '../services/i18n';
@@ -37,6 +38,7 @@ interface OnboardingProps {
   }) => void;
   lang: Language;
   googleUser?: any;
+  onResetAccount?: () => void;
 }
 
 // Avatar Illustrations for Woman & Man
@@ -68,7 +70,8 @@ export const Onboarding: React.FC<OnboardingProps> = ({
   onJoinCouple,
   onCompleteOnboarding,
   lang,
-  googleUser
+  googleUser,
+  onResetAccount
 }) => {
   const t = translations[lang];
   const [step, setStep] = useState<1 | 2 | 3 | 4 | 5 | 6>(1);
@@ -863,7 +866,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({
               </div>
             </form>
 
-            <div className="pt-2 border-t border-[#36343a]">
+            <div className="pt-2 border-t border-[#36343a] space-y-2">
               <button
                 onClick={handleFinish}
                 className="btn-rose w-full py-3.5 text-xs flex items-center justify-center gap-2 font-bold"
@@ -871,6 +874,17 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                 <Sparkles className="w-4 h-4" />
                 <span>{t.completeSetupBtn}</span>
               </button>
+
+              {onResetAccount && (
+                <button
+                  type="button"
+                  onClick={onResetAccount}
+                  className="w-full py-2.5 text-xs font-bold text-white bg-red-600 hover:bg-red-700 rounded-2xl flex items-center justify-center gap-1.5 transition shadow-sm"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  <span>{lang === 'he' ? 'מחק והתחל מחדש' : 'Delete Account & Start Over'}</span>
+                </button>
+              )}
             </div>
           </div>
         )}

@@ -35,6 +35,7 @@ export const App: React.FC = () => {
   const [isAuthSyncing, setIsAuthSyncing] = useState(false);
   const [isResettingAccount, setIsResettingAccount] = useState(false);
   const [resetProgress, setResetProgress] = useState(0);
+  const [onboardingKey, setOnboardingKey] = useState(0);
 
   // i18n Language State
   const [lang, setLang] = useState<Language>('en');
@@ -213,6 +214,7 @@ export const App: React.FC = () => {
     setIsPartnerConnected(false);
     setAnsweredQuestionIds([]);
     setActiveTab('onboarding');
+    setOnboardingKey((k) => k + 1);
   };
 
   // Execute Account Reset & Wiping DB records
@@ -398,12 +400,14 @@ export const App: React.FC = () => {
       <main className={activeTab === 'onboarding' ? 'py-2 flex-1' : 'pt-2 pb-24 md:pb-8 flex-1'}>
         {activeTab === 'onboarding' && (
           <Onboarding
+            key={onboardingKey}
             pairCode={pairCode}
             onCreateCouple={handleCreateCouple}
             onJoinCouple={handleJoinCouple}
             onCompleteOnboarding={handleCompleteOnboarding}
             lang={lang}
             googleUser={googleUser}
+            onResetAccount={() => setIsResetModalOpen(true)}
           />
         )}
 

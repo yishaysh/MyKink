@@ -111,11 +111,11 @@ export const Header: React.FC<HeaderProps> = ({
             {/* Delete Account / Reset Onboarding Button */}
             <button
               onClick={onResetAccount}
-              className="flex items-center gap-1 px-2 py-1 rounded-full bg-[#2b292f] border border-amber-900/50 hover:bg-amber-950 text-[11px] font-bold text-amber-300 transition shadow-sm"
-              title={lang === 'he' ? 'מחק חשבון והתחל Onboarding מחדש' : 'Reset Account & Restart Onboarding'}
+              className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-red-600 hover:bg-red-700 text-white text-[11px] font-bold transition shadow-sm"
+              title={lang === 'he' ? 'מחק חשבון והתחל מחדש' : 'Delete Account & Start Over'}
             >
-              <Trash2 className="w-3 h-3 text-amber-400" />
-              <span className="hidden lg:inline">{lang === 'he' ? 'איפוס' : 'Reset'}</span>
+              <Trash2 className="w-3.5 h-3.5 text-white" />
+              <span>{lang === 'he' ? 'מחק והתחל מחדש' : 'Delete & Start Over'}</span>
             </button>
 
             {/* Sign Out Button */}
