@@ -15,6 +15,35 @@ export interface ChatMessage {
   text: string;
 }
 
+// Resilient API Caller trying supported Gemini model endpoints with seamless fallback
+async function callGeminiApi(payload: any): Promise<any> {
+  const models = [
+    'gemini-2.5-flash',
+    'gemini-2.0-flash',
+    'gemini-flash-latest',
+    'gemini-1.5-flash-latest'
+  ];
+
+  for (const model of models) {
+    try {
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        }
+      );
+      if (response.ok) {
+        return await response.json();
+      }
+    } catch (err) {
+      console.warn(`Gemini API model ${model} error:`, err);
+    }
+  }
+  return null;
+}
+
 export async function askGeminiAria(
   userQuery: string,
   lang: 'en' | 'he',
@@ -68,25 +97,18 @@ Mandatory Guidelines:
       contents[contents.length - 1].parts[0].text = userQuery.trim();
     }
 
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          systemInstruction: {
-            parts: [{ text: systemPrompt }]
-          },
-          contents,
-          generationConfig: {
-            maxOutputTokens: 1200,
-            temperature: 0.7
-          }
-        })
+    const payload = {
+      systemInstruction: {
+        parts: [{ text: systemPrompt }]
+      },
+      contents,
+      generationConfig: {
+        maxOutputTokens: 1200,
+        temperature: 0.7
       }
-    );
+    };
 
-    const data = await response.json();
+    const data = await callGeminiApi(payload);
     const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
     if (text) return text.trim();
   } catch (e) {
@@ -188,19 +210,12 @@ Generate a 4-step romantic evening scenario regarding "${selectedTheme}" at inte
 Phase 1: Buildup & Safety, Phase 2: Sensory Immersion, Phase 3: Erotic Play, Phase 4: Aftercare.
 Return JSON array of 4 objects with fields: "stepNumber", "phase", "title", "description".`;
 
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${GEMINI_API_KEY}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { responseMimeType: 'application/json' }
-        })
-      }
-    );
+    const payload = {
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: { responseMimeType: 'application/json' }
+    };
 
-    const data = await response.json();
+    const data = await callGeminiApi(payload);
     const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
     if (rawText) {
       const parsed = JSON.parse(rawText);
@@ -241,19 +256,12 @@ export async function generateAIDare(
 "title" (כותרת קצרה ומפתה) ו-"description" (הוראות ביצוע ב-2 משפטים).`
         : `Generate a unique romantic dare for a couple regarding "${randomTheme}" at intensity ${intensity}. Return JSON with "title" and "description" fields ONLY.`;
 
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${GEMINI_API_KEY}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { responseMimeType: 'application/json' }
-        })
-      }
-    );
+    const payload = {
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: { responseMimeType: 'application/json' }
+    };
 
-    const data = await response.json();
+    const data = await callGeminiApi(payload);
     const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
     if (rawText) {
       const parsed = JSON.parse(rawText);
