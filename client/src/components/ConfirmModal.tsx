@@ -38,7 +38,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
 
         {/* Header & Warning Icon */}
         <div className="text-center space-y-3">
-          <div className="w-14 h-14 rounded-2xl bg-amber-950/60 border border-amber-500/40 text-amber-400 flex items-center justify-center mx-auto shadow-lg shadow-amber-900/20">
+          <div className="w-14 h-14 rounded-2xl bg-red-950/80 border border-red-500/50 text-red-500 flex items-center justify-center mx-auto shadow-lg shadow-red-900/30">
             <AlertTriangle className="w-7 h-7" />
           </div>
 
@@ -67,7 +67,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
               onConfirm();
               onClose();
             }}
-            className="py-3 px-4 rounded-2xl bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-500 hover:to-rose-600 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-lg shadow-rose-900/30 transition flex-1"
+            className="py-3 px-4 rounded-2xl bg-red-600 hover:bg-red-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-lg shadow-red-900/40 transition flex-1"
           >
             <Trash2 className="w-4 h-4" />
             <span>{confirmText}</span>

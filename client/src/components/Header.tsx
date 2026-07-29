@@ -87,45 +87,42 @@ export const Header: React.FC<HeaderProps> = ({
             </nav>
           )}
 
-          {/* Controls: Language Switcher, Pair Code, Reset & Logout Buttons (ALWAYS VISIBLE) */}
+          {/* Controls: Language Switcher, Pair Code, Reset & Logout Buttons (ICON ONLY) */}
           <div className="flex items-center gap-1.5 shrink-0">
             {/* Language Switcher Toggle Button */}
             <button
               onClick={onToggleLang}
-              className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#2b292f] border border-[#504444] hover:border-[#e8b4b8] text-[11px] font-bold text-[#d1c5b2] hover:text-white transition shadow-sm"
-              title={lang === 'en' ? 'Switch to Hebrew (עברית)' : 'Switch to English'}
+              className="p-2 rounded-full bg-[#2b292f] border border-[#36343a] hover:border-[#e8b4b8] text-slate-300 hover:text-white transition shadow-sm"
+              title={lang === 'en' ? 'עברית' : 'English'}
             >
-              <Globe className="w-3 h-3 text-[#e8b4b8]" />
-              <span>{lang === 'en' ? 'עברית' : 'English'}</span>
+              <Globe className="w-4 h-4 text-[#e8b4b8]" />
             </button>
 
             {/* Pair Code Button */}
             <button
               onClick={openPairingModal}
-              className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#211f25] border border-[#36343a] hover:border-[#e8b4b8] text-[11px] font-semibold text-slate-200 transition shadow-sm"
+              className="p-2 rounded-full bg-[#2b292f] border border-[#36343a] hover:border-[#e8b4b8] text-slate-300 hover:text-white transition shadow-sm"
+              title={pairCode ? `${t.code}: ${pairCode}` : t.code}
             >
-              <Share2 className="w-3 h-3 text-[#e8b4b8]" />
-              <span className="font-mono">{pairCode || t.code}</span>
+              <Share2 className="w-4 h-4 text-[#e8b4b8]" />
             </button>
 
             {/* Delete Account / Reset Onboarding Button */}
             <button
               onClick={onResetAccount}
-              className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-red-600 hover:bg-red-700 text-white text-[11px] font-bold transition shadow-sm"
-              title={lang === 'he' ? 'מחק חשבון והתחל מחדש' : 'Delete Account & Start Over'}
+              className="p-2 rounded-full bg-[#2b292f] border border-[#36343a] hover:border-red-500 text-slate-300 hover:text-red-400 transition shadow-sm"
+              title={lang === 'he' ? 'מחק והתחל מחדש' : 'Delete Account & Start Over'}
             >
-              <Trash2 className="w-3.5 h-3.5 text-white" />
-              <span>{lang === 'he' ? 'מחק והתחל מחדש' : 'Delete & Start Over'}</span>
+              <Trash2 className="w-4 h-4 text-slate-300 hover:text-red-400" />
             </button>
 
             {/* Sign Out Button */}
             <button
               onClick={onSignOut}
-              className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#2b292f] border border-rose-900/50 hover:bg-rose-950 text-[11px] font-bold text-rose-300 transition shadow-sm"
+              className="p-2 rounded-full bg-[#2b292f] border border-[#36343a] hover:border-rose-500 text-slate-300 hover:text-rose-400 transition shadow-sm"
               title={lang === 'he' ? 'התנתקות מהחשבון' : 'Sign Out'}
             >
-              <LogOut className="w-3 h-3 text-rose-400" />
-              <span className="hidden sm:inline">{lang === 'he' ? 'התנתק' : 'Logout'}</span>
+              <LogOut className="w-4 h-4 text-slate-300 hover:text-rose-400" />
             </button>
           </div>
         </div>
