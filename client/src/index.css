@@ -24,14 +24,18 @@
   --color-outline-variant: #504444;
 }
 
-body {
+html, body, #root {
+  height: 100%;
+  height: 100dvh;
   margin: 0;
   padding: 0;
+  overflow: hidden;
+}
+
+body {
   background-color: #141218 !important;
   color: #e7e0e9;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  min-height: 100vh;
-  overflow-x: hidden;
 }
 
 h1, h2, h3, h4, .font-headline {

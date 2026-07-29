@@ -82,30 +82,30 @@ export const DaresView: React.FC<DaresViewProps> = ({
   };
 
   return (
-    <div className="max-w-xl mx-auto px-4 py-4 space-y-4">
+    <div className="h-full max-w-xl w-full mx-auto px-3 py-2 flex flex-col space-y-2 overflow-hidden">
       {/* Top Banner: Rewards Ledger */}
-      <div className="solid-card p-5 space-y-4 text-center">
-        <div className="w-12 h-12 rounded-2xl bg-[#2b292f] border border-[#e8b4b8]/30 text-[#e8b4b8] flex items-center justify-center mx-auto shadow-md">
-          <Award className="w-6 h-6" />
+      <div className="solid-card p-3 space-y-2 text-center shrink-0">
+        <div className="w-9 h-9 rounded-xl bg-[#2b292f] border border-[#e8b4b8]/30 text-[#e8b4b8] flex items-center justify-center mx-auto shadow-md">
+          <Award className="w-4 h-4" />
         </div>
         <div>
-          <h2 className="text-xl sm:text-2xl font-bold text-white font-headline">{t.challengesTitle}</h2>
-          <p className="text-xs text-slate-300 max-w-md mx-auto mt-1">
+          <h2 className="text-base sm:text-lg font-bold text-white font-headline leading-tight">{t.challengesTitle}</h2>
+          <p className="text-[11px] text-slate-300 max-w-md mx-auto leading-tight mt-0.5">
             {t.challengesSub}
           </p>
         </div>
 
-        <div className="flex items-center justify-between gap-3 pt-3 border-t border-[#36343a]">
-          <div className="text-left px-4 py-2 rounded-2xl bg-[#141218] border border-[#36343a]">
-            <span className="text-[10px] text-slate-400 block">{t.rewardPoints}</span>
-            <span className="text-xl font-black text-[#e8b4b8] font-mono">{totalPoints} pts</span>
+        <div className="flex items-center justify-between gap-2 pt-2 border-t border-[#36343a]">
+          <div className="text-left px-3 py-1 rounded-xl bg-[#141218] border border-[#36343a]">
+            <span className="text-[9px] text-slate-400 block leading-tight">{t.rewardPoints}</span>
+            <span className="text-base font-black text-[#e8b4b8] font-mono leading-tight">{totalPoints} pts</span>
           </div>
 
           <button
             onClick={() => setShowCreateModal(true)}
-            className="btn-rose px-4 py-2.5 text-xs flex items-center gap-1.5"
+            className="btn-rose px-3 py-2 text-xs flex items-center gap-1 font-bold"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-3.5 h-3.5" />
             <span>{t.newChallengeBtn}</span>
           </button>
         </div>
@@ -113,7 +113,7 @@ export const DaresView: React.FC<DaresViewProps> = ({
 
       {/* Challenges List */}
       {challenges.length > 0 ? (
-        <div className="space-y-3">
+        <div className="flex-1 min-h-0 overflow-y-auto space-y-2 pr-1">
           {challenges.map((rawChallenge) => {
             const challenge = getLocalizedDare(rawChallenge);
             const isCompleted = challenge.status === 'COMPLETED';

@@ -39,7 +39,7 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <>
       {/* Top Header Bar (100% Solid Dark Background, Zero Transparency) */}
-      <header className="sticky top-0 z-40 app-header-solid border-b border-[#36343a] px-3 py-2.5 shadow-md">
+      <header className="shrink-0 app-header-solid border-b border-[#36343a] px-3 py-2 shadow-md">
         <div className="max-w-md md:max-w-5xl mx-auto flex items-center justify-between gap-1.5 overflow-hidden">
           {/* Brand Logo Image & Title */}
           <div className="flex items-center gap-2 shrink-0">
@@ -130,7 +130,7 @@ export const Header: React.FC<HeaderProps> = ({
       </header>
 
       {/* Mobile Bottom Navigation Bar (100% Solid Opaque Dark, Zero Transparency) */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 app-bottom-nav-solid border-t border-[#36343a] px-2 py-2 shadow-2xl">
+      <div className="md:hidden shrink-0 app-bottom-nav-solid border-t border-[#36343a] px-2 py-1.5 shadow-2xl">
         <nav className="max-w-md mx-auto grid grid-cols-4 gap-1">
           {tabs.map((tabItem) => {
             const Icon = tabItem.icon;

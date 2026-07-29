@@ -83,9 +83,9 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
   };
 
   return (
-    <div className="max-w-lg mx-auto px-4 py-4">
+    <div className="h-full max-w-lg w-full mx-auto px-3 py-2 flex flex-col justify-between overflow-hidden">
       {/* Category & Intensity Filters */}
-      <div className="solid-card p-4 mb-4 space-y-3">
+      <div className="solid-card p-3 mb-2 space-y-2 shrink-0">
         <div className="flex items-center justify-between text-xs text-slate-300 font-bold">
           <div className="flex items-center gap-1.5 text-[#e8b4b8]">
             <Filter className="w-4 h-4" />
@@ -99,12 +99,12 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
         </div>
 
         {/* Categories Pills */}
-        <div className="flex flex-wrap gap-1.5">
+        <div className="flex overflow-x-auto gap-1 py-0.5 no-scrollbar scrollbar-none flex-nowrap">
           {categories.map((cat) => (
             <button
               key={cat.id}
               onClick={() => { setSelectedCategory(cat.id); setCurrentIndex(0); }}
-              className={`px-3.5 py-1 rounded-full text-xs font-semibold transition ${
+              className={`shrink-0 px-3 py-0.5 rounded-full text-[11px] font-semibold transition whitespace-nowrap ${
                 selectedCategory === cat.id
                   ? 'btn-rose shadow-sm'
                   : 'btn-soft'
@@ -116,12 +116,12 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
         </div>
 
         {/* Intensities Pills */}
-        <div className="flex flex-wrap gap-1.5 pt-1 border-t border-[#36343a]">
+        <div className="flex overflow-x-auto gap-1 pt-1 border-t border-[#36343a] no-scrollbar scrollbar-none flex-nowrap">
           {intensities.map((lvl) => (
             <button
               key={lvl.id}
               onClick={() => { setSelectedIntensity(lvl.id); setCurrentIndex(0); }}
-              className={`px-3 py-0.5 rounded-full text-[11px] font-semibold transition ${
+              className={`shrink-0 px-2.5 py-0.5 rounded-full text-[10px] font-semibold transition whitespace-nowrap ${
                 selectedIntensity === lvl.id
                   ? 'bg-[#e8b4b8] text-[#48272a] font-bold'
                   : 'bg-[#2b292f] text-slate-400 hover:text-slate-200'
@@ -135,14 +135,14 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
 
       {/* Main Swiper Card Area */}
       {!isFinished && currentQ ? (
-        <div className="relative space-y-4">
-          <div className="solid-card p-6 sm:p-8 min-h-[360px] flex flex-col justify-between card-appear relative overflow-hidden">
+        <div className="flex-1 min-h-0 flex flex-col justify-between space-y-2 my-1 overflow-hidden">
+          <div className="solid-card p-4 sm:p-6 flex-1 flex flex-col justify-between card-appear relative overflow-hidden">
             {/* Top Badges */}
-            <div className="flex items-center justify-between gap-2">
-              <span className="px-3 py-1 rounded-full bg-[#2b292f] border border-[#504444] text-[#e8b4b8] text-xs font-bold uppercase tracking-wider">
+            <div className="flex items-center justify-between gap-2 shrink-0">
+              <span className="px-2.5 py-0.5 rounded-full bg-[#2b292f] border border-[#504444] text-[#e8b4b8] text-[11px] font-bold uppercase tracking-wider">
                 {currentQ.category}
               </span>
-              <span className="px-3 py-1 rounded-full bg-[#141218] border border-[#36343a] text-slate-300 text-xs font-mono font-bold">
+              <span className="px-2.5 py-0.5 rounded-full bg-[#141218] border border-[#36343a] text-slate-300 text-[11px] font-mono font-bold">
                 {currentQ.intensityLevel === 'VANILLA' && t.intensityVanilla}
                 {currentQ.intensityLevel === 'SPICY' && t.intensitySpicy}
                 {currentQ.intensityLevel === 'ADVENTUROUS' && t.intensityAdventurous}
@@ -150,17 +150,17 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
             </div>
 
             {/* Question Title & Description */}
-            <div className="my-6 text-center space-y-3">
-              <h3 className="text-xl sm:text-2xl font-bold text-white leading-snug font-headline">
+            <div className="my-auto py-2 text-center space-y-2">
+              <h3 className="text-lg sm:text-2xl font-bold text-white leading-snug font-headline">
                 {currentQ.title}
               </h3>
-              <p className="text-sm text-slate-300 max-w-md mx-auto leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate-300 max-w-md mx-auto leading-relaxed">
                 {currentQ.description}
               </p>
             </div>
 
             {/* Bottom Role Indicator & Privacy Footnote */}
-            <div className="pt-4 border-t border-[#36343a] flex items-center justify-between text-[11px] text-slate-400">
+            <div className="pt-2 border-t border-[#36343a] flex items-center justify-between text-[11px] text-slate-400 shrink-0">
               <span className="font-semibold text-[#d1c5b2]">
                 {currentQ.roleType === 'GIVER' && t.roleGiverBadge}
                 {currentQ.roleType === 'RECEIVER' && t.roleReceiverBadge}
@@ -173,7 +173,7 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
           </div>
 
           {/* Voting Action Buttons */}
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-3 gap-2 shrink-0">
             {/* NO */}
             <button
               onClick={() => handleVote('NO')}
@@ -184,9 +184,9 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
                 borderColor: 'rgba(225, 29, 72, 0.6)',
                 backgroundColor: '#1d1b21'
               }}
-              className="py-4 px-3 rounded-2xl hover:bg-rose-950/40 text-rose-400 font-bold text-xs flex flex-col items-center justify-center gap-1.5 transition group shadow-lg disabled:opacity-60"
+              className="py-2.5 px-2 rounded-xl hover:bg-rose-950/40 text-rose-400 font-bold text-xs flex flex-col items-center justify-center gap-1 transition group shadow-lg disabled:opacity-60"
             >
-              <ThumbsDown className="w-6 h-6 group-hover:scale-110 transition-transform" />
+              <ThumbsDown className="w-5 h-5 group-hover:scale-110 transition-transform" />
               <span>{t.btnNo}</span>
             </button>
 
