@@ -36,22 +36,24 @@ export const MatchesView: React.FC<MatchesViewProps> = ({ matches, lang }) => {
   return (
     <div className="max-w-2xl mx-auto px-4 py-4 space-y-4">
       {/* Header Banner */}
-      <div className="solid-card p-5 flex items-center justify-between gap-4">
-        <div className="w-9 h-9 rounded-xl bg-[#2b292f] border border-[#e8b4b8]/30 text-[#e8b4b8] flex items-center justify-center mx-auto shadow-md">
-          <Sparkles className="w-4 h-4" />
+      <div className="solid-card p-5 text-center space-y-3">
+        <div className="w-10 h-10 rounded-2xl bg-[#2b292f] border border-[#e8b4b8]/30 text-[#e8b4b8] flex items-center justify-center mx-auto shadow-md">
+          <Sparkles className="w-5 h-5" />
         </div>
-        <h2 className="text-base sm:text-lg font-bold text-white font-headline leading-tight">
-          {t.matchesTitle}
-        </h2>
-        <p className="text-[11px] text-slate-300 max-w-md mx-auto leading-tight">
-          {t.matchesSub}
-        </p>
+        <div>
+          <h2 className="text-lg sm:text-xl font-bold text-white font-headline">
+            {t.matchesTitle}
+          </h2>
+          <p className="text-xs text-slate-300 max-w-md mx-auto mt-1 leading-relaxed">
+            {t.matchesSub}
+          </p>
+        </div>
 
         {/* Filter Pills */}
-        <div className="flex justify-center gap-1.5 pt-1.5 border-t border-[#36343a]">
+        <div className="flex justify-center gap-2 pt-2 border-t border-[#36343a]">
           <button
             onClick={() => setFilter('ALL')}
-            className={`px-3 py-0.5 rounded-full text-[11px] font-semibold transition ${
+            className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition ${
               filter === 'ALL' ? 'btn-rose' : 'btn-soft'
             }`}
           >
@@ -59,7 +61,7 @@ export const MatchesView: React.FC<MatchesViewProps> = ({ matches, lang }) => {
           </button>
           <button
             onClick={() => setFilter('YES')}
-            className={`px-3 py-0.5 rounded-full text-[11px] font-semibold transition ${
+            className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition ${
               filter === 'YES' ? 'btn-rose' : 'btn-soft'
             }`}
           >
@@ -67,7 +69,7 @@ export const MatchesView: React.FC<MatchesViewProps> = ({ matches, lang }) => {
           </button>
           <button
             onClick={() => setFilter('MAYBE')}
-            className={`px-3 py-0.5 rounded-full text-[11px] font-semibold transition ${
+            className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition ${
               filter === 'MAYBE' ? 'btn-rose' : 'btn-soft'
             }`}
           >
