@@ -83,9 +83,9 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
   };
 
   return (
-    <div className="h-full max-w-lg w-full mx-auto px-3 py-2 flex flex-col justify-between overflow-hidden">
+    <div className="max-w-lg mx-auto px-4 py-4 space-y-4">
       {/* Category & Intensity Filters */}
-      <div className="solid-card p-3 mb-2 space-y-2 shrink-0">
+      <div className="solid-card p-4 space-y-3">
         <div className="flex items-center justify-between text-xs text-slate-300 font-bold">
           <div className="flex items-center gap-1.5 text-[#e8b4b8]">
             <Filter className="w-4 h-4" />

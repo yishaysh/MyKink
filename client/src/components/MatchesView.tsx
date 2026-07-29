@@ -34,9 +34,9 @@ export const MatchesView: React.FC<MatchesViewProps> = ({ matches, lang }) => {
   };
 
   return (
-    <div className="h-full max-w-xl w-full mx-auto px-3 py-2 flex flex-col space-y-2 overflow-hidden">
-      {/* Title & Header */}
-      <div className="solid-card p-3 text-center space-y-1.5 shrink-0">
+    <div className="max-w-2xl mx-auto px-4 py-4 space-y-4">
+      {/* Header Banner */}
+      <div className="solid-card p-5 flex items-center justify-between gap-4">
         <div className="w-9 h-9 rounded-xl bg-[#2b292f] border border-[#e8b4b8]/30 text-[#e8b4b8] flex items-center justify-center mx-auto shadow-md">
           <Sparkles className="w-4 h-4" />
         </div>

@@ -51,7 +51,7 @@ export const AICoachView: React.FC<AICoachViewProps> = ({ coupleId, lang }) => {
   };
 
   return (
-    <div className="h-full max-w-xl w-full mx-auto px-3 py-2 flex flex-col space-y-2 overflow-hidden">
+    <div className="max-w-xl mx-auto px-4 py-4 space-y-4">
       {/* Sub-tab Navigation */}
       <div className="flex bg-[#211f25] p-1 rounded-2xl border border-[#36343a] shrink-0">
         <button

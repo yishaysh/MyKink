@@ -359,25 +359,23 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="h-screen h-[100dvh] flex flex-col bg-[#141218] text-[#e7e0e9] overflow-hidden">
-      {/* Hide Header and Bottom Nav entirely during Onboarding so there is ZERO background clutter */}
-      {activeTab !== 'onboarding' && (
-        <Header
-          activeTab={activeTab}
-          setActiveTab={changeActiveTab}
-          pairCode={pairCode}
-          openPairingModal={() => setIsPairingModalOpen(true)}
-          isPartnerConnected={isPartnerConnected}
-          userAlias={userProfile?.alias}
-          lang={lang}
-          onToggleLang={handleToggleLang}
-          onSignOut={handleSignOut}
-          onResetAccount={() => setIsResetModalOpen(true)}
-        />
-      )}
+    <div className="min-h-screen bg-[#141218] text-[#e7e0e9] flex flex-col">
+      {/* Header is ALWAYS visible so user can see Logo, Alias, Lang Switcher, Reset Account & Sign Out */}
+      <Header
+        activeTab={activeTab}
+        setActiveTab={changeActiveTab}
+        pairCode={pairCode}
+        openPairingModal={() => setIsPairingModalOpen(true)}
+        isPartnerConnected={isPartnerConnected}
+        userAlias={userProfile?.alias}
+        lang={lang}
+        onToggleLang={handleToggleLang}
+        onSignOut={handleSignOut}
+        onResetAccount={() => setIsResetModalOpen(true)}
+      />
 
       {/* Main Tab Views */}
-      <main className="flex-1 min-h-0 flex flex-col overflow-hidden">
+      <main className={activeTab === 'onboarding' ? 'py-2 flex-1' : 'pt-2 pb-24 md:pb-8 flex-1'}>
         {activeTab === 'onboarding' && (
           <Onboarding
             pairCode={pairCode}

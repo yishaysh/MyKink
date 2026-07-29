@@ -82,9 +82,9 @@ export const DaresView: React.FC<DaresViewProps> = ({
   };
 
   return (
-    <div className="h-full max-w-xl w-full mx-auto px-3 py-2 flex flex-col space-y-2 overflow-hidden">
-      {/* Top Banner: Rewards Ledger */}
-      <div className="solid-card p-3 space-y-2 text-center shrink-0">
+    <div className="max-w-xl mx-auto px-4 py-4 space-y-4">
+      {/* Points & Level Ledger Header */}
+      <div className="solid-card p-5 space-y-3">
         <div className="w-9 h-9 rounded-xl bg-[#2b292f] border border-[#e8b4b8]/30 text-[#e8b4b8] flex items-center justify-center mx-auto shadow-md">
           <Award className="w-4 h-4" />
         </div>

@@ -39,7 +39,7 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <>
       {/* Top Header Bar (100% Solid Dark Background, Zero Transparency) */}
-      <header className="shrink-0 app-header-solid border-b border-[#36343a] px-3 py-2 shadow-md">
+      <header className="sticky top-0 z-40 app-header-solid border-b border-[#36343a] px-3 py-2.5 shadow-md">
         <div className="max-w-md md:max-w-5xl mx-auto flex items-center justify-between gap-1.5 overflow-hidden">
           {/* Brand Logo Image & Title */}
           <div className="flex items-center gap-2 shrink-0">
@@ -63,29 +63,31 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
           </div>
 
-          {/* Desktop Navigation Tabs */}
-          <nav className="hidden md:flex items-center gap-1 bg-[#211f25] p-1 rounded-full border border-[#36343a]">
-            {tabs.map((tabItem) => {
-              const Icon = tabItem.icon;
-              const isActive = activeTab === tabItem.id;
-              return (
-                <button
-                  key={tabItem.id}
-                  onClick={() => setActiveTab(tabItem.id)}
-                  className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold transition ${
-                    isActive
-                      ? 'btn-rose shadow-sm'
-                      : 'text-slate-400 hover:text-slate-200 hover:bg-[#2b292f]'
-                  }`}
-                >
-                  <Icon className="w-3.5 h-3.5" />
-                  <span>{tabItem.label}</span>
-                </button>
-              );
-            })}
-          </nav>
+          {/* Desktop Navigation Tabs (rendered only when in main app tabs) */}
+          {activeTab !== 'onboarding' && (
+            <nav className="hidden md:flex items-center gap-1 bg-[#211f25] p-1 rounded-full border border-[#36343a]">
+              {tabs.map((tabItem) => {
+                const Icon = tabItem.icon;
+                const isActive = activeTab === tabItem.id;
+                return (
+                  <button
+                    key={tabItem.id}
+                    onClick={() => setActiveTab(tabItem.id)}
+                    className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold transition ${
+                      isActive
+                        ? 'btn-rose shadow-sm'
+                        : 'text-slate-400 hover:text-slate-200 hover:bg-[#2b292f]'
+                    }`}
+                  >
+                    <Icon className="w-3.5 h-3.5" />
+                    <span>{tabItem.label}</span>
+                  </button>
+                );
+              })}
+            </nav>
+          )}
 
-          {/* Controls: Language Switcher, Pair Code, Reset & Logout Buttons */}
+          {/* Controls: Language Switcher, Pair Code, Reset & Logout Buttons (ALWAYS VISIBLE) */}
           <div className="flex items-center gap-1.5 shrink-0">
             {/* Language Switcher Toggle Button */}
             <button
@@ -129,29 +131,31 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       </header>
 
-      {/* Mobile Bottom Navigation Bar (100% Solid Opaque Dark, Zero Transparency) */}
-      <div className="md:hidden shrink-0 app-bottom-nav-solid border-t border-[#36343a] px-2 py-1.5 shadow-2xl">
-        <nav className="max-w-md mx-auto grid grid-cols-4 gap-1">
-          {tabs.map((tabItem) => {
-            const Icon = tabItem.icon;
-            const isActive = activeTab === tabItem.id;
-            return (
-              <button
-                key={tabItem.id}
-                onClick={() => setActiveTab(tabItem.id)}
-                className={`flex flex-col items-center justify-center py-2 px-1 rounded-xl transition ${
-                  isActive
-                    ? 'bg-[#2b292f] text-[#e8b4b8] font-[#e8b4b8] font-bold border border-[#e8b4b8]/40 shadow-sm'
-                    : 'text-slate-400 hover:text-slate-200'
-                }`}
-              >
-                <Icon className={`w-4 h-4 mb-0.5 ${isActive ? 'scale-110' : ''} transition-transform`} />
-                <span className="text-[10px] tracking-tight">{tabItem.label}</span>
-              </button>
-            );
-          })}
-        </nav>
-      </div>
+      {/* Mobile Bottom Navigation Bar (rendered only when in main app tabs) */}
+      {activeTab !== 'onboarding' && (
+        <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 app-bottom-nav-solid border-t border-[#36343a] px-2 py-2 shadow-2xl">
+          <nav className="max-w-md mx-auto grid grid-cols-4 gap-1">
+            {tabs.map((tabItem) => {
+              const Icon = tabItem.icon;
+              const isActive = activeTab === tabItem.id;
+              return (
+                <button
+                  key={tabItem.id}
+                  onClick={() => setActiveTab(tabItem.id)}
+                  className={`flex flex-col items-center justify-center py-2 px-1 rounded-xl transition ${
+                    isActive
+                      ? 'bg-[#2b292f] text-[#e8b4b8] font-[#e8b4b8] font-bold border border-[#e8b4b8]/40 shadow-sm'
+                      : 'text-slate-400 hover:text-slate-200'
+                  }`}
+                >
+                  <Icon className={`w-4 h-4 mb-0.5 ${isActive ? 'scale-110' : ''} transition-transform`} />
+                  <span className="text-[10px] tracking-tight">{tabItem.label}</span>
+                </button>
+              );
+            })}
+          </nav>
+        </div>
+      )}
     </>
   );
 };
