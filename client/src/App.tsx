@@ -7,6 +7,7 @@ import { SwipeDeck } from './components/SwipeDeck';
 import { MatchesView, SharedMatchItem } from './components/MatchesView';
 import { DaresView, ChallengeItem } from './components/DaresView';
 import { AICoachView } from './components/AICoachView';
+import { LogoSpinner } from './components/LogoSpinner';
 
 import {
   registerDevice,
@@ -31,6 +32,9 @@ export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('onboarding');
   const [isPairingModalOpen, setIsPairingModalOpen] = useState(false);
   const [isResetModalOpen, setIsResetModalOpen] = useState(false);
+  const [isAuthSyncing, setIsAuthSyncing] = useState(false);
+  const [isResettingAccount, setIsResettingAccount] = useState(false);
+  const [resetProgress, setResetProgress] = useState(0);
 
   // i18n Language State
   const [lang, setLang] = useState<Language>('en');
@@ -154,18 +158,24 @@ export const App: React.FC = () => {
     // Listen for Supabase OAuth Callback events (Google Auth)
     const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (session?.user) {
+        setIsAuthSyncing(true);
         setGoogleUser(session.user);
-        const deviceId = getOrCreateDeviceId();
-        const pubKey = getOrCreatePublicKey();
-        const res = await registerDevice(deviceId, pubKey, true);
+        try {
+          const deviceId = getOrCreateDeviceId();
+          const pubKey = getOrCreatePublicKey();
+          const res = await registerDevice(deviceId, pubKey, true);
 
-        if (res.user) {
-          await syncUserDBState(res.user, session.user);
-        }
+          if (res.user) {
+            await syncUserDBState(res.user, session.user);
+          }
 
-        // Clear access token hash cleanly from address bar
-        if (window.location.hash.includes('access_token')) {
-          window.history.replaceState(null, '', window.location.pathname);
+          if (window.location.hash.includes('access_token')) {
+            window.history.replaceState(null, '', window.location.pathname);
+          }
+        } catch (err) {
+          console.error('Auth sync error:', err);
+        } finally {
+          setIsAuthSyncing(false);
         }
       }
     });
@@ -207,12 +217,22 @@ export const App: React.FC = () => {
 
   // Execute Account Reset & Wiping DB records
   const executeResetAccount = async () => {
+    setIsResettingAccount(true);
+    setResetProgress(15);
     try {
+      setResetProgress(45);
       await resetUserAccountInDB(userId, googleUser?.id);
+      setResetProgress(80);
+      await handleSignOut();
+      setResetProgress(100);
     } catch (e) {
       console.warn('Delete user data error:', e);
+    } finally {
+      setTimeout(() => {
+        setIsResettingAccount(false);
+        setResetProgress(0);
+      }, 400);
     }
-    await handleSignOut();
   };
 
   // 2. Load Questions catalog
@@ -439,6 +459,25 @@ export const App: React.FC = () => {
         cancelText={lang === 'he' ? 'ביטול' : 'Cancel'}
         lang={lang}
       />
+
+      {/* Google Auth Syncing Spinner */}
+      {isAuthSyncing && (
+        <LogoSpinner
+          fullScreen
+          label={lang === 'he' ? 'מתחבר לחשבון גוגל...' : 'Authenticating with Google...'}
+          sublabel={lang === 'he' ? 'מאמת זהות ומסנכרן נתונים מוצפנים במערכת' : 'Syncing encrypted profile...'}
+        />
+      )}
+
+      {/* Account Deletion / Reset Progress Spinner */}
+      {isResettingAccount && (
+        <LogoSpinner
+          fullScreen
+          progress={resetProgress}
+          label={lang === 'he' ? 'מוחק נתוני חשבון ומבצע איפוס...' : 'Deleting account & resetting...'}
+          sublabel={lang === 'he' ? 'מנקה לחלוטין את הנתונים המוצפנים ממסד הנתונים' : 'Wiping encrypted records from database'}
+        />
+      )}
     </div>
   );
 };

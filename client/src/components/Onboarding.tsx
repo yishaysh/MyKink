@@ -72,6 +72,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({
 }) => {
   const t = translations[lang];
   const [step, setStep] = useState<1 | 2 | 3 | 4 | 5 | 6>(1);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
   // Profile Form State
   const [alias, setAlias] = useState('');
@@ -91,6 +92,16 @@ export const Onboarding: React.FC<OnboardingProps> = ({
   // Pairing State
   const [inputCode, setInputCode] = useState('');
   const [copied, setCopied] = useState(false);
+
+  const handleGoogleSignIn = async () => {
+    setIsGoogleLoading(true);
+    try {
+      await signInWithGoogle();
+    } catch (e) {
+      console.error('Google sign in error:', e);
+      setIsGoogleLoading(false);
+    }
+  };
 
   // Dynamic Aliases Pools
   const poolHe = [
@@ -239,9 +250,6 @@ export const Onboarding: React.FC<OnboardingProps> = ({
       {step === 1 && (
         <div className="solid-card p-5 sm:p-8 space-y-5 card-appear border border-[#36343a]">
           <div className="text-center">
-            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-[#2b292f] border border-[#e8b4b8]/30 text-[#e8b4b8] flex items-center justify-center mx-auto mb-2.5 shadow-md">
-              <User className="w-6 h-6 sm:w-7 sm:h-7" />
-            </div>
             <h2 className="text-xl sm:text-2xl font-bold text-white font-headline">
               {lang === 'he' ? 'זהות, מגדר וכינוי אינטימי' : 'Identity, Gender & Sexy Alias'}
             </h2>
@@ -259,10 +267,16 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                 <Check className="w-4 h-4" />
                 <span>{t.googleSignedInAs} {googleUser.email}</span>
               </div>
+            ) : isGoogleLoading ? (
+              <LogoSpinner
+                size="md"
+                label={lang === 'he' ? 'מתחבר לחשבון גוגל...' : 'Authenticating with Google...'}
+                sublabel={lang === 'he' ? 'אנא המתן, מעביר לאימות...' : 'Redirecting to sign-in...'}
+              />
             ) : (
               <button
                 type="button"
-                onClick={() => signInWithGoogle()}
+                onClick={handleGoogleSignIn}
                 className="w-full py-3 px-4 rounded-2xl bg-white hover:bg-slate-100 text-slate-900 font-bold text-xs flex items-center justify-center gap-2 transition shadow-md"
               >
                 <svg className="w-4 h-4" viewBox="0 0 24 24">
@@ -398,9 +412,6 @@ export const Onboarding: React.FC<OnboardingProps> = ({
         {step === 2 && (
           <div className="solid-card p-3.5 sm:p-5 space-y-2.5 sm:space-y-3 card-appear border border-[#36343a]">
             <div className="text-center">
-              <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-[#2b292f] border border-[#e8b4b8]/30 text-[#e8b4b8] flex items-center justify-center mx-auto mb-1 shadow-md">
-                <Target className="w-4 h-4 sm:w-5 sm:h-5" />
-              </div>
               <h2 className="text-base sm:text-xl font-bold text-white font-headline leading-tight">
                 {lang === 'he' ? 'מה המטרה הזוגית שלכם?' : 'What is your intimacy goal?'}
               </h2>
@@ -486,9 +497,6 @@ export const Onboarding: React.FC<OnboardingProps> = ({
         {step === 3 && (
           <div className="solid-card p-3.5 sm:p-5 space-y-2.5 card-appear border border-[#36343a]">
             <div className="text-center">
-              <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-[#2b292f] border border-[#e8b4b8]/30 text-[#e8b4b8] flex items-center justify-center mx-auto mb-1 shadow-md">
-                <Heart className="w-4 h-4 sm:w-5 sm:h-5" />
-              </div>
               <h2 className="text-base sm:text-xl font-bold text-white font-headline leading-tight">
                 {lang === 'he' ? 'אופי הקשר ותפקיד במיטה' : 'Relationship Dynamic & Role'}
               </h2>
@@ -626,9 +634,6 @@ export const Onboarding: React.FC<OnboardingProps> = ({
         {step === 4 && (
           <div className="solid-card p-3.5 sm:p-5 space-y-2.5 card-appear border border-[#36343a]">
             <div className="text-center">
-              <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-[#2b292f] border border-[#e8b4b8]/30 text-[#e8b4b8] flex items-center justify-center mx-auto mb-1 shadow-md">
-                <Compass className="w-4 h-4 sm:w-5 sm:h-5 animate-pulse" />
-              </div>
               <span className="text-[9px] uppercase tracking-widest font-extrabold text-[#e8b4b8] block">
                 {lang === 'he' ? '🌶️ שאלת חימום סודית' : '🌶️ Teaser Question'}
               </span>
@@ -695,11 +700,8 @@ export const Onboarding: React.FC<OnboardingProps> = ({
         {step === 5 && (
           <div className="solid-card p-3.5 sm:p-5 space-y-2.5 card-appear border border-[#36343a]">
             <div className="text-center">
-              <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-[#2b292f] border border-[#e8b4b8]/30 text-[#e8b4b8] flex items-center justify-center mx-auto mb-1 shadow-md">
-                <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
-              </div>
               <h2 className="text-base sm:text-xl font-bold text-white font-headline leading-tight">{t.onboardingStep2Title}</h2>
-              <p className="text-[11px] text-slate-300 max-w-xs mx-auto mt-0.5 leading-tight">
+              <p className="text-[11px] text-[#d1c5b2] max-w-xs mx-auto mt-0.5 leading-tight">
                 {t.onboardingStep2Sub}
               </p>
             </div>
@@ -806,10 +808,6 @@ export const Onboarding: React.FC<OnboardingProps> = ({
         {/* STEP 6: COUPLE PAIRING */}
         {step === 6 && (
           <div className="solid-card p-3.5 sm:p-5 text-center space-y-2.5 card-appear border border-[#36343a]">
-            <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-[#2b292f] border border-[#e8b4b8]/30 text-[#e8b4b8] flex items-center justify-center mx-auto shadow-md">
-              <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
-            </div>
-
             <div>
               <h2 className="text-base sm:text-xl font-bold text-white font-headline leading-tight">{t.onboardingStep4Title}</h2>
               <p className="text-[11px] text-slate-300 max-w-xs mx-auto mt-0.5 leading-tight">
