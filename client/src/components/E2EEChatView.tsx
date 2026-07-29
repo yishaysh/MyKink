@@ -33,7 +33,9 @@ export const E2EEChatView: React.FC<E2EEChatViewProps> = ({ userId, coupleId }) 
       }
     });
 
-    return () => unsubscribe();
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   const handleSend = (e: React.FormEvent) => {

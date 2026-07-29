@@ -20,6 +20,7 @@ import {
 import { QRCodeSVG } from 'qrcode.react';
 import { Language, translations } from '../services/i18n';
 import { signInWithGoogle } from '../services/api';
+import { LogoSpinner } from './LogoSpinner';
 
 interface OnboardingProps {
   pairCode: string | null;
@@ -108,16 +109,19 @@ export const Onboarding: React.FC<OnboardingProps> = ({
 
   // Dynamic Aliases Pools
   const poolHe = [
-    'מגע סאטן 💋', 'נמר מסתורי 🐅', 'להבה יצרית 🔥', 'שועל חושני 🦊', 'ורד חצות 🌹',
-    'לחישה סודית ✨', 'תשוקה אנונימית 🖤', 'פנתר פראי 🐆', 'משי וסאטן 🎀', 'קטיפה שחורה ♠️',
-    'נשיקת חצות 💋', 'סופה יצרית 🌪️', 'נסיכה פראית 👑', 'מלכת הלילה 🔮', 'צל מסתורי 🌒',
-    'VelvetTouch 💋', 'ShadowFox 🦊', 'MidnightRose 🌹', 'WildHeart 🖤', 'MysticFlame 🔥'
+    'Baby / בייבי 💋', 'Babe / בייב 🔥', 'Hot stuff / הוט סטף 🌶️', 'Gorgeous / גורג\'ס ✨',
+    'Sexy / סקסי 🖤', 'Sexy / סקסית 🖤', 'Handsome / הנדסם 😉', 'חתיך שלי 🔥', 'יפה שלי 🌹',
+    'מאהב / מאהבת 💋', 'לוהט 🌶️', 'לוהטת 🌶️', 'ילד רע 😈', 'ילדה רעה 😈', 'תשוקה שלי 🖤',
+    'Bad Boy 😈', 'Bad Girl 😈', 'שובב 😉', 'שובבה 💋', 'חיים שלי ❤️', 'מאמי / ממי 💋',
+    'נשמה שלי 👑', 'Wild One 🐆', 'Sweetie / סוויטי 🍯', 'האני / Honey 🍯', 'מלאך שלי 😇',
+    'עיניים שלי ✨', 'Trouble / צרות שלי 😉', 'Sugar / שוגר 🍬', 'Love / לאב שלי ❤️'
   ];
 
   const poolEn = [
-    'VelvetTouch 💋', 'ShadowFox 🦊', 'MidnightRose 🌹', 'WildHeart 🖤', 'MysticFlame 🔥',
-    'SatinWhisper ✨', 'SilkWhisper 🎀', 'SecretDesire 🖤', 'MidnightVixen 🦊', 'SeductiveShadow 🌒',
-    'SatinPanther 🐆', 'CrimsonKiss 💋', 'DarkObsession ♠️', 'EroticStorm 🌪️', 'GoldenPhoenix 🔮'
+    'Baby / Babe 💋', 'Hot stuff 🌶️', 'Gorgeous ✨', 'Sexy 🖤', 'Handsome 😉',
+    'Sweetheart 🍯', 'Wild One 🐆', 'Bad Boy 😈', 'Bad Girl 😈', 'My Lover 💋',
+    'Cutie Pie 🥰', 'Charming ✨', 'Honey 🍯', 'Sunshine ☀️', 'Angel 😇',
+    'Naughty Girl 💋', 'Naughty Boy 😈', 'Trouble 😉', 'Sugar 🍬', 'Seductive 🖤'
   ];
 
   const getRandomAliases = (language: Language) => {
@@ -206,7 +210,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({
   };
 
   const handleFinish = async () => {
-    const finalAlias = alias.trim() || (lang === 'he' ? 'מגע סאטן 💋' : 'VelvetTouch 💋');
+    const finalAlias = alias.trim() || (lang === 'he' ? 'בייבי 💋' : 'Baby 💋');
     if (!pairCode) {
       await onCreateCouple();
     }
@@ -350,7 +354,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({
                   setAlias(e.target.value);
                   if (e.target.value.trim()) setAliasError(false);
                 }}
-                placeholder={lang === 'he' ? 'למשל: מגע סאטן 💋' : t.sexyAliasPlaceholder}
+                placeholder={lang === 'he' ? 'למשל: בייבי, הוט סטף, סקסי, גורג\'ס' : t.sexyAliasPlaceholder}
                 className={`w-full px-4 py-3 input-solid text-xs text-white ${
                   aliasError ? 'border-rose-500 ring-1 ring-rose-500' : ''
                 }`}

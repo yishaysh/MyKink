@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Flame, Clock, Award, Plus, CheckCircle2, AlertCircle, Wand2, Sparkles, XCircle } from 'lucide-react';
 import { ChallengeItem } from '../services/api';
+export type { ChallengeItem };
 import { generateAIDare } from '../services/gemini';
 import { Language, translations } from '../services/i18n';
 
