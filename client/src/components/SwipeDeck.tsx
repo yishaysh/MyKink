@@ -98,38 +98,56 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
           )}
         </div>
 
-        {/* Categories Pills */}
-        <div className="flex overflow-x-auto gap-1 py-0.5 no-scrollbar scrollbar-none flex-nowrap">
-          {categories.map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => { setSelectedCategory(cat.id); setCurrentIndex(0); }}
-              className={`shrink-0 px-3 py-0.5 rounded-full text-[11px] font-semibold transition whitespace-nowrap ${
-                selectedCategory === cat.id
-                  ? 'btn-rose shadow-sm'
-                  : 'btn-soft'
-              }`}
-            >
-              {cat.label}
-            </button>
-          ))}
+        {/* Categories Choice Blocks (קוביות לבחירה) */}
+        <div>
+          <label className="text-[11px] font-semibold text-slate-400 block mb-1.5">
+            {lang === 'he' ? 'קטגוריית פנטזיות' : 'Fantasy Category'}
+          </label>
+          <div className="grid grid-cols-3 gap-1.5">
+            {categories.map((cat) => {
+              const isSelected = selectedCategory === cat.id;
+              return (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => { setSelectedCategory(cat.id); setCurrentIndex(0); }}
+                  className={`p-2 rounded-xl text-center transition flex items-center justify-center min-h-[2.5rem] cursor-pointer text-xs font-bold ${
+                    isSelected
+                      ? 'bg-[#2b292f] border-2 border-[#e8b4b8] text-[#e8b4b8] shadow-md'
+                      : 'bg-[#141218] border border-[#36343a] text-slate-300 hover:border-slate-500'
+                  }`}
+                >
+                  <span>{cat.label}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
 
-        {/* Intensities Pills */}
-        <div className="flex overflow-x-auto gap-1 pt-1 border-t border-[#36343a] no-scrollbar scrollbar-none flex-nowrap">
-          {intensities.map((lvl) => (
-            <button
-              key={lvl.id}
-              onClick={() => { setSelectedIntensity(lvl.id); setCurrentIndex(0); }}
-              className={`shrink-0 px-2.5 py-0.5 rounded-full text-[10px] font-semibold transition whitespace-nowrap ${
-                selectedIntensity === lvl.id
-                  ? 'bg-[#e8b4b8] text-[#48272a] font-bold'
-                  : 'bg-[#2b292f] text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              {lvl.label}
-            </button>
-          ))}
+        {/* Intensities Choice Blocks (קוביות לבחירה) */}
+        <div className="pt-2 border-t border-[#36343a]">
+          <label className="text-[11px] font-semibold text-slate-400 block mb-1.5">
+            {lang === 'he' ? 'רמת נועזות' : 'Intensity Level'}
+          </label>
+          <div className="grid grid-cols-4 gap-1.5">
+            {intensities.map((lvl) => {
+              const isSelected = selectedIntensity === lvl.id;
+              return (
+                <button
+                  key={lvl.id}
+                  type="button"
+                  onClick={() => { setSelectedIntensity(lvl.id); setCurrentIndex(0); }}
+                  className={`p-1.5 rounded-xl text-center transition flex items-center justify-center min-h-[2.25rem] cursor-pointer text-[11px] font-bold ${
+                    isSelected
+                      ? 'bg-[#2b292f] border-2 border-[#e8b4b8] text-[#e8b4b8] shadow-md'
+                      : 'bg-[#141218] border border-[#36343a] text-slate-400 hover:text-slate-200 hover:border-slate-500'
+                  }`}
+                >
+                  <span>{lvl.label}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
 
