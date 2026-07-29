@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Sparkles,
   Share2,
@@ -107,33 +107,56 @@ export const Onboarding: React.FC<OnboardingProps> = ({
     }
   };
 
-  // Dynamic Aliases Pools
-  const poolHe = [
-    'Baby / בייבי 💋', 'Babe / בייב 🔥', 'Hot stuff / הוט סטף 🌶️', 'Gorgeous / גורג\'ס ✨',
-    'Sexy / סקסי 🖤', 'Sexy / סקסית 🖤', 'Handsome / הנדסם 😉', 'חתיך שלי 🔥', 'יפה שלי 🌹',
-    'מאהב / מאהבת 💋', 'לוהט 🌶️', 'לוהטת 🌶️', 'ילד רע 😈', 'ילדה רעה 😈', 'תשוקה שלי 🖤',
-    'Bad Boy 😈', 'Bad Girl 😈', 'שובב 😉', 'שובבה 💋', 'חיים שלי ❤️', 'מאמי / ממי 💋',
-    'נשמה שלי 👑', 'Wild One 🐆', 'Sweetie / סוויטי 🍯', 'האני / Honey 🍯', 'מלאך שלי 😇',
-    'עיניים שלי ✨', 'Trouble / צרות שלי 😉', 'Sugar / שוגר 🍬', 'Love / לאב שלי ❤️'
+  // Dynamic Aliases Pools (Strictly separated by Language & Gender)
+  const poolHeMan = [
+    'בייבי 💋', 'בייב 🔥', 'הוט סטף 🌶️', 'גורג\'ס ✨', 'סקסי 🖤',
+    'הנדסם 😉', 'חתיך שלי 🔥', 'מאהב שלי 💋', 'לוהט 🌶️', 'ילד רע 😈',
+    'תשוקה שלי 🖤', 'שובב 😉', 'חיים שלי ❤️', 'מאמי 💋', 'נשמה שלי 👑',
+    'סוויטי 🍯', 'האני 🍯', 'מלאך שלי 😇', 'עיניים שלי ✨', 'צרות שלי 😉',
+    'שוגר 🍬', 'לאב שלי ❤️'
   ];
 
-  const poolEn = [
-    'Baby / Babe 💋', 'Hot stuff 🌶️', 'Gorgeous ✨', 'Sexy 🖤', 'Handsome 😉',
-    'Sweetheart 🍯', 'Wild One 🐆', 'Bad Boy 😈', 'Bad Girl 😈', 'My Lover 💋',
-    'Cutie Pie 🥰', 'Charming ✨', 'Honey 🍯', 'Sunshine ☀️', 'Angel 😇',
-    'Naughty Girl 💋', 'Naughty Boy 😈', 'Trouble 😉', 'Sugar 🍬', 'Seductive 🖤'
+  const poolHeWoman = [
+    'בייבי 💋', 'בייב 🔥', 'הוט סטף 🌶️', 'גורג\'ס ✨', 'סקסית 🖤',
+    'יפה שלי 🌹', 'יפהפייה 🌹', 'מאהבת שלי 💋', 'לוהטת 🌶️', 'ילדה רעה 😈',
+    'תשוקה שלי 🖤', 'שובבה 💋', 'חיים שלי ❤️', 'מאמי 💋', 'נשמה שלי 👑',
+    'סוויטי 🍯', 'האני 🍯', 'מלאכית שלי 😇', 'עיניים שלי ✨', 'צרות שלי 😉',
+    'שוגר 🍬', 'לאב שלי ❤️'
   ];
 
-  const getRandomAliases = (language: Language) => {
-    const list = [...(language === 'he' ? poolHe : poolEn)];
+  const poolEnMan = [
+    'Baby 💋', 'Babe 🔥', 'Hot Stuff 🌶️', 'Handsome 😉', 'Sexy 🖤',
+    'Gorgeous ✨', 'Bad Boy 😈', 'My Lover 💋', 'Wild One 🐆', 'My Passion 🖤',
+    'Playful 😉', 'Sweetheart 🍯', 'Honey 🍯', 'My Angel 😇', 'Trouble 😉',
+    'Sugar 🍬', 'My Love ❤️'
+  ];
+
+  const poolEnWoman = [
+    'Baby 💋', 'Babe 🔥', 'Hot Stuff 🌶️', 'Gorgeous ✨', 'Sexy 🖤',
+    'My Beauty 🌹', 'Bad Girl 😈', 'My Lover 💋', 'Wild One 🐆', 'My Passion 🖤',
+    'Naughty Girl 💋', 'Sweetheart 🍯', 'Honey 🍯', 'My Angel 😇', 'Trouble 😉',
+    'Sugar 🍬', 'My Love ❤️'
+  ];
+
+  const getRandomAliases = (language: Language, g: 'MAN' | 'WOMAN') => {
+    let list: string[];
+    if (language === 'he') {
+      list = [...(g === 'MAN' ? poolHeMan : poolHeWoman)];
+    } else {
+      list = [...(g === 'MAN' ? poolEnMan : poolEnWoman)];
+    }
     const shuffled = list.sort(() => 0.5 - Math.random());
     return shuffled.slice(0, 7);
   };
 
-  const [suggestedAliases, setSuggestedAliases] = useState<string[]>(() => getRandomAliases(lang));
+  const [suggestedAliases, setSuggestedAliases] = useState<string[]>(() => getRandomAliases(lang, gender));
+
+  useEffect(() => {
+    setSuggestedAliases(getRandomAliases(lang, gender));
+  }, [lang, gender]);
 
   const shuffleAliases = () => {
-    setSuggestedAliases(getRandomAliases(lang));
+    setSuggestedAliases(getRandomAliases(lang, gender));
   };
 
   const availableCategories = [
