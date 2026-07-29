@@ -53,24 +53,30 @@ export const MatchesView: React.FC<MatchesViewProps> = ({ matches, lang }) => {
         <div className="flex justify-center gap-2 pt-2 border-t border-[#36343a]">
           <button
             onClick={() => setFilter('ALL')}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition ${
-              filter === 'ALL' ? 'btn-rose' : 'btn-soft'
+            className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition ${
+              filter === 'ALL'
+                ? 'bg-[#2b292f] border-2 border-[#e8b4b8] text-[#e8b4b8] shadow-md'
+                : 'btn-soft'
             }`}
           >
             {t.filterAll} ({matches.length})
           </button>
           <button
             onClick={() => setFilter('YES')}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition ${
-              filter === 'YES' ? 'btn-rose' : 'btn-soft'
+            className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition ${
+              filter === 'YES'
+                ? 'bg-[#2b292f] border-2 border-[#e8b4b8] text-[#e8b4b8] shadow-md'
+                : 'btn-soft'
             }`}
           >
             {t.filterYes} ({matches.filter((m) => m.matchStatus === 'MUTUAL_YES').length})
           </button>
           <button
             onClick={() => setFilter('MAYBE')}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition ${
-              filter === 'MAYBE' ? 'btn-rose' : 'btn-soft'
+            className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition ${
+              filter === 'MAYBE'
+                ? 'bg-[#2b292f] border-2 border-[#e8b4b8] text-[#e8b4b8] shadow-md'
+                : 'btn-soft'
             }`}
           >
             {t.filterMaybe} ({matches.filter((m) => m.matchStatus === 'MUTUAL_MAYBE').length})

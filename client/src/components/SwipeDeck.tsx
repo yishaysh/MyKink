@@ -113,7 +113,7 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
                   onClick={() => { setSelectedCategory(cat.id); setCurrentIndex(0); }}
                   className={`p-2 rounded-xl text-center transition flex items-center justify-center min-h-[2.5rem] cursor-pointer text-xs font-bold ${
                     isSelected
-                      ? 'bg-[#e8b4b8]/15 border-2 border-[#e8b4b8] text-[#e8b4b8] shadow-md shadow-[#e8b4b8]/20'
+                      ? 'bg-[#2b292f] border-2 border-[#e8b4b8] text-[#e8b4b8] shadow-md shadow-[#e8b4b8]/20'
                       : 'bg-[#141218] border border-[#36343a] text-slate-300 hover:border-slate-500'
                   }`}
                 >
@@ -139,7 +139,7 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
                   onClick={() => { setSelectedIntensity(lvl.id); setCurrentIndex(0); }}
                   className={`p-1.5 rounded-xl text-center transition flex items-center justify-center min-h-[2.25rem] cursor-pointer text-[11px] font-bold ${
                     isSelected
-                      ? 'bg-[#e8b4b8]/15 border-2 border-[#e8b4b8] text-[#e8b4b8] shadow-md shadow-[#e8b4b8]/20'
+                      ? 'bg-[#2b292f] border-2 border-[#e8b4b8] text-[#e8b4b8] shadow-md shadow-[#e8b4b8]/20'
                       : 'bg-[#141218] border border-[#36343a] text-slate-400 hover:text-slate-200 hover:border-slate-500'
                   }`}
                 >
