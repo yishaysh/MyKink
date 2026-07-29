@@ -536,7 +536,7 @@ const catalogTranslationsHeByTitle: Record<string, { title: string; description:
 };
 
 export function translateQuestion(
-  q: { id: string; title: string; description: string; category: string },
+  q: { id: string; title: string; description: string; category: string; intensityLevel?: string; roleType?: string },
   lang: Language
 ) {
   if (lang === 'he') {
