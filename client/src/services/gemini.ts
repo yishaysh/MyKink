@@ -10,28 +10,76 @@ export interface ScenarioStep {
   description: string;
 }
 
-export async function askGeminiAria(userQuery: string, lang: 'en' | 'he'): Promise<string> {
+export interface ChatMessage {
+  sender: 'aria' | 'user';
+  text: string;
+}
+
+export async function askGeminiAria(
+  userQuery: string,
+  lang: 'en' | 'he',
+  history: ChatMessage[] = []
+): Promise<string> {
   try {
     const systemPrompt =
       lang === 'he'
-        ? "אתה אריאל — יועצת אינטימיות ותקשורת זוגית מומחית. ענה בעברית חמה, מקצועית, תמציתית ועניינית מאוד.\nהנחיות חובה:\n1. ענה ישירות לעניין ללא הקדמות ארוכות, ללא ברכות פתיחה נפוחות וללא מכתבי סיום.\n2. שמור על תשובה קצרה וממוקדת (עד 3-4 נקודות תכליתיות, מקסימום 100 מילים).\n3. תן טיפים פרקטיים ויישומיים שאפשר לבצע בטבעיות ובביטחון.\n\nשאלת המשתמש:"
-        : "You are Aria — an expert intimacy & relationship guide. Provide warm, highly concise, direct, and actionable advice.\nMandatory guidelines:\n1. Get straight to the point without long intros, formal greetings, or sign-offs.\n2. Keep the response brief and focused (up to 3-4 bullet points, under 100 words max).\n3. Give actionable tips that can be applied naturally.\n\nUser query:";
+        ? `שמך הוא אריאל — יועצת אינטימיות ותקשורת זוגית מומחית, חמה, מקצועית ומעצימה.
+תפקידך לספק תשובות מפורטות, מעמיקות, חמות ופרקטיות לזוגות.
+
+הנחיות חובה:
+1. עני בצורה מפורטת, עשירה וברורה. אל תיתני תשובות קצרות מדי, חתוכות או חלקיות!
+2. אם המשתמש מבקש תשובה מורחבת, הסבר מפורט או דוגמאות — הרחיבי בשמחה ובפירוט עם נקודות ברורות, טיפים מעשיים ושלבים לפעולה.
+3. שמרי על שפה עברית קולחת, חמה, עשירה ומכבדת.
+4. השתמשי בריווח נעים ובנקודות (bullet points) להקלת הקריאה.
+5. הקפידי לענות בהתאם להקשר המלא של כל היסטוריית השיחה הקודמת.`
+        : `Your name is Aria — an expert, warm, and empowering intimacy & relationship guide.
+Your role is to provide detailed, rich, practical, and empathetic advice to couples.
+
+Mandatory Guidelines:
+1. Provide detailed, informative, warm, and clear answers. Do NOT give overly brief or cut-off responses!
+2. When the user asks for expansion, detail, or examples — expand generously with clear structured points and practical advice.
+3. Maintain a warm, respectful, fluent, and encouraging tone.
+4. Use clean line breaks and bullet points for readability.
+5. Always answer based on the full context of the preceding conversation history.`;
+
+    // Construct multi-turn contents for Gemini API (user / model alternating turns)
+    const contents: { role: 'user' | 'model'; parts: { text: string }[] }[] = [];
+
+    if (history && history.length > 0) {
+      for (const msg of history) {
+        if (!msg.text || !msg.text.trim()) continue;
+        const role = msg.sender === 'user' ? 'user' : 'model';
+
+        // Skip leading 'model' messages to ensure conversation starts with 'user'
+        if (contents.length === 0 && role === 'model') continue;
+
+        if (contents.length > 0 && contents[contents.length - 1].role === role) {
+          contents[contents.length - 1].parts[0].text += `\n${msg.text.trim()}`;
+        } else {
+          contents.push({ role, parts: [{ text: msg.text.trim() }] });
+        }
+      }
+    }
+
+    // Ensure the last message in contents is the user's latest query
+    if (contents.length === 0 || contents[contents.length - 1].role === 'model') {
+      contents.push({ role: 'user', parts: [{ text: userQuery.trim() }] });
+    } else if (contents[contents.length - 1].parts[0].text !== userQuery.trim()) {
+      contents[contents.length - 1].parts[0].text = userQuery.trim();
+    }
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          contents: [
-            {
-              parts: [
-                { text: `${systemPrompt}\n\n${userQuery}` }
-              ]
-            }
-          ],
+          systemInstruction: {
+            parts: [{ text: systemPrompt }]
+          },
+          contents,
           generationConfig: {
-            maxOutputTokens: 300,
+            maxOutputTokens: 1200,
             temperature: 0.7
           }
         })
@@ -46,8 +94,8 @@ export async function askGeminiAria(userQuery: string, lang: 'en' | 'he'): Promi
   }
 
   return lang === 'he'
-    ? "אריאל זמינה עבורכם! זכרו שהסכמה הדדית ומילות בטיחות (אדום/צהוב/ירוק) הן הבסיס לחקירה זוגית מהנה ובטוחה."
-    : "Intimacy flourishes with mutual respect. Always use clear safewords and open dialogue!";
+    ? "אני כאן איתכם! תקשורת פתוחה והקשבה הדדית הן המפתח. אשמח להרחיב ולענות על כל שאלה נוספת בלחישת פנטזיה או רעיון לחדר השינה."
+    : "I am here with you! Open communication and mutual listening are key. Feel free to ask any question!";
 }
 
 // Research-Backed Erotic Arc Scenario Sets (Gottman & Esther Perel Framework)

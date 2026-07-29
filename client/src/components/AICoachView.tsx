@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Bot, Send, Sparkles, Wand2, Shield, Heart } from 'lucide-react';
-import { generateAIScenario, askGeminiAria, ScenarioStep } from '../services/gemini';
+import { generateAIScenario, askGeminiAria, ScenarioStep, ChatMessage } from '../services/gemini';
 import { Language, translations } from '../services/i18n';
 
 interface AICoachViewProps {
@@ -18,9 +18,7 @@ export const AICoachView: React.FC<AICoachViewProps> = ({ coupleId, lang }) => {
   const [isGenerating, setIsGenerating] = useState(false);
 
   // Aria Chat State
-  const [chatMessages, setChatMessages] = useState<
-    { sender: 'aria' | 'user'; text: string }[]
-  >([
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([
     {
       sender: 'aria',
       text: t.ariaWelcomeMsg
@@ -28,6 +26,16 @@ export const AICoachView: React.FC<AICoachViewProps> = ({ coupleId, lang }) => {
   ]);
   const [inputMsg, setInputMsg] = useState('');
   const [isAsking, setIsAsking] = useState(false);
+  const chatStreamRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (activeSubTab === 'aria') {
+      chatStreamRef.current?.scrollTo({
+        top: chatStreamRef.current.scrollHeight,
+        behavior: 'smooth'
+      });
+    }
+  }, [chatMessages, isAsking, activeSubTab]);
 
   const handleGenerateScenario = async () => {
     setIsGenerating(true);
@@ -38,14 +46,18 @@ export const AICoachView: React.FC<AICoachViewProps> = ({ coupleId, lang }) => {
 
   const handleSendChat = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!inputMsg.trim()) return;
+    if (!inputMsg.trim() || isAsking) return;
 
     const userText = inputMsg.trim();
-    setChatMessages((prev) => [...prev, { sender: 'user', text: userText }]);
+    const updatedHistory: ChatMessage[] = [
+      ...chatMessages,
+      { sender: 'user', text: userText }
+    ];
+    setChatMessages(updatedHistory);
     setInputMsg('');
     setIsAsking(true);
 
-    const answer = await askGeminiAria(userText, lang);
+    const answer = await askGeminiAria(userText, lang, updatedHistory);
     setChatMessages((prev) => [...prev, { sender: 'aria', text: answer }]);
     setIsAsking(false);
   };
@@ -150,7 +162,7 @@ export const AICoachView: React.FC<AICoachViewProps> = ({ coupleId, lang }) => {
           </div>
 
           {/* Chat Stream */}
-          <div className="flex-1 min-h-0 overflow-y-auto space-y-2 pr-1">
+          <div ref={chatStreamRef} className="flex-1 min-h-0 overflow-y-auto space-y-2 pr-1 scroll-smooth">
             {chatMessages.map((msg, idx) => (
               <div
                 key={idx}
@@ -159,12 +171,12 @@ export const AICoachView: React.FC<AICoachViewProps> = ({ coupleId, lang }) => {
                 }`}
               >
                 {msg.sender === 'aria' && (
-                  <div className="w-6 h-6 rounded-full bg-[#2b292f] text-[#e8b4b8] flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="w-6 h-6 rounded-full bg-[#2b292f] text-[#e8b4b8] flex items-center justify-center shrink-0 mt-0.5 shadow-sm">
                     <Bot className="w-3.5 h-3.5" />
                   </div>
                 )}
                 <div
-                  className={`p-2.5 rounded-xl max-w-[85%] leading-relaxed ${
+                  className={`p-2.5 rounded-xl max-w-[85%] leading-relaxed whitespace-pre-wrap ${
                     msg.sender === 'user'
                       ? 'bg-[#e8b4b8] text-[#48272a] font-semibold'
                       : 'bg-[#141218] border border-[#36343a] text-slate-200'
