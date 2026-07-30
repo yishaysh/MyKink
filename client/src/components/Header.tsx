@@ -53,12 +53,20 @@ export const Header: React.FC<HeaderProps> = ({
               }}
             />
             <div>
-              <h1 className="text-base font-bold tracking-tight text-white font-headline leading-none">
-                MyKink
-              </h1>
-              <div className="hidden sm:flex items-center gap-1 text-[10px] text-[#d1c5b2] mt-0.5">
+              <div className="flex items-center gap-1.5">
+                <h1 className="text-base font-bold tracking-tight text-white font-headline leading-none">
+                  MyKink
+                </h1>
+                {userAlias && (
+                  <span className="px-2 py-0.5 rounded-full bg-[#2e2329] border border-[#e8b4b8]/40 text-[#e8b4b8] text-[11px] font-bold shadow-xs flex items-center gap-1">
+                    <Sparkles className="w-3 h-3 text-[#e8b4b8]" />
+                    <span className="truncate max-w-[110px] sm:max-w-[180px]">{userAlias}</span>
+                  </span>
+                )}
+              </div>
+              <div className="flex items-center gap-1 text-[10px] text-[#d1c5b2] mt-0.5">
                 <ShieldCheck className="w-3 h-3 text-emerald-400 shrink-0" />
-                <span className="truncate">{userAlias || t.digitalSanctuary}</span>
+                <span className="truncate">{t.digitalSanctuary}</span>
               </div>
             </div>
           </div>

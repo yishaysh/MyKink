@@ -46,6 +46,10 @@ export const App: React.FC = () => {
     role: string;
     categories: string[];
     intensity: string;
+    gender?: string;
+    pronouns?: string;
+    goal?: string;
+    relationshipDynamic?: string;
   } | null>(null);
 
   // User & Couple & Google Auth state
