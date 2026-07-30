@@ -353,7 +353,7 @@ export const App: React.FC = () => {
 
     const activeId = await ensureActiveUserId();
     if (activeId) {
-      await updateUserProfileInDB(activeId, profile.alias);
+      await updateUserProfileInDB(activeId, profile.alias, profile.gender);
     }
 
     changeActiveTab('swipe');

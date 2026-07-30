@@ -152,7 +152,7 @@ export async function registerDevice(deviceId: string, publicKey: string, create
 }
 
 // 1b. Update User Profile in DB
-export async function updateUserProfileInDB(userId: string | null, alias: string, deviceId?: string, pubKey?: string) {
+export async function updateUserProfileInDB(userId: string | null, alias: string, gender?: string, deviceId?: string, pubKey?: string) {
   try {
     let activeId = userId;
     if (!activeId && deviceId && pubKey) {
@@ -161,10 +161,14 @@ export async function updateUserProfileInDB(userId: string | null, alias: string
     }
     if (activeId) {
       const now = new Date().toISOString();
-      await supabase.from('User').update({
+      const updatePayload: any = {
         anonymousAlias: alias,
         updatedAt: now
-      }).eq('id', activeId);
+      };
+      if (gender) {
+        updatePayload.gender = gender;
+      }
+      await supabase.from('User').update(updatePayload).eq('id', activeId);
     }
     return activeId;
   } catch (e) {
