@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Heart, ThumbsDown, HelpCircle, Flame, Filter, RotateCcw, Lock, ChevronLeft, ChevronRight, Check } from 'lucide-react';
+import { Heart, ThumbsDown, HelpCircle, Flame, Filter, RotateCcw, Lock, Check } from 'lucide-react';
 import { CatalogQuestion } from '../services/api';
 import { Language, translations, translateQuestion } from '../services/i18n';
 
@@ -33,9 +33,13 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
   const [isVoting, setIsVoting] = useState(false);
   const hasInitializedRef = useRef(false);
 
-  // Touch Swipe Gesture Refs
-  const touchStartXRef = useRef<number | null>(null);
-  const touchEndXRef = useRef<number | null>(null);
+  // Physics Drag State for TikTok / Tinder style swiping
+  const [dragOffset, setDragOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [exitDirection, setExitDirection] = useState<'left' | 'right' | 'up' | null>(null);
+
+  const startXRef = useRef<number | null>(null);
+  const startYRef = useRef<number | null>(null);
 
   // Jump to first unanswered question ONLY on initial filter load
   useEffect(() => {
@@ -60,12 +64,14 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
     setSelectedCategory(catId);
     hasInitializedRef.current = false;
     setCurrentIndex(0);
+    setDragOffset({ x: 0, y: 0 });
   };
 
   const handleIntensityChange = (lvlId: string) => {
     setSelectedIntensity(lvlId);
     hasInitializedRef.current = false;
     setCurrentIndex(0);
+    setDragOffset({ x: 0, y: 0 });
   };
 
   const categories = [
@@ -85,72 +91,110 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
   ];
 
   const rawQ = questions[currentIndex];
+  const nextRawQ = questions[currentIndex + 1];
   const currentQ = rawQ ? translateQuestion(rawQ, lang) : null;
+  const nextQ = nextRawQ ? translateQuestion(nextRawQ, lang) : null;
+
   const isFinished = currentIndex >= questions.length || !currentQ;
   const currentAnswer = rawQ ? userAnswerValues[rawQ.id] : undefined;
 
-  const handleVote = (val: 'YES' | 'MAYBE' | 'NO') => {
-    if (rawQ && !isVoting) {
-      setIsVoting(true);
-      onAnswer(rawQ.id, val);
+  // Trigger smooth card exit animation & advance to next question
+  const triggerExit = (dir: 'left' | 'right' | 'up', voteVal: 'YES' | 'MAYBE' | 'NO') => {
+    if (exitDirection || isVoting) return;
+    setIsVoting(true);
+    setExitDirection(dir);
+    if (rawQ) onAnswer(rawQ.id, voteVal);
+
+    setTimeout(() => {
+      setExitDirection(null);
+      setDragOffset({ x: 0, y: 0 });
       setCurrentIndex((prev) => Math.min(prev + 1, questions.length));
-      setTimeout(() => setIsVoting(false), 200);
-    }
+      setIsVoting(false);
+    }, 280);
   };
 
-  const handlePrev = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex((prev) => prev - 1);
-    }
-  };
-
-  const handleNext = () => {
-    if (currentIndex < questions.length - 1) {
-      setCurrentIndex((prev) => prev + 1);
-    } else if (currentIndex === questions.length - 1) {
-      setCurrentIndex(questions.length);
-    }
+  const handleVote = (val: 'YES' | 'MAYBE' | 'NO') => {
+    if (!rawQ || isVoting || exitDirection) return;
+    const dir =
+      val === 'YES'
+        ? lang === 'he'
+          ? 'left'
+          : 'right'
+        : val === 'NO'
+        ? lang === 'he'
+          ? 'right'
+          : 'left'
+        : 'up';
+    triggerExit(dir, val);
   };
 
   const handleReset = () => {
     hasInitializedRef.current = true;
     setCurrentIndex(0);
+    setDragOffset({ x: 0, y: 0 });
   };
 
-  // Touch Swipe Event Handlers
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartXRef.current = e.touches[0].clientX;
-    touchEndXRef.current = null;
+  // Drag Gesture Handlers (Touch & Mouse)
+  const handleDragStart = (clientX: number, clientY: number) => {
+    if (isVoting || exitDirection) return;
+    startXRef.current = clientX;
+    startYRef.current = clientY;
+    setIsDragging(true);
   };
 
-  const handleTouchMove = (e: React.TouchEvent) => {
-    touchEndXRef.current = e.touches[0].clientX;
+  const handleDragMove = (clientX: number, clientY: number) => {
+    if (!isDragging || startXRef.current === null || startYRef.current === null) return;
+    const deltaX = clientX - startXRef.current;
+    const deltaY = clientY - startYRef.current;
+    setDragOffset({ x: deltaX, y: deltaY });
   };
 
-  const handleTouchEnd = () => {
-    if (touchStartXRef.current === null || touchEndXRef.current === null) return;
-    const deltaX = touchEndXRef.current - touchStartXRef.current;
-    const minSwipeDistance = 45;
+  const handleDragEnd = () => {
+    if (!isDragging) return;
+    setIsDragging(false);
+    const threshold = 75;
 
-    if (lang === 'he') {
-      // RTL: Swipe Right = Next, Swipe Left = Prev
-      if (deltaX > minSwipeDistance) {
-        handleNext();
-      } else if (deltaX < -minSwipeDistance) {
-        handlePrev();
-      }
+    if (dragOffset.y < -110) {
+      // Swiped Up -> MAYBE
+      triggerExit('up', 'MAYBE');
+    } else if (dragOffset.x > threshold) {
+      // Dragged Right -> YES (in LTR) or NO (in RTL)
+      const voteVal = lang === 'he' ? 'NO' : 'YES';
+      triggerExit('right', voteVal);
+    } else if (dragOffset.x < -threshold) {
+      // Dragged Left -> NO (in LTR) or YES (in RTL)
+      const voteVal = lang === 'he' ? 'YES' : 'NO';
+      triggerExit('left', voteVal);
     } else {
-      // LTR: Swipe Left = Next, Swipe Right = Prev
-      if (deltaX < -minSwipeDistance) {
-        handleNext();
-      } else if (deltaX > minSwipeDistance) {
-        handlePrev();
-      }
+      // Spring back to center
+      setDragOffset({ x: 0, y: 0 });
     }
-
-    touchStartXRef.current = null;
-    touchEndXRef.current = null;
+    startXRef.current = null;
+    startYRef.current = null;
   };
+
+  // Determine Stamp Indicators (LIKE / NO / MAYBE)
+  const isSwipingYes =
+    (lang === 'he' && dragOffset.x < -35) || (lang !== 'he' && dragOffset.x > 35);
+  const isSwipingNo =
+    (lang === 'he' && dragOffset.x > 35) || (lang !== 'he' && dragOffset.x < -35);
+  const isSwipingMaybe = dragOffset.y < -45 && Math.abs(dragOffset.x) < 50;
+
+  const yesOpacity = Math.min(1, Math.abs(dragOffset.x) / 100);
+  const noOpacity = Math.min(1, Math.abs(dragOffset.x) / 100);
+  const maybeOpacity = Math.min(1, Math.abs(dragOffset.y) / 90);
+
+  // Dynamic CSS Transform calculation
+  let cardTransform = `translate3d(${dragOffset.x}px, ${dragOffset.y}px, 0) rotate(${
+    dragOffset.x * 0.06
+  }deg)`;
+  if (exitDirection === 'left') {
+    cardTransform = `translate3d(-140%, ${dragOffset.y}px, 0) rotate(-25deg)`;
+  } else if (exitDirection === 'right') {
+    cardTransform = `translate3d(140%, ${dragOffset.y}px, 0) rotate(25deg)`;
+  } else if (exitDirection === 'up') {
+    cardTransform = `translate3d(0, -140%, 0) rotate(0deg)`;
+  }
 
   return (
     <div className="max-w-lg mx-auto px-4 py-4 space-y-4">
@@ -217,29 +261,103 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
         </div>
       </div>
 
-      {/* Main Swiper Card Area */}
+      {/* Main TikTok / Tinder Card Swiper Area */}
       {!isFinished && currentQ ? (
-        <div className="flex-1 min-h-0 flex flex-col justify-between space-y-2 my-1 overflow-hidden">
-          {/* Card Container with Touch Swipe Handlers */}
-          <div
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
-            className="solid-card p-4 sm:p-6 flex-1 flex flex-col justify-between card-appear relative overflow-hidden select-none min-h-[280px]"
-          >
-            {/* Top Navigation Bar: Previous Arrow | Category Badges | Next Arrow */}
-            <div className="flex items-center justify-between gap-2 shrink-0">
-              <button
-                type="button"
-                onClick={handlePrev}
-                disabled={currentIndex === 0}
-                className="p-1.5 rounded-xl bg-[#2b292f] border border-[#36343a] text-slate-300 disabled:opacity-30 hover:text-white transition"
-                title={lang === 'he' ? 'שאלה קודמת' : 'Previous Question'}
+        <div className="flex-1 min-h-0 flex flex-col justify-between space-y-3 my-1 overflow-hidden">
+          {/* Card Stack Wrapper */}
+          <div className="relative w-full min-h-[300px] flex items-center justify-center">
+            {/* Background Card Stack Layer (Next Card) */}
+            {nextQ && (
+              <div
+                className="absolute inset-0 solid-card p-5 sm:p-6 flex flex-col justify-between opacity-50 scale-95 transition-transform duration-300 pointer-events-none rounded-2xl border border-[#36343a]"
+                style={{
+                  transform:
+                    isDragging || exitDirection
+                      ? 'scale(0.98) translateY(0px)'
+                      : 'scale(0.94) translateY(12px)'
+                }}
               >
-                {lang === 'he' ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
-              </button>
+                <div className="flex items-center justify-between gap-2 shrink-0">
+                  <span className="px-2.5 py-0.5 rounded-full bg-[#2b292f] border border-[#504444] text-[#e8b4b8] text-[11px] font-bold uppercase tracking-wider">
+                    {nextQ.category}
+                  </span>
+                  <span className="px-2.5 py-0.5 rounded-full bg-[#141218] border border-[#36343a] text-slate-300 text-[11px] font-mono font-bold">
+                    {nextQ.intensityLevel === 'VANILLA' && t.intensityVanilla}
+                    {nextQ.intensityLevel === 'SPICY' && t.intensitySpicy}
+                    {nextQ.intensityLevel === 'ADVENTUROUS' && t.intensityAdventurous}
+                  </span>
+                </div>
 
-              <div className="flex items-center gap-1.5">
+                <div className="my-auto py-3 text-center space-y-2.5">
+                  <h3 className="text-lg sm:text-2xl font-bold text-white leading-snug font-headline">
+                    {nextQ.title}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-slate-300 max-w-md mx-auto leading-relaxed">
+                    {nextQ.description}
+                  </p>
+                </div>
+
+                <div className="pt-2 border-t border-[#36343a] flex items-center justify-between text-[11px] text-slate-400 shrink-0">
+                  <span className="font-semibold text-[#d1c5b2]">
+                    {nextQ.roleType === 'GIVER' && t.roleGiverBadge}
+                    {nextQ.roleType === 'RECEIVER' && t.roleReceiverBadge}
+                    {nextQ.roleType === 'SYMMETRIC' && (lang === 'he' ? 'תפקיד הדדי' : 'Symmetric / Both')}
+                  </span>
+                  <span className="font-mono text-slate-300 font-bold">
+                    {currentIndex + 2} / {questions.length}
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {/* Active Foreground Interactive Card */}
+            <div
+              onTouchStart={(e) => handleDragStart(e.touches[0].clientX, e.touches[0].clientY)}
+              onTouchMove={(e) => handleDragMove(e.touches[0].clientX, e.touches[0].clientY)}
+              onTouchEnd={handleDragEnd}
+              onMouseDown={(e) => handleDragStart(e.clientX, e.clientY)}
+              onMouseMove={(e) => handleDragMove(e.clientX, e.clientY)}
+              onMouseUp={handleDragEnd}
+              onMouseLeave={handleDragEnd}
+              style={{
+                transform: cardTransform,
+                transition: isDragging ? 'none' : 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
+              }}
+              className="w-full solid-card p-5 sm:p-6 flex flex-col justify-between relative overflow-hidden select-none min-h-[300px] shadow-2xl cursor-grab active:cursor-grabbing rounded-2xl border border-[#e8b4b8]/30 z-10"
+            >
+              {/* Overlay Stamp Badges (YES / NO / MAYBE) */}
+              {isSwipingYes && (
+                <div
+                  style={{ opacity: yesOpacity }}
+                  className="absolute top-6 left-6 z-30 border-4 border-[#e8b4b8] text-[#e8b4b8] bg-[#48272a]/90 font-black text-xl px-4 py-1.5 rounded-2xl transform -rotate-12 tracking-wider shadow-2xl flex items-center gap-2 pointer-events-none"
+                >
+                  <Heart className="w-6 h-6 fill-[#e8b4b8]" />
+                  <span>{t.btnYes}</span>
+                </div>
+              )}
+
+              {isSwipingNo && (
+                <div
+                  style={{ opacity: noOpacity }}
+                  className="absolute top-6 right-6 z-30 border-4 border-rose-500 text-rose-400 bg-rose-950/90 font-black text-xl px-4 py-1.5 rounded-2xl transform rotate-12 tracking-wider shadow-2xl flex items-center gap-2 pointer-events-none"
+                >
+                  <ThumbsDown className="w-6 h-6 text-rose-400" />
+                  <span>{t.btnNo}</span>
+                </div>
+              )}
+
+              {isSwipingMaybe && (
+                <div
+                  style={{ opacity: maybeOpacity }}
+                  className="absolute top-6 left-1/2 -translate-x-1/2 z-30 border-4 border-amber-500 text-amber-400 bg-amber-950/90 font-black text-xl px-4 py-1.5 rounded-2xl tracking-wider shadow-2xl flex items-center gap-2 pointer-events-none"
+                >
+                  <HelpCircle className="w-6 h-6 text-amber-400" />
+                  <span>{t.btnMaybe}</span>
+                </div>
+              )}
+
+              {/* Card Header Badges */}
+              <div className="flex items-center justify-between gap-2 shrink-0">
                 <span className="px-2.5 py-0.5 rounded-full bg-[#2b292f] border border-[#504444] text-[#e8b4b8] text-[11px] font-bold uppercase tracking-wider">
                   {currentQ.category}
                 </span>
@@ -250,42 +368,27 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
                 </span>
               </div>
 
-              <button
-                type="button"
-                onClick={handleNext}
-                disabled={currentIndex >= questions.length - 1}
-                className="p-1.5 rounded-xl bg-[#2b292f] border border-[#36343a] text-slate-300 disabled:opacity-30 hover:text-white transition"
-                title={lang === 'he' ? 'שאלה הבאה' : 'Next Question'}
-              >
-                {lang === 'he' ? <ChevronLeft className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
-              </button>
-            </div>
-
-            {/* Question Title & Description */}
-            <div className="my-auto py-3 text-center space-y-2.5">
-              <h3 className="text-lg sm:text-2xl font-bold text-white leading-snug font-headline">
-                {currentQ.title}
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-300 max-w-md mx-auto leading-relaxed">
-                {currentQ.description}
-              </p>
-
-              {/* Swipe Instruction Hint */}
-              <div className="text-[10px] text-slate-400 font-mono flex items-center justify-center gap-1 pt-1">
-                <span>👈 {lang === 'he' ? 'החלק לשאלה הבאה / הקודמת' : 'Swipe left/right to navigate'} 👉</span>
+              {/* Question Title & Description */}
+              <div className="my-auto py-4 text-center space-y-3">
+                <h3 className="text-lg sm:text-2xl font-bold text-white leading-snug font-headline">
+                  {currentQ.title}
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-300 max-w-md mx-auto leading-relaxed">
+                  {currentQ.description}
+                </p>
               </div>
-            </div>
 
-            {/* Bottom Role Indicator & Counter */}
-            <div className="pt-2 border-t border-[#36343a] flex items-center justify-between text-[11px] text-slate-400 shrink-0">
-              <span className="font-semibold text-[#d1c5b2]">
-                {currentQ.roleType === 'GIVER' && t.roleGiverBadge}
-                {currentQ.roleType === 'RECEIVER' && t.roleReceiverBadge}
-                {currentQ.roleType === 'SYMMETRIC' && (lang === 'he' ? 'תפקיד הדדי' : 'Symmetric / Both')}
-              </span>
-              <span className="font-mono text-slate-300 font-bold">
-                {currentIndex + 1} / {questions.length}
-              </span>
+              {/* Card Footer Info */}
+              <div className="pt-2 border-t border-[#36343a] flex items-center justify-between text-[11px] text-slate-400 shrink-0">
+                <span className="font-semibold text-[#d1c5b2]">
+                  {currentQ.roleType === 'GIVER' && t.roleGiverBadge}
+                  {currentQ.roleType === 'RECEIVER' && t.roleReceiverBadge}
+                  {currentQ.roleType === 'SYMMETRIC' && (lang === 'he' ? 'תפקיד הדדי' : 'Symmetric / Both')}
+                </span>
+                <span className="font-mono text-slate-300 font-bold">
+                  {currentIndex + 1} / {questions.length}
+                </span>
+              </div>
             </div>
           </div>
 
