@@ -1,14 +1,25 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Bot, Send, Sparkles, Wand2, Shield, Heart } from 'lucide-react';
-import { generateAIScenario, askGeminiAria, ScenarioStep, ChatMessage } from '../services/gemini';
-import { Language, translations } from '../services/i18n';
+import { generateAIScenario, askGeminiAria, ScenarioStep, ChatMessage, UserContext } from '../services/gemini';
+import { SharedMatchItem } from './MatchesView';
+import { Language, translations, translateQuestion } from '../services/i18n';
 
 interface AICoachViewProps {
   coupleId: string | null;
   lang: Language;
+  userProfile?: {
+    alias: string;
+    role: string;
+    categories: string[];
+    intensity: string;
+    gender?: string;
+    goal?: string;
+    relationshipDynamic?: string;
+  } | null;
+  matches?: SharedMatchItem[];
 }
 
-export const AICoachView: React.FC<AICoachViewProps> = ({ coupleId, lang }) => {
+export const AICoachView: React.FC<AICoachViewProps> = ({ coupleId, lang, userProfile, matches }) => {
   const t = translations[lang];
   const [activeSubTab, setActiveSubTab] = useState<'scenario' | 'aria'>('scenario');
 
@@ -57,7 +68,28 @@ export const AICoachView: React.FC<AICoachViewProps> = ({ coupleId, lang }) => {
     setInputMsg('');
     setIsAsking(true);
 
-    const answer = await askGeminiAria(userText, lang, updatedHistory);
+    const userMatches: { title: string; category?: string }[] = [];
+    if (matches && matches.length > 0) {
+      for (const m of matches) {
+        if (m.question) {
+          const q = translateQuestion(m.question, lang);
+          userMatches.push({ title: q.title, category: m.question.category });
+        }
+      }
+    }
+
+    const userContext: UserContext = {
+      alias: userProfile?.alias,
+      role: userProfile?.role,
+      categories: userProfile?.categories,
+      intensity: userProfile?.intensity,
+      gender: userProfile?.gender,
+      goal: userProfile?.goal,
+      relationshipDynamic: userProfile?.relationshipDynamic,
+      matches: userMatches
+    };
+
+    const answer = await askGeminiAria(userText, lang, updatedHistory, userContext);
     setChatMessages((prev) => [...prev, { sender: 'aria', text: answer }]);
     setIsAsking(false);
   };

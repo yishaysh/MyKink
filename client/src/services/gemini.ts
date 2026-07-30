@@ -55,12 +55,24 @@ async function callGeminiApi(payload: any): Promise<any> {
   return null;
 }
 
-function getSmartFallbackAdvice(query: string, lang: 'en' | 'he'): string {
+export interface UserContext {
+  alias?: string;
+  role?: string;
+  categories?: string[];
+  intensity?: string;
+  gender?: string;
+  goal?: string;
+  relationshipDynamic?: string;
+  matches?: { title: string; category?: string }[];
+}
+
+function getSmartFallbackAdvice(query: string, lang: 'en' | 'he', context?: UserContext | null): string {
   const lower = query.toLowerCase();
+  const alias = context?.alias || (lang === 'he' ? 'בייבי' : 'Baby');
 
   if (lang === 'he') {
     if (lower.includes('פנטז') || lower.includes('לדבר') || lower.includes('מורחבת')) {
-      return `איך מתחילים לדבר על פנטזיות בזוגיות — מדריך מעשי ומעמיק:
+      return `בשמחה ${alias}! הנה מדריך מעשי ומעמיק לאיך מתחילים לדבר על פנטזיות בזוגיות:
 
 1. **יצירת מרחב בטוח וללא שיפוטיות:**
    התחילו את השיחה ברגע רגוע (למשל במהלך הליכה, בנסיעה או בערב שקט בבית). הבהירו מראש שהמטרה היא לשתף מחשבות וסקרנות בטוחה, ללא שום חובה לבצע מיד.
@@ -75,7 +87,7 @@ function getSmartFallbackAdvice(query: string, lang: 'en' | 'he'): string {
    כשבן/בת הזוג משתפים, הודו להם על הפתיחות והאמון. הקשבה מעצימה בונה ביטחון רגשי ותשוקה עמוקה יותר לאורך זמן.`;
     }
 
-    return `אני כאן איתכם לכל שאלה והתייעצות! 
+    return `אהלן ${alias}, אני כאן איתכם לכל שאלה והתייעצות! 
 
 כדי לבנות תקשורת אינטימית בריאה ומעצימה, מומלץ להתמקד ב-3 עקרונות ליבה:
 • **פתיחות וכנות:** שתפו ברגשות, בסקרנות ובתשוקות שלכם ללא חשש.
@@ -85,7 +97,7 @@ function getSmartFallbackAdvice(query: string, lang: 'en' | 'he'): string {
 ספרו לי על מה תרצו להרחיב ואשמח לתת לכם רעיונות והכוונות מותאמות!`;
   }
 
-  return `Here is how to open up about intimacy and fantasies:
+  return `Here is how to open up about intimacy and fantasies, ${alias}:
 
 1. **Create a Safe Environment:** Choose a relaxed moment without pressure to discuss desires openly.
 2. **Use External Bridges:** Reference a movie, book, or quiz to ease into the topic naturally.
@@ -95,29 +107,68 @@ function getSmartFallbackAdvice(query: string, lang: 'en' | 'he'): string {
 export async function askGeminiAria(
   userQuery: string,
   lang: 'en' | 'he',
-  history: ChatMessage[] = []
+  history: ChatMessage[] = [],
+  context?: UserContext | null
 ): Promise<string> {
   try {
+    const alias = context?.alias?.trim() || (lang === 'he' ? 'בייבי' : 'Baby');
+    const roleText = context?.role === 'GIVER'
+      ? (lang === 'he' ? 'שולט / מעניק' : 'Dominant / Giver')
+      : context?.role === 'RECEIVER'
+      ? (lang === 'he' ? 'נשלט / מקבל' : 'Submissive / Receiver')
+      : (lang === 'he' ? 'ורסטילי / משתנה' : 'Switch / Versatile');
+
+    const intensityText = context?.intensity === 'VANILLA'
+      ? (lang === 'he' ? 'מעודן (ווניל)' : 'Vanilla & Mild')
+      : context?.intensity === 'ADVENTUROUS'
+      ? (lang === 'he' ? 'נועז והרפתקני' : 'Adventurous & Bold')
+      : (lang === 'he' ? 'פילפלי ולוהט' : 'Spicy & Hot');
+
+    const categoriesText = context?.categories?.length
+      ? context.categories.join(', ')
+      : (lang === 'he' ? 'חושים ומגע, BDSM, משחקי תפקידים' : 'Sensual, BDSM, Roleplay');
+
+    const matchesText = context?.matches?.length
+      ? context.matches.map((m) => `• ${m.title}`).join('\n')
+      : (lang === 'he' ? 'טרם נמצאו התאמות זוגיות מאומתות' : 'No verified matches yet');
+
     const systemPrompt =
       lang === 'he'
         ? `שמך הוא אריאל — יועצת אינטימיות ותקשורת זוגית מומחית, חמה, מקצועית ומעצימה.
 תפקידך לספק תשובות מפורטות, מעמיקות, חמות ופרקטיות לזוגות.
 
-הנחיות חובה:
-1. עני בצורה מפורטת, עשירה וברורה. אל תיתני תשובות קצרות מדי, חתוכות או חלקיות!
-2. אם המשתמש מבקש תשובה מורחבת, הסבר מפורט או דוגמאות — הרחיבי בשמחה ובפירוט עם נקודות ברורות, טיפים מעשיים ושלבים לפעולה.
-3. שמרי על שפה עברית קולחת, חמה, עשירה ומכבדת.
-4. השתמשי בריווח נעים ובנקודות (bullet points) להקלת הקריאה.
-5. הקפידי לענות בהתאם להקשר המלא של כל היסטוריית השיחה הקודמת.`
+פרופיל המשתמש/ת עמו/ה את משוחחת כעת:
+• כינוי סקסי: "${alias}"
+• מגדר: ${context?.gender === 'MAN' ? 'גבר ♂️' : 'אישה ♀️'}
+• תפקיד אינטימי דינמי מועדף: ${roleText}
+• רמת עוצמה מועדפת: ${intensityText}
+• קטגוריות אהובות: ${categoriesText}
+• התאמות זוגיות מאומתות עם בן/בת הזוג (פנטזיות ששניהם סימנו לגביהן YES/MAYBE):
+${matchesText}
+
+הנחיות מענה חובה:
+1. פני אל המשתמש/ת בכינוי הסקסי שלו/ה ("${alias}") בטבעיות לפי זרימת השיחה (למשל: "בשמחה ${alias}", "כדי להתחיל ${alias}..."). אל תכריחי את הכינוי בכל משפט, אלא השתמשי בו בצורה קולחת וטבעית.
+2. התחשבי בתפקידו/ה האינטימי, ברמת העוצמה ובהתאמות המאומתות שבינו לבין בן/בת הזוג במתקפת ההמלצות.
+3. עני בצורה מפורטת, עשירה וברורה. אל תיתני תשובות קצרות מדי, חתוכות או חלקיות!
+4. אם המשתמש/ת מבקש/ת תשובה מורחבת, הסבר מפורט או דוגמאות — הרחיבי בשמחה ובפירוט עם נקודות ברורות, טיפים מעשיים ושלבים לפעולה.
+5. שמרי על שפה עברית קולחת, חמה, עשירה ומכבדת.
+6. השתמשי בריווח נעים ובנקודות (bullet points) להקלת הקריאה.`
         : `Your name is Aria — an expert, warm, and empowering intimacy & relationship guide.
 Your role is to provide detailed, rich, practical, and empathetic advice to couples.
 
+User Profile:
+• Sexy Alias: "${alias}"
+• Dynamic Intimacy Role: ${roleText}
+• Preferred Intensity: ${intensityText}
+• Favorite Categories: ${categoriesText}
+• Verified Mutual Matches with Partner:
+${matchesText}
+
 Mandatory Guidelines:
-1. Provide detailed, informative, warm, and clear answers. Do NOT give overly brief or cut-off responses!
-2. When the user asks for expansion, detail, or examples — expand generously with clear structured points and practical advice.
-3. Maintain a warm, respectful, fluent, and encouraging tone.
-4. Use clean line breaks and bullet points for readability.
-5. Always answer based on the full context of the preceding conversation history.`;
+1. Address the user naturally by their sexy alias ("${alias}") as fits the conversation flow.
+2. Tailor your recommendations to their dynamic role, intensity level, and verified mutual matches.
+3. Provide detailed, informative, warm, and clear answers. Do NOT give cut-off or overly brief responses!
+4. When requested, expand generously with structured points and practical advice.`;
 
     // Construct multi-turn contents for Gemini API (user / model alternating turns)
     const contents: { role: 'user' | 'model'; parts: { text: string }[] }[] = [];
@@ -151,7 +202,7 @@ Mandatory Guidelines:
       },
       contents,
       generationConfig: {
-        maxOutputTokens: 1200,
+        maxOutputTokens: 4096,
         temperature: 0.7
       }
     };
@@ -163,7 +214,7 @@ Mandatory Guidelines:
     console.warn('Gemini API Error:', e);
   }
 
-  return getSmartFallbackAdvice(userQuery, lang);
+  return getSmartFallbackAdvice(userQuery, lang, context);
 }
 
 // Research-Backed Erotic Arc Scenario Sets (Gottman & Esther Perel Framework)

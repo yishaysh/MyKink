@@ -436,7 +436,14 @@ export const App: React.FC = () => {
           />
         )}
 
-        {activeTab === 'ai' && <AICoachView coupleId={coupleId} lang={lang} />}
+        {activeTab === 'ai' && (
+          <AICoachView
+            coupleId={coupleId}
+            lang={lang}
+            userProfile={userProfile}
+            matches={matches}
+          />
+        )}
       </main>
 
       {/* Pairing Modal */}
