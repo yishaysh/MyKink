@@ -4,6 +4,84 @@ import { generateAIScenario, askGeminiAria, ScenarioStep, ChatMessage, UserConte
 import { SharedMatchItem } from './MatchesView';
 import { Language, translations, translateQuestion } from '../services/i18n';
 
+// Helper component to format Aria's text beautifully in the UI
+const FormattedMessageText: React.FC<{ content: string; isUser: boolean }> = ({ content, isUser }) => {
+  if (isUser) {
+    return <span>{content}</span>;
+  }
+
+  if (!content) return null;
+
+  // Helper to render inline bold text (**text**)
+  const renderInline = (str: string) => {
+    const parts = str.split(/(\*\*.*?\*\*)/g);
+    return parts.map((part, i) => {
+      if (part.startsWith('**') && part.endsWith('**') && part.length > 4) {
+        return (
+          <strong key={i} className="font-bold text-white">
+            {part.slice(2, -2)}
+          </strong>
+        );
+      }
+      const cleanPart = part.replace(/\*/g, '').replace(/^#+\s*/, '');
+      return cleanPart;
+    });
+  };
+
+  const lines = content.split('\n');
+
+  return (
+    <div className="space-y-1.5 leading-relaxed text-xs">
+      {lines.map((line, idx) => {
+        const trimmed = line.trim();
+        if (!trimmed) return <div key={idx} className="h-0.5" />;
+
+        // Horizontal Dividers (--- or ***)
+        if (trimmed === '---' || trimmed === '***') {
+          return <hr key={idx} className="border-[#36343a] my-1.5" />;
+        }
+
+        // Headings (### or #### or ##)
+        if (trimmed.startsWith('#')) {
+          const headingText = trimmed.replace(/^#+\s*/, '');
+          return (
+            <div key={idx} className="font-bold text-[#e8b4b8] text-xs mt-2 mb-0.5 font-headline border-b border-[#36343a]/40 pb-0.5">
+              {renderInline(headingText)}
+            </div>
+          );
+        }
+
+        // Blockquotes (> text)
+        if (trimmed.startsWith('> ')) {
+          const quoteText = trimmed.replace(/^>\s*/, '');
+          return (
+            <blockquote key={idx} className="border-r-2 border-[#e8b4b8] pr-2.5 pl-1.5 py-1 italic bg-[#1c1a22] rounded text-slate-200 my-1">
+              {renderInline(quoteText)}
+            </blockquote>
+          );
+        }
+
+        // Bullet points (* or - or • or numbers like 1.)
+        if (/^([*•-]\s|\d+\.\s)/.test(trimmed)) {
+          const bulletContent = trimmed.replace(/^([*•-]\s|\d+\.\s)/, '');
+          const matchNum = trimmed.match(/^(\d+)\.\s/);
+          const prefix = matchNum ? `${matchNum[1]}.` : '•';
+
+          return (
+            <div key={idx} className="flex items-start gap-1.5 pl-1 my-0.5">
+              <span className="text-[#e8b4b8] font-bold text-xs shrink-0 mt-0.5">{prefix}</span>
+              <span className="text-slate-200">{renderInline(bulletContent)}</span>
+            </div>
+          );
+        }
+
+        // Standard paragraph line
+        return <div key={idx}>{renderInline(line)}</div>;
+      })}
+    </div>
+  );
+};
+
 interface AICoachViewProps {
   coupleId: string | null;
   lang: Language;
@@ -208,13 +286,13 @@ export const AICoachView: React.FC<AICoachViewProps> = ({ coupleId, lang, userPr
                   </div>
                 )}
                 <div
-                  className={`p-2.5 rounded-xl max-w-[85%] leading-relaxed whitespace-pre-wrap ${
+                  className={`p-3 rounded-xl max-w-[88%] leading-relaxed ${
                     msg.sender === 'user'
-                      ? 'bg-[#e8b4b8] text-[#48272a] font-semibold'
+                      ? 'bg-[#e8b4b8] text-[#48272a] font-semibold text-xs'
                       : 'bg-[#141218] border border-[#36343a] text-slate-200'
                   }`}
                 >
-                  {msg.text}
+                  <FormattedMessageText content={msg.text} isUser={msg.sender === 'user'} />
                 </div>
               </div>
             ))}
