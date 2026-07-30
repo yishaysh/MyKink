@@ -239,7 +239,7 @@ export async function fetchUserAnswers(userId: string) {
   try {
     const { data: answers, error } = await supabase
       .from('UserAnswer')
-      .select('questionId')
+      .select('questionId, value')
       .eq('userId', userId);
 
     if (!error && answers) {

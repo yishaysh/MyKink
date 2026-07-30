@@ -315,14 +315,34 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
             >
               {/* Card Header Badges */}
               <div className="flex items-center justify-between gap-2 shrink-0">
-                <span className="px-2.5 py-0.5 rounded-full bg-[#2b292f] border border-[#504444] text-[#e8b4b8] text-[11px] font-bold uppercase tracking-wider">
-                  {currentQ.category}
-                </span>
-                <span className="px-2.5 py-0.5 rounded-full bg-[#141218] border border-[#36343a] text-slate-300 text-[11px] font-mono font-bold">
-                  {currentQ.intensityLevel === 'VANILLA' && t.intensityVanilla}
-                  {currentQ.intensityLevel === 'SPICY' && t.intensitySpicy}
-                  {currentQ.intensityLevel === 'ADVENTUROUS' && t.intensityAdventurous}
-                </span>
+                <div className="flex items-center gap-1.5">
+                  <span className="px-2.5 py-0.5 rounded-full bg-[#2b292f] border border-[#504444] text-[#e8b4b8] text-[11px] font-bold uppercase tracking-wider">
+                    {currentQ.category}
+                  </span>
+                  <span className="px-2.5 py-0.5 rounded-full bg-[#141218] border border-[#36343a] text-slate-300 text-[11px] font-mono font-bold">
+                    {currentQ.intensityLevel === 'VANILLA' && t.intensityVanilla}
+                    {currentQ.intensityLevel === 'SPICY' && t.intensitySpicy}
+                    {currentQ.intensityLevel === 'ADVENTUROUS' && t.intensityAdventurous}
+                  </span>
+                </div>
+
+                {/* Answered Icon Indicator (Icon ONLY, no text) */}
+                {currentAnswer && (
+                  <div
+                    className={`p-1.5 rounded-full border shadow-md flex items-center justify-center ${
+                      currentAnswer === 'YES'
+                        ? 'bg-[#48272a] border-[#e8b4b8]'
+                        : currentAnswer === 'MAYBE'
+                        ? 'bg-amber-950/80 border-amber-500'
+                        : 'bg-rose-950/80 border-rose-500'
+                    }`}
+                    title={lang === 'he' ? 'תשובה קיימת' : 'Existing Answer'}
+                  >
+                    {currentAnswer === 'YES' && <Heart className="w-3.5 h-3.5 fill-[#e8b4b8] text-[#e8b4b8]" />}
+                    {currentAnswer === 'MAYBE' && <HelpCircle className="w-3.5 h-3.5 text-amber-400" />}
+                    {currentAnswer === 'NO' && <ThumbsDown className="w-3.5 h-3.5 text-rose-400" />}
+                  </div>
+                )}
               </div>
 
               {/* Question Title & Description */}

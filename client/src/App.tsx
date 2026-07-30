@@ -94,6 +94,18 @@ export const App: React.FC = () => {
     const ansRes = await fetchUserAnswers(userRecord.id);
     if (ansRes.success && ansRes.answers) {
       setAnsweredQuestionIds(ansRes.answers.map((a: any) => a.questionId));
+
+      const dbAnswersMap: Record<string, 'YES' | 'MAYBE' | 'NO'> = {};
+      ansRes.answers.forEach((a: any) => {
+        if (a.questionId && a.value) {
+          dbAnswersMap[a.questionId] = a.value as 'YES' | 'MAYBE' | 'NO';
+        }
+      });
+      setUserAnswerValues((prev) => {
+        const merged = { ...prev, ...dbAnswersMap };
+        localStorage.setItem('mykink_user_answers', JSON.stringify(merged));
+        return merged;
+      });
     }
 
     // 2. Restore Profile & Active Tab from LocalStorage or DB
