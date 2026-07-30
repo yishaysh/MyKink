@@ -185,16 +185,16 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
   }
 
   return (
-    <div className="max-w-lg mx-auto px-4 py-4 space-y-4">
+    <div className="max-w-lg mx-auto px-3 py-2 space-y-2">
       {/* Category & Intensity Filters */}
-      <div className="solid-card p-4 space-y-3">
-        <div className="flex items-center justify-between text-xs text-slate-300 font-bold">
-          <div className="flex items-center gap-1.5 text-[#e8b4b8]">
-            <Filter className="w-4 h-4" />
+      <div className="solid-card p-2.5 space-y-2">
+        <div className="flex items-center justify-between text-[11px] text-slate-300 font-bold">
+          <div className="flex items-center gap-1 text-[#e8b4b8]">
+            <Filter className="w-3.5 h-3.5" />
             <span>{t.filterTitle}</span>
           </div>
           {answeredQuestionIds.length > 0 && (
-            <span className="text-[11px] font-mono text-[#d1c5b2]">
+            <span className="text-[10px] font-mono text-[#d1c5b2]">
               {lang === 'he' ? 'נענו:' : 'Answered:'} {answeredQuestionIds.length} / {questions.length}
             </span>
           )}
@@ -202,10 +202,10 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
 
         {/* Categories Choice Blocks */}
         <div>
-          <label className="text-[11px] font-semibold text-slate-400 block mb-1.5">
+          <label className="text-[10px] font-semibold text-slate-400 block mb-1">
             {lang === 'he' ? 'קטגוריית פנטזיות' : 'Fantasy Category'}
           </label>
-          <div className="grid grid-cols-3 gap-1.5">
+          <div className="grid grid-cols-3 gap-1">
             {categories.map((cat) => {
               const isSelected = selectedCategory === cat.id;
               return (
@@ -213,7 +213,7 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
                   key={cat.id}
                   type="button"
                   onClick={() => handleCategoryChange(cat.id)}
-                  className={`p-2 rounded-xl text-center transition flex items-center justify-center min-h-[2.5rem] cursor-pointer text-xs ${
+                  className={`py-1 px-1.5 rounded-lg text-center transition flex items-center justify-center min-h-[2rem] cursor-pointer text-[11px] ${
                     isSelected ? 'filter-box-selected' : 'filter-box-unselected'
                   }`}
                 >
@@ -225,11 +225,11 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
         </div>
 
         {/* Intensities Choice Blocks */}
-        <div className="pt-2 border-t border-[#36343a]">
-          <label className="text-[11px] font-semibold text-slate-400 block mb-1.5">
+        <div className="pt-1.5 border-t border-[#36343a]">
+          <label className="text-[10px] font-semibold text-slate-400 block mb-1">
             {lang === 'he' ? 'רמת נועזות' : 'Intensity Level'}
           </label>
-          <div className="grid grid-cols-4 gap-1.5">
+          <div className="grid grid-cols-4 gap-1">
             {intensities.map((lvl) => {
               const isSelected = selectedIntensity === lvl.id;
               return (
@@ -237,7 +237,7 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
                   key={lvl.id}
                   type="button"
                   onClick={() => handleIntensityChange(lvl.id)}
-                  className={`p-1.5 rounded-xl text-center transition flex items-center justify-center min-h-[2.25rem] cursor-pointer text-[11px] ${
+                  className={`py-0.5 px-1 rounded-lg text-center transition flex items-center justify-center min-h-[1.75rem] cursor-pointer text-[10px] ${
                     isSelected ? 'filter-box-selected' : 'filter-box-unselected'
                   }`}
                 >
@@ -251,41 +251,41 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
 
       {/* Main Card Swiper Area */}
       {!isFinished && currentQ ? (
-        <div className="flex-1 min-h-0 flex flex-col justify-between space-y-3 my-1 overflow-hidden">
+        <div className="flex-1 min-h-0 flex flex-col justify-between space-y-2 my-0.5 overflow-hidden">
           {/* Card Stack Wrapper */}
-          <div className="relative w-full min-h-[300px] flex items-center justify-center">
+          <div className="relative w-full min-h-[210px] sm:min-h-[240px] flex items-center justify-center">
             {/* Background Card Stack Layer (Next Card Preview) */}
             {nextQ && (
               <div
-                className="absolute inset-0 solid-card p-5 sm:p-6 flex flex-col justify-between opacity-40 scale-95 transition-transform duration-300 pointer-events-none rounded-2xl border border-[#36343a]"
+                className="absolute inset-0 solid-card p-3.5 sm:p-5 flex flex-col justify-between opacity-40 scale-95 transition-transform duration-300 pointer-events-none rounded-2xl border border-[#36343a]"
                 style={{
                   transform:
                     isDragging || exitDirection
                       ? 'scale(0.98) translateY(0px)'
-                      : 'scale(0.94) translateY(12px)'
+                      : 'scale(0.94) translateY(8px)'
                 }}
               >
                 <div className="flex items-center justify-between gap-2 shrink-0">
-                  <span className="px-2.5 py-0.5 rounded-full bg-[#2b292f] border border-[#504444] text-[#e8b4b8] text-[11px] font-bold uppercase tracking-wider">
+                  <span className="px-2 py-0.5 rounded-full bg-[#2b292f] border border-[#504444] text-[#e8b4b8] text-[10px] font-bold uppercase tracking-wider">
                     {nextQ.category}
                   </span>
-                  <span className="px-2.5 py-0.5 rounded-full bg-[#141218] border border-[#36343a] text-slate-300 text-[11px] font-mono font-bold">
+                  <span className="px-2 py-0.5 rounded-full bg-[#141218] border border-[#36343a] text-slate-300 text-[10px] font-mono font-bold">
                     {nextQ.intensityLevel === 'VANILLA' && t.intensityVanilla}
                     {nextQ.intensityLevel === 'SPICY' && t.intensitySpicy}
                     {nextQ.intensityLevel === 'ADVENTUROUS' && t.intensityAdventurous}
                   </span>
                 </div>
 
-                <div className="my-auto py-3 text-center space-y-2.5">
-                  <h3 className="text-lg sm:text-2xl font-bold text-white leading-snug font-headline">
+                <div className="my-auto py-2 text-center space-y-1.5">
+                  <h3 className="text-base sm:text-xl font-bold text-white leading-snug font-headline">
                     {nextQ.title}
                   </h3>
-                  <p className="text-xs sm:text-sm text-slate-300 max-w-md mx-auto leading-relaxed">
+                  <p className="text-[11px] sm:text-xs text-slate-300 max-w-md mx-auto leading-normal">
                     {nextQ.description}
                   </p>
                 </div>
 
-                <div className="pt-2 border-t border-[#36343a] flex items-center justify-between text-[11px] text-slate-400 shrink-0">
+                <div className="pt-1.5 border-t border-[#36343a] flex items-center justify-between text-[10px] text-slate-400 shrink-0">
                   <span className="font-semibold text-[#d1c5b2]">
                     {nextQ.roleType === 'GIVER' && t.roleGiverBadge}
                     {nextQ.roleType === 'RECEIVER' && t.roleReceiverBadge}
@@ -311,15 +311,15 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
                 transform: cardTransform,
                 transition: isDragging ? 'none' : 'transform 0.28s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
               }}
-              className="w-full solid-card p-5 sm:p-6 flex flex-col justify-between relative overflow-hidden select-none min-h-[300px] shadow-2xl cursor-grab active:cursor-grabbing rounded-2xl border border-[#e8b4b8]/30 z-10"
+              className="w-full solid-card p-3.5 sm:p-5 flex flex-col justify-between relative overflow-hidden select-none min-h-[210px] sm:min-h-[240px] shadow-xl cursor-grab active:cursor-grabbing rounded-2xl border border-[#e8b4b8]/30 z-10"
             >
               {/* Card Header Badges */}
               <div className="flex items-center justify-between gap-2 shrink-0">
                 <div className="flex items-center gap-1.5">
-                  <span className="px-2.5 py-0.5 rounded-full bg-[#2b292f] border border-[#504444] text-[#e8b4b8] text-[11px] font-bold uppercase tracking-wider">
+                  <span className="px-2 py-0.5 rounded-full bg-[#2b292f] border border-[#504444] text-[#e8b4b8] text-[10px] font-bold uppercase tracking-wider">
                     {currentQ.category}
                   </span>
-                  <span className="px-2.5 py-0.5 rounded-full bg-[#141218] border border-[#36343a] text-slate-300 text-[11px] font-mono font-bold">
+                  <span className="px-2 py-0.5 rounded-full bg-[#141218] border border-[#36343a] text-slate-300 text-[10px] font-mono font-bold">
                     {currentQ.intensityLevel === 'VANILLA' && t.intensityVanilla}
                     {currentQ.intensityLevel === 'SPICY' && t.intensitySpicy}
                     {currentQ.intensityLevel === 'ADVENTUROUS' && t.intensityAdventurous}
@@ -329,7 +329,7 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
                 {/* Answered Icon Indicator (Icon ONLY, no text) */}
                 {currentAnswer && (
                   <div
-                    className={`p-1.5 rounded-full border shadow-md flex items-center justify-center ${
+                    className={`p-1 rounded-full border shadow-md flex items-center justify-center ${
                       currentAnswer === 'YES'
                         ? 'bg-[#48272a] border-[#e8b4b8]'
                         : currentAnswer === 'MAYBE'
@@ -338,25 +338,25 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
                     }`}
                     title={lang === 'he' ? 'תשובה קיימת' : 'Existing Answer'}
                   >
-                    {currentAnswer === 'YES' && <Heart className="w-3.5 h-3.5 fill-[#e8b4b8] text-[#e8b4b8]" />}
-                    {currentAnswer === 'MAYBE' && <HelpCircle className="w-3.5 h-3.5 text-amber-400" />}
-                    {currentAnswer === 'NO' && <ThumbsDown className="w-3.5 h-3.5 text-rose-400" />}
+                    {currentAnswer === 'YES' && <Heart className="w-3 h-3 fill-[#e8b4b8] text-[#e8b4b8]" />}
+                    {currentAnswer === 'MAYBE' && <HelpCircle className="w-3 h-3 text-amber-400" />}
+                    {currentAnswer === 'NO' && <ThumbsDown className="w-3 h-3 text-rose-400" />}
                   </div>
                 )}
               </div>
 
               {/* Question Title & Description */}
-              <div className="my-auto py-4 text-center space-y-3">
-                <h3 className="text-lg sm:text-2xl font-bold text-white leading-snug font-headline">
+              <div className="my-auto py-2 text-center space-y-1.5">
+                <h3 className="text-base sm:text-xl font-bold text-white leading-snug font-headline">
                   {currentQ.title}
                 </h3>
-                <p className="text-xs sm:text-sm text-slate-300 max-w-md mx-auto leading-relaxed">
+                <p className="text-[11px] sm:text-xs text-slate-300 max-w-md mx-auto leading-normal">
                   {currentQ.description}
                 </p>
               </div>
 
               {/* Card Footer Info */}
-              <div className="pt-2 border-t border-[#36343a] flex items-center justify-between text-[11px] text-slate-400 shrink-0">
+              <div className="pt-1.5 border-t border-[#36343a] flex items-center justify-between text-[10px] text-slate-400 shrink-0">
                 <span className="font-semibold text-[#d1c5b2]">
                   {currentQ.roleType === 'GIVER' && t.roleGiverBadge}
                   {currentQ.roleType === 'RECEIVER' && t.roleReceiverBadge}
@@ -370,62 +370,62 @@ export const SwipeDeck: React.FC<SwipeDeckProps> = ({
           </div>
 
           {/* Voting Action Buttons */}
-          <div className="grid grid-cols-3 gap-2 shrink-0">
+          <div className="grid grid-cols-3 gap-1.5 shrink-0">
             <button
               onClick={() => handleVote('NO')}
               disabled={isVoting}
-              className={`py-3 px-2 rounded-xl border-2 border-rose-900 bg-[#1d1b21] text-rose-400 font-bold text-xs flex flex-col items-center justify-center gap-1 transition group shadow-lg ${currentAnswer === 'NO' ? 'ring-2 ring-rose-500' : ''}`}
+              className={`py-2 px-1.5 rounded-xl border-2 border-rose-900 bg-[#1d1b21] text-rose-400 font-bold text-[11px] flex flex-col items-center justify-center gap-0.5 transition group shadow-md ${currentAnswer === 'NO' ? 'ring-2 ring-rose-500' : ''}`}
             >
-              <ThumbsDown className="w-5 h-5" />
+              <ThumbsDown className="w-4 h-4" />
               <span>{t.btnNo}</span>
             </button>
             <button
               onClick={() => handleVote('MAYBE')}
               disabled={isVoting}
-              className={`py-4 px-3 rounded-2xl border-2 border-amber-900 bg-[#1d1b21] text-amber-400 font-bold text-xs flex flex-col items-center justify-center gap-1.5 transition group shadow-lg ${currentAnswer === 'MAYBE' ? 'ring-2 ring-amber-500' : ''}`}
+              className={`py-2 px-1.5 rounded-xl border-2 border-amber-900 bg-[#1d1b21] text-amber-400 font-bold text-[11px] flex flex-col items-center justify-center gap-0.5 transition group shadow-md ${currentAnswer === 'MAYBE' ? 'ring-2 ring-amber-500' : ''}`}
             >
-              <HelpCircle className="w-6 h-6" />
+              <HelpCircle className="w-4 h-4" />
               <span>{t.btnMaybe}</span>
             </button>
             <button
               onClick={() => handleVote('YES')}
               disabled={isVoting}
-              className={`py-4 px-3 rounded-2xl border-2 border-[#e8b4b8] bg-[#2b292f] text-[#e8b4b8] font-black text-xs flex flex-col items-center justify-center gap-1.5 transition group shadow-xl ${currentAnswer === 'YES' ? 'ring-2 ring-[#e8b4b8]' : ''}`}
+              className={`py-2 px-1.5 rounded-xl border-2 border-[#e8b4b8] bg-[#2b292f] text-[#e8b4b8] font-black text-[11px] flex flex-col items-center justify-center gap-0.5 transition group shadow-lg ${currentAnswer === 'YES' ? 'ring-2 ring-[#e8b4b8]' : ''}`}
             >
-              <Heart className="w-6 h-6 fill-[#e8b4b8]" />
+              <Heart className="w-4 h-4 fill-[#e8b4b8]" />
               <span>{t.btnYes}</span>
             </button>
           </div>
 
-          <p className="text-[10px] text-center text-slate-400 flex items-center justify-center gap-1">
-            <Lock className="w-3 h-3 text-[#e8b4b8]" />
+          <p className="text-[9px] text-center text-slate-400 flex items-center justify-center gap-1 mt-0.5">
+            <Lock className="w-2.5 h-2.5 text-[#e8b4b8]" />
             <span>{t.noPrivacyFootnote}</span>
           </p>
         </div>
       ) : (
         /* Quiz Finished State */
-        <div className="solid-card p-8 text-center space-y-5 card-appear">
-          <div className="w-16 h-16 rounded-full bg-[#2b292f] border border-[#e8b4b8]/40 text-[#e8b4b8] flex items-center justify-center mx-auto shadow-lg">
-            <Flame className="w-8 h-8" />
+        <div className="solid-card p-6 text-center space-y-4 card-appear">
+          <div className="w-14 h-14 rounded-full bg-[#2b292f] border border-[#e8b4b8]/40 text-[#e8b4b8] flex items-center justify-center mx-auto shadow-lg">
+            <Flame className="w-7 h-7" />
           </div>
           <div>
-            <h3 className="text-2xl font-bold text-white font-headline">{t.quizCompletedTitle}</h3>
+            <h3 className="text-xl font-bold text-white font-headline">{t.quizCompletedTitle}</h3>
             <p className="text-xs text-[#e8b4b8] max-w-sm mx-auto mt-1 font-semibold">
               {t.quizCompletedSub}
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-3 pt-2">
+          <div className="flex flex-col sm:flex-row gap-2 pt-1">
             <button
               onClick={onGoToMatches}
-              className="btn-rose flex-1 py-3 text-xs flex items-center justify-center gap-2"
+              className="btn-rose flex-1 py-2.5 text-xs flex items-center justify-center gap-2"
             >
               <Heart className="w-4 h-4 fill-[#48272a]" />
               <span>{t.viewMatchesBtn}</span>
             </button>
             <button
               onClick={handleReset}
-              className="btn-soft px-5 py-3 text-xs flex items-center justify-center gap-2"
+              className="btn-soft px-4 py-2.5 text-xs flex items-center justify-center gap-2"
             >
               <RotateCcw className="w-4 h-4" />
               <span>{t.restartQuizBtn}</span>
