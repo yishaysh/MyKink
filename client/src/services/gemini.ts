@@ -16,30 +16,27 @@ export interface ChatMessage {
 }
 
 function hasValidApiKey(): boolean {
-  if (!GEMINI_API_KEY) return false;
-  if (GEMINI_API_KEY === DEFAULT_KEY) return false;
-  if (GEMINI_API_KEY.startsWith('AQ.')) return false;
+  if (!GEMINI_API_KEY || !GEMINI_API_KEY.trim()) return false;
   return true;
 }
 
 // Resilient API Caller trying supported Gemini model endpoints when a valid key is provided
 async function callGeminiApi(payload: any): Promise<any> {
   if (!hasValidApiKey()) {
-    // Skip external network calls when placeholder key is used to avoid console 429/404 errors
     return null;
   }
 
   const models = [
-    'gemini-1.5-flash-latest',
     'gemini-1.5-flash',
-    'gemini-2.0-flash-exp',
-    'gemini-1.5-pro-latest'
+    'gemini-2.0-flash',
+    'gemini-1.5-pro',
+    'gemini-flash-latest'
   ];
 
   for (const model of models) {
     try {
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY.trim()}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
