@@ -27,10 +27,10 @@ async function callGeminiApi(payload: any): Promise<any> {
   }
 
   const models = [
-    'gemini-1.5-flash',
+    'gemini-flash-latest',
     'gemini-2.0-flash',
-    'gemini-1.5-pro',
-    'gemini-flash-latest'
+    'gemini-1.5-flash',
+    'gemini-1.5-pro'
   ];
 
   for (const model of models) {
