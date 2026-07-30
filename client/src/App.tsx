@@ -62,6 +62,14 @@ export const App: React.FC = () => {
 
   // User Answered Question IDs restored from DB
   const [answeredQuestionIds, setAnsweredQuestionIds] = useState<string[]>([]);
+  const [userAnswerValues, setUserAnswerValues] = useState<Record<string, 'YES' | 'MAYBE' | 'NO'>>(() => {
+    try {
+      const saved = localStorage.getItem('mykink_user_answers');
+      return saved ? JSON.parse(saved) : {};
+    } catch {
+      return {};
+    }
+  });
 
   // Data state
   const [questions, setQuestions] = useState<CatalogQuestion[]>([]);
@@ -366,7 +374,13 @@ export const App: React.FC = () => {
     const encryptedVal = encryptPayload(value);
 
     await submitAnswer(userId, questionId, encryptedVal, answerHash, value);
-    setAnsweredQuestionIds((prev) => [...prev, questionId]);
+    setAnsweredQuestionIds((prev) => (prev.includes(questionId) ? prev : [...prev, questionId]));
+
+    setUserAnswerValues((prev) => {
+      const updated = { ...prev, [questionId]: value };
+      localStorage.setItem('mykink_user_answers', JSON.stringify(updated));
+      return updated;
+    });
 
     if (coupleId) reloadMatches();
   };
@@ -419,6 +433,7 @@ export const App: React.FC = () => {
           <SwipeDeck
             questions={questions}
             answeredQuestionIds={answeredQuestionIds}
+            userAnswerValues={userAnswerValues}
             onAnswer={handleAnswer}
             selectedCategory={selectedCategory}
             setSelectedCategory={setSelectedCategory}
