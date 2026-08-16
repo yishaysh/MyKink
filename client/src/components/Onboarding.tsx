@@ -100,7 +100,10 @@ export const Onboarding: React.FC<OnboardingProps> = ({
   const handleGoogleSignIn = async () => {
     setIsGoogleLoading(true);
     try {
-      await signInWithGoogle();
+      const res = await signInWithGoogle();
+      if (!res?.success) {
+        setIsGoogleLoading(false);
+      }
     } catch (e) {
       console.error('Google sign in error:', e);
       setIsGoogleLoading(false);

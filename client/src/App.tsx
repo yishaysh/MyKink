@@ -165,6 +165,17 @@ export const App: React.FC = () => {
           document.documentElement.lang = savedLang;
         }
 
+        // Check session and gracefully purge invalid refresh tokens
+        try {
+          const { error: sessionError } = await supabase.auth.getSession();
+          if (sessionError) {
+            console.warn('Stale session token detected, resetting auth state:', sessionError);
+            await supabase.auth.signOut().catch(() => {});
+          }
+        } catch (e) {
+          console.warn('Session verification notice:', e);
+        }
+
         const deviceId = getOrCreateDeviceId();
         const pubKey = getOrCreatePublicKey();
         const res = await registerDevice(deviceId, pubKey, false);
