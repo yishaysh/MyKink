@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>MyKink - תוכנית אסטרטגית ומחקרית: 5 ההצעות המובילות לשדרוג האפליקציה</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 8mm 10mm 8mm 10mm;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    body {
+      font-family: 'Heebo', 'Rubik', sans-serif;
+      background-color: #0c0a10;
+      color: #e5dfd8;
+      line-height: 1.4;
+      font-size: 12px;
+      direction: rtl;
+    }
+
+    .container {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    /* Header & Branding */
+    .header-card {
+      background: linear-gradient(135deg, rgba(35, 28, 44, 0.95) 0%, rgba(18, 16, 23, 0.95) 100%);
+      border: 1px solid rgba(232, 180, 184, 0.35);
+      border-radius: 14px;
+      padding: 14px 18px;
+      margin-bottom: 8px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      position: relative;
+    }
+
+    .brand-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(232, 180, 184, 0.15);
+      border: 1px solid rgba(232, 180, 184, 0.35);
+      color: #ffd2d5;
+      padding: 2px 10px;
+      border-radius: 16px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    h1.doc-title {
+      font-size: 19px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 3px;
+      line-height: 1.2;
+      background: linear-gradient(90deg, #ffffff 40%, #ffd2d5 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    p.doc-subtitle {
+      font-size: 11.5px;
+      color: #d1c5b2;
+      font-weight: 400;
+    }
+
+    .meta-bar {
+      display: flex;
+      gap: 14px;
+      margin-top: 8px;
+      padding-top: 6px;
+      border-top: 1px solid rgba(232, 180, 184, 0.15);
+      font-size: 10.5px;
+      color: #a89f91;
+    }
+
+    .meta-item strong {
+      color: #f4e7d3;
+    }
+
+    /* Section Styles */
+    .section-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #ffd2d5;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 8px 0 6px 0;
+      padding-bottom: 3px;
+      border-bottom: 1px solid rgba(232, 180, 184, 0.2);
+    }
+
+    .section-title span.badge {
+      background: rgba(232, 180, 184, 0.15);
+      color: #ffd2d5;
+      font-size: 9.5px;
+      font-weight: 600;
+      padding: 1px 7px;
+      border-radius: 10px;
+    }
+
+    /* Market Summary Card */
+    .market-box {
+      background: rgba(24, 21, 29, 0.85);
+      border: 1px solid rgba(232, 180, 184, 0.18);
+      border-radius: 10px;
+      padding: 8px 12px;
+      margin-bottom: 8px;
+    }
+
+    .market-box p {
+      font-size: 11px;
+      color: #d8d0c7;
+      margin-bottom: 6px;
+      line-height: 1.35;
+    }
+
+    .market-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+    }
+
+    .market-app-card {
+      background: rgba(16, 13, 20, 0.7);
+      border: 1px solid rgba(232, 180, 184, 0.12);
+      border-radius: 8px;
+      padding: 5px 8px;
+      font-size: 10px;
+    }
+
+    .market-app-card .app-name {
+      font-weight: 700;
+      color: #f4e7d3;
+      margin-bottom: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .market-app-card .app-focus {
+      color: #a89f91;
+      font-size: 9.5px;
+    }
+
+    /* Proposal Cards */
+    .proposal-card {
+      background: linear-gradient(180deg, rgba(27, 23, 34, 0.9) 0%, rgba(18, 16, 24, 0.9) 100%);
+      border: 1px solid rgba(232, 180, 184, 0.22);
+      border-radius: 11px;
+      padding: 9px 12px;
+      margin-bottom: 7px;
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
+    }
+
+    .proposal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 5px;
+    }
+
+    .proposal-title-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .proposal-num {
+      background: linear-gradient(135deg, #e8b4b8 0%, #7d5c7e 100%);
+      color: #141218;
+      font-weight: 800;
+      font-size: 11px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .proposal-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .proposal-badges {
+      display: flex;
+      gap: 5px;
+    }
+
+    .badge-pill {
+      font-size: 9.5px;
+      padding: 1px 6px;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+
+    .badge-pink {
+      background: rgba(232, 180, 184, 0.18);
+      color: #ffd2d5;
+      border: 1px solid rgba(232, 180, 184, 0.3);
+    }
+
+    .badge-gold {
+      background: rgba(244, 231, 211, 0.12);
+      color: #f4e7d3;
+      border: 1px solid rgba(244, 231, 211, 0.25);
+    }
+
+    .badge-purple {
+      background: rgba(125, 92, 126, 0.25);
+      color: #fad0f8;
+      border: 1px solid rgba(125, 92, 126, 0.4);
+    }
+
+    .proposal-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 8px;
+    }
+
+    .detail-block {
+      background: rgba(14, 12, 18, 0.6);
+      border-radius: 8px;
+      padding: 7px 10px;
+      border: 1px solid rgba(232, 180, 184, 0.08);
+    }
+
+    .detail-block h4 {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #f4e7d3;
+      margin-bottom: 3px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .detail-block ul {
+      list-style: none;
+      padding-right: 0;
+    }
+
+    .detail-block ul li {
+      font-size: 10.5px;
+      color: #c9c2b9;
+      margin-bottom: 2.5px;
+      position: relative;
+      padding-right: 12px;
+      line-height: 1.35;
+    }
+
+    .detail-block ul li::before {
+      content: '✦';
+      position: absolute;
+      right: 0;
+      color: #e8b4b8;
+      font-size: 8.5px;
+    }
+
+    .sex-appeal-box {
+      margin-top: 5px;
+      background: rgba(232, 180, 184, 0.07);
+      border-right: 2.5px solid #e8b4b8;
+      border-radius: 0 6px 6px 0;
+      padding: 4px 10px;
+      font-size: 10.5px;
+      color: #ffd2d5;
+      line-height: 1.35;
+    }
+
+    .sex-appeal-box strong {
+      color: #ffffff;
+    }
+
+    /* Table */
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 6px;
+      background: rgba(20, 17, 26, 0.85);
+      border-radius: 9px;
+      overflow: hidden;
+      border: 1px solid rgba(232, 180, 184, 0.18);
+      font-size: 10px;
+    }
+
+    .comparison-table th {
+      background: rgba(34, 29, 42, 0.95);
+      color: #ffd2d5;
+      padding: 6px 9px;
+      text-align: right;
+      font-weight: 700;
+      border-bottom: 1px solid rgba(232, 180, 184, 0.2);
+    }
+
+    .comparison-table td {
+      padding: 5px 9px;
+      border-bottom: 1px solid rgba(232, 180, 184, 0.08);
+      color: #d1c5b2;
+    }
+
+    .comparison-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .comparison-table tr:nth-child(even) {
+      background: rgba(16, 13, 20, 0.5);
+    }
+
+    .stars {
+      color: #ffd2d5;
+      letter-spacing: 0.5px;
+    }
+
+    .page-break {
+      page-break-before: always;
+    }
+
+    .footer-note {
+      text-align: center;
+      margin-top: 7px;
+      font-size: 9.5px;
+      color: #8c8275;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- ==================== PAGE 1 ==================== -->
+    <div class="header-card">
+      <div class="brand-tag">🔥 MYKINK • PRODUCT STRATEGY & INNOVATION ROADMAP</div>
+      <h1 class="doc-title">5 ההצעות המנצחות להפיכת MyKink לאפליקציה קינקית, סקסית וממכרת</h1>
+      <p class="doc-subtitle">מחקר שוק עולמי מקיף, פסיכולוגיית אינטימיות לזוגות, ומנגנוני Gamification מתקדמים לחדר המיטות</p>
+      
+      <div class="meta-bar">
+        <div class="meta-item">📅 <strong>תאריך:</strong> אוגוסט 2026</div>
+        <div class="meta-item">🎨 <strong>שפת עיצוב:</strong> Midnight Velvet & Glassmorphism</div>
+        <div class="meta-item">🎯 <strong>יעד:</strong> מקסימום סקס-אפיל, שבירת מבוכה ומעורבות יומית</div>
+      </div>
+    </div>
+
+    <!-- Market Overview -->
+    <div class="section-title">
+      <span>📊 תמצית מחקר שוק עולמי: מה הופך אפליקציות SexTech למובילות?</span>
+      <span class="badge">SexTech Benchmarking</span>
+    </div>
+
+    <div class="market-box">
+      <p>
+        ניתוח של המובילות בעולם (Spicer, Desire, Kindu, BeMoreKinky, Feeld, Beducated) מעלה כי זוגות אינם מחפשים רק שאלון התאמה פסיבי, אלא <strong>מנוע ריגוש אקטיבי</strong> בשלושה רבדים: 
+        <em>1. טיזינג וציפייה לאורך היום, 2. שבירת מבוכה מוחלטת, 3. כלי אינטראקטיבי בזמן אמת בחדר המיטות</em>.
+      </p>
+
+      <div class="market-grid">
+        <div class="market-app-card">
+          <div class="app-name">Spicer <span>🔥 4.8★</span></div>
+          <div class="app-focus">התאמות עיוורות וחידוני זוגות</div>
+        </div>
+        <div class="market-app-card">
+          <div class="app-name">Desire <span>🏆 4.7★</span></div>
+          <div class="app-focus">אתגרים יומיים, תחרות וניקוד</div>
+        </div>
+        <div class="market-app-card">
+          <div class="app-name">BeMoreKinky <span>⛓️ 4.9★</span></div>
+          <div class="app-focus">BDSM, מיפוי גוף ודינמיקות</div>
+        </div>
+        <div class="market-app-card">
+          <div class="app-name">CanWe / Feeld <span>💬 4.6★</span></div>
+          <div class="app-focus">תקשורת אינטימית ללא שיפוטיות</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROPOSAL 1 -->
+    <div class="proposal-card">
+      <div class="proposal-header">
+        <div class="proposal-title-group">
+          <div class="proposal-num">1</div>
+          <div class="proposal-title">💋 מפת חושים וגוף אינטראקטיבית (Interactive Sensation Heatmap)</div>
+        </div>
+        <div class="proposal-badges">
+          <span class="badge-pill badge-pink">Sensual & Visual</span>
+          <span class="badge-pill badge-gold">High Virality</span>
+        </div>
+      </div>
+
+      <div class="proposal-grid">
+        <div class="detail-block">
+          <h4>🎯 אופן הפעולה ומכניקת המשחק</h4>
+          <ul>
+            <li><strong>קנבס גוף וקטורי יוקרתי:</strong> סילואט גוף מעוצב שבו כל בן זוג ממפה אזורי תשוקה (עורף, שפתיים, גב תחתון, פנים הירך, אגן, כפות ידיים).</li>
+            <li><strong>תפריט גירויים חושי:</strong> בחירה מדויקת לכל אזור — <em>נשיקות רכות, קוביות קרח, מגע נוצה, נשיכות עדינות, שעווה חמה, מכות/Spanking, קשירה</em>.</li>
+            <li><strong>מפת התאמה זוהרת (Pleasure Heatmap):</strong> בסיום, נוצרת מפה משותפת המאירה נקודות מגע מושלמות (Touch Matches) ששניכם כמהים לקבל ולתת.</li>
+          </ul>
+        </div>
+        <div class="detail-block">
+          <h4>💡 ערך מוסף פסיכולוגי וטכנולוגי</h4>
+          <ul>
+            <li><strong>מסיר מבוכה מילולית:</strong> קל יותר ללחוץ על אזור בגוף מאשר להסביר במילים פנטזיה פיזית מדויקת.</li>
+            <li><strong>מדריך מגע בלייב:</strong> ניתן להשתמש במפה הזוהרת ישירות במהלך משחק מקדים כהנחיה חושית מודרכת.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sex-appeal-box">
+        <strong>🔥 למה זה סקסי ומגניב?</strong> מעניק ויזואליזציה מהפנטת של הגוף, שובר את השגרה והופך את גילוי הגוף לחוויית מדע-אירוטית מהנה.
+      </div>
+    </div>
+
+    <!-- PROPOSAL 2 -->
+    <div class="proposal-card">
+      <div class="proposal-header">
+        <div class="proposal-title-group">
+          <div class="proposal-num">2</div>
+          <div class="proposal-title">🎲 מצב חדר שינה בלייב: רולטת קינק וקוביות תשוקה (Live Bedroom Mode)</div>
+        </div>
+        <div class="proposal-badges">
+          <span class="badge-pill badge-pink">Live Action</span>
+          <span class="badge-pill badge-purple">Bedside Game</span>
+        </div>
+      </div>
+
+      <div class="proposal-grid">
+        <div class="detail-block">
+          <h4>🎯 אופן הפעולה ומכניקת המשחק</h4>
+          <ul>
+            <li><strong>הצבה בחדר השינה:</strong> מסך מוחשך ייעודי לשידה, עם כפתורי ענק וסאונד/רטט פועם.</li>
+            <li><strong>מחולל פקודות ב-4 שכבות:</strong> רולטה מסתובבת שמרכיבה פקודה חיה: <em>[פעולה: ליטוף / מציצה / קשירה / הפשטה] + [איבר: צוואר / ירך / שפתיים / ישבן] + [מגבלה: בלי ידיים / בכיסוי עיניים / עם קרח] + [טיימר: 90 שניות / 3 דק']</em>.</li>
+            <li><strong>בורר רמות להבה:</strong> Soft Romantic, Hot Tease, Extreme Power-Play.</li>
+          </ul>
+        </div>
+        <div class="detail-block">
+          <h4>💡 ערך מוסף פסיכולוגי וטכנולוגי</h4>
+          <ul>
+            <li><strong>טיימר חושי פועם:</strong> מסך שמהבהב ברכות ומייצר ספירה לאחור מותחת עם רטט (Haptic Feedback) בסיום.</li>
+            <li><strong>מעבר משיחה למעשה:</strong> הופך את MyKink מחוויית יום לכלי המרכזי שמונח על המיטה בלילה.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sex-appeal-box">
+        <strong>🔥 למה זה סקסי ומגניב?</strong> מייצר מתח מיידי ואלמנט הפתעה ספונטני – אף אחד מבני הזוג לא יודע מה הרולטה תגריל בדקה הבאה.
+      </div>
+    </div>
+
+    <!-- ==================== PAGE 2 ==================== -->
+    <div class="page-break"></div>
+
+    <div class="section-title">
+      <span>💎 המשך ההצעות: דינמיקות כוח, מסתורין ובינה מלאכותית</span>
+      <span class="badge">Next-Gen Intimacy Features</span>
+    </div>
+
+    <!-- PROPOSAL 3 -->
+    <div class="proposal-card">
+      <div class="proposal-header">
+        <div class="proposal-title-group">
+          <div class="proposal-num">3</div>
+          <div class="proposal-title">📜 בונה חוזי BDSM ומשחקי שליטה מעוצב (Power Play Contract Studio)</div>
+        </div>
+        <div class="proposal-badges">
+          <span class="badge-pill badge-purple">Kink & BDSM</span>
+          <span class="badge-pill badge-gold">Psychological</span>
+        </div>
+      </div>
+
+      <div class="proposal-grid">
+        <div class="detail-block">
+          <h4>🎯 אופן הפעולה ומכניקת המשחק</h4>
+          <ul>
+            <li><strong>בחירת דינמיקת כוח:</strong> הגדרת תפקידים מדויקת — <em>Dominant/Submissive, Brat/Tamer, Master/Slave, Switch</em>.</li>
+            <li><strong>פרוטוקול בטיחות וגבולות:</strong> הגדרת מילות ביטחון מוסכמות (🚥 ירוק, צהוב, אדום) וגבולות קשיחים (Hard Limits) שאינם ניתנים למשא ומתן.</li>
+            <li><strong>חוקי בית ועונשים שובבים:</strong> "הגעה למיטה בעיניים מכוסות", "חובת בקשת אישור לפני מגע", "מסאז' רגליים יומי".</li>
+            <li><strong>חתימה ביומטרית דיגיטלית:</strong> הפקת מסמך קלף שחור יוקרתי חתום ע"י שני בני הזוג שננעל באפליקציה.</li>
+          </ul>
+        </div>
+        <div class="detail-block">
+          <h4>💡 ערך מוסף פסיכולוגי וטכנולוגי</h4>
+          <ul>
+            <li><strong>הסכמה מודעת ואירוטית (SSC/RACK):</strong> הופך את הגדרת הגבולות לחלק מהמשחק האירוטי המעצים.</li>
+            <li><strong>צבירת Brat & Reward Points:</strong> ניקוד על ציות שמקנה פרסים לוהטים ("30 דקות מסאז' שמן מלא").</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sex-appeal-box">
+        <strong>🔥 למה זה סקסי ומגניב?</strong> פסיכולוגיית כניעה ושליטה היא מהפנטזיות המבוקשות ביותר — מסגרת מעוצבת הופכת את זה למשחק מלכותי ומקצועי.
+      </div>
+    </div>
+
+    <!-- PROPOSAL 4 -->
+    <div class="proposal-card">
+      <div class="proposal-header">
+        <div class="proposal-title-group">
+          <div class="proposal-num">4</div>
+          <div class="proposal-title">🔥 משדר התשוקה הלילי ופתיחה ביומטרית כפולה (Tonight's Mood Beacon & Dual Vault)</div>
+        </div>
+        <div class="proposal-badges">
+          <span class="badge-pill badge-pink">Daily Retention</span>
+          <span class="badge-pill badge-gold">Zero Rejection</span>
+        </div>
+      </div>
+
+      <div class="proposal-grid">
+        <div class="detail-block">
+          <h4>🎯 אופן הפעולה ומכניקת המשחק</h4>
+          <ul>
+            <li><strong>משדר מצב רוח דיסקרטי (Tonight's Signal):</strong> כל אחד מסמן במהלך היום את הוייב שלו: <em>😈 פראי ודומיננטי | 🕯️ רומנטי ואיטי | 💆 זקוק לפינוק | 💤 עייף/חיבוק</em>.</li>
+            <li><strong>התראת כימיה מסתורית:</strong> רק כאשר יש הלימה (Match), נשלחת לשניהם התראה מעוררת: <em>"הערב הולך להיות לוהט..."</em>.</li>
+            <li><strong>כספת פנטזיות נעולה (Dual Fingerprint Hold):</strong> התאמות אקסטרים ננעלות בכספת סודית — נחשפות רק כששני בני הזוג מניחים אצבע יחד על המסך ל-3 שניות!</li>
+          </ul>
+        </div>
+        <div class="detail-block">
+          <h4>💡 ערך מוסף פסיכולוגי וטכנולוגי</h4>
+          <ul>
+            <li><strong>אפס פחד מדחייה:</strong> פותר את הבעיה הנפוצה ביותר בזוגיות (אי-נעימות ביוזמה כשלא בטוחים אם הצד השני בעניין).</li>
+            <li><strong>בניית מתח מקדים (Anticipation):</strong> מייצר פרפרים וציפייה שמתבשלת שעות לפני שנכנסים למיטה.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sex-appeal-box">
+        <strong>🔥 למה זה סקסי ומגניב?</strong> הופך את פתיחת הפנטזיה לריטואל זוגי מותח ומחשמל ברמה הביומטרית.
+      </div>
+    </div>
+
+    <!-- PROPOSAL 5 -->
+    <div class="proposal-card">
+      <div class="proposal-header">
+        <div class="proposal-title-group">
+          <div class="proposal-num">5</div>
+          <div class="proposal-title">🎭 במאי התרחישים: AI Erotic Roleplay & Story Engine</div>
+        </div>
+        <div class="proposal-badges">
+          <span class="badge-pill badge-pink">AI Powered</span>
+          <span class="badge-pill badge-purple">Personalized Erotica</span>
+        </div>
+      </div>
+
+      <div class="proposal-grid">
+        <div class="detail-block">
+          <h4>🎯 אופן הפעולה ומכניקת המשחק</h4>
+          <ul>
+            <li><strong>אינטגרציה עם ההתאמות הקיימות:</strong> בוחרים 2–3 התאמות ששניכם סימנתם ב-YES (למשל: <em>כיסוי עיניים + משחק זרים בבר + נשיכות</em>).</li>
+            <li><strong>כרטיס הפקה אישי ב-AI:</strong> ה-AI מייצר תסריט קצרצר בן 2 דקות עם:
+              <br>• 🎬 <em>שורת פתיחה מדויקת:</em> "שבי בבר, הוא ייגש וישאל אם המקום פנוי..."
+              <br>• 👗 <em>Dress Code & Props:</em> שמלה שחורה, עניבת משי, שפתון עמוק.
+              <br>• 🎵 <em>אוירה וסאונדטראק:</em> המלצת ג'אז עמום ותאורה מעומעמת.
+            </li>
+          </ul>
+        </div>
+        <div class="detail-block">
+          <h4>💡 ערך מוסף פסיכולוגי וטכנולוגי</h4>
+          <ul>
+            <li><strong>פתרון למבוכת ה-Roleplay:</strong> זוגות רבים חוששים לנסות משחקי תפקידים כי הם "לא יודעים איך להתחיל"; ה-AI מספק בימוי מוכן ומפתה.</li>
+            <li><strong>מינוף מנוע ה-Gemini הקיים:</strong> הרחבה ישירה וקלה למימוש של שירות ה-AI באפליקציה.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sex-appeal-box">
+        <strong>🔥 למה זה סקסי ומגניב?</strong> הופך פנטזיות מופשטות לסצנות קולנועיות חיות שנכתבו במיוחד עבור בני הזוג.
+      </div>
+    </div>
+
+    <!-- SUMMARY TABLE -->
+    <div class="section-title">
+      <span>📈 מטריצת תעדוף ואימפקט עסקי-חווייתי</span>
+      <span class="badge">Strategic ROI</span>
+    </div>
+
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>שם התכונה</th>
+          <th>רמת סקס-אפיל</th>
+          <th>מאמץ פיתוח</th>
+          <th>אימפקט Retention</th>
+          <th>הערך המרכזי ל-MyKink</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>1. מפת חושים וגוף אינטראקטיבית</strong></td>
+          <td><span class="stars">★★★★★</span></td>
+          <td>בינוני</td>
+          <td>גבוה מאוד</td>
+          <td>בידול ויזואלי יוצא דופן וזמן שהייה גבוה באפליקציה</td>
+        </tr>
+        <tr>
+          <td><strong>2. רולטת חדר שינה בלייב (קוביות & טיימר)</strong></td>
+          <td><span class="stars">★★★★★</span></td>
+          <td>קל-בינוני</td>
+          <td>גבוה</td>
+          <td>שימוש פיזי פעיל במיטה בזמן אמת — משחק חדר מיטות</td>
+        </tr>
+        <tr>
+          <td><strong>3. בונה חוזי BDSM ומשחקי שליטה</strong></td>
+          <td><span class="stars">★★★★☆</span></td>
+          <td>קל</td>
+          <td>בינוני-גבוה</td>
+          <td>העמקת זהות המותג מול קהילת ה-Kink והפטיש</td>
+        </tr>
+        <tr>
+          <td><strong>4. משדר מצב רוח יומי + פתיחה ביומטרית</strong></td>
+          <td><span class="stars">★★★★★</span></td>
+          <td>קל</td>
+          <td>מקסימלי (יומי)</td>
+          <td>הרגל שימוש יומיומי ללא חשש מדחייה או מבוכה</td>
+        </tr>
+        <tr>
+          <td><strong>5. במאי תרחישי Roleplay מבוסס AI</strong></td>
+          <td><span class="stars">★★★★★</span></td>
+          <td>בינוני</td>
+          <td>גבוה מאוד</td>
+          <td>הפיכת התאמות מופשטות לסצנות קולנועיות חיות</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="footer-note">
+      MyKink Design System • Midnight Velvet & Dark Rose Gold • סודי ומוגן בהצפנת E2EE
+    </div>
+
+  </div>
+
+</body>
+</html>

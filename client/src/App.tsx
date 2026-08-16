@@ -8,6 +8,11 @@ import { MatchesView, SharedMatchItem } from './components/MatchesView';
 import { DaresView, ChallengeItem } from './components/DaresView';
 import { AICoachView } from './components/AICoachView';
 import { LogoSpinner } from './components/LogoSpinner';
+import { SensationHeatmap } from './components/SensationHeatmap';
+import { BedroomLiveMode } from './components/BedroomLiveMode';
+import { PlayContractStudio } from './components/PlayContractStudio';
+import { MoodBeaconAndVault } from './components/MoodBeaconAndVault';
+import { AIRoleplayDirector } from './components/AIRoleplayDirector';
 
 import {
   registerDevice,
@@ -453,6 +458,44 @@ export const App: React.FC = () => {
             setSelectedIntensity={setSelectedIntensity}
             onGoToMatches={() => changeActiveTab('matches')}
             lang={lang}
+          />
+        )}
+
+        {activeTab === 'heatmap' && (
+          <SensationHeatmap
+            lang={lang}
+            coupleId={coupleId}
+            isPartnerConnected={isPartnerConnected}
+          />
+        )}
+
+        {activeTab === 'live' && (
+          <BedroomLiveMode
+            lang={lang}
+            onAddPoints={(pts) => console.log('Points awarded:', pts)}
+          />
+        )}
+
+        {activeTab === 'contract' && (
+          <PlayContractStudio
+            lang={lang}
+            userAlias={userProfile?.alias}
+          />
+        )}
+
+        {activeTab === 'beacon' && (
+          <MoodBeaconAndVault
+            lang={lang}
+            userAlias={userProfile?.alias}
+            isPartnerConnected={isPartnerConnected}
+          />
+        )}
+
+        {activeTab === 'roleplay' && (
+          <AIRoleplayDirector
+            lang={lang}
+            userProfile={userProfile}
+            matches={matches}
           />
         )}
 

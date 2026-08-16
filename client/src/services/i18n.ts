@@ -11,6 +11,11 @@ export interface TranslationDictionary {
   tabMatches: string;
   tabChallenges: string;
   tabAria: string;
+  tabHeatmap: string;
+  tabLiveMode: string;
+  tabContract: string;
+  tabBeacon: string;
+  tabRoleplay: string;
   
   // Onboarding Step 1
   onboardingStep1Title: string;
@@ -126,6 +131,11 @@ export const translations: Record<Language, TranslationDictionary> = {
     tabMatches: 'Matches',
     tabChallenges: 'Challenges',
     tabAria: 'Aria AI',
+    tabHeatmap: 'Heatmap 💋',
+    tabLiveMode: 'Bedside 🎲',
+    tabContract: 'Contract 📜',
+    tabBeacon: 'Beacon 🔥',
+    tabRoleplay: 'Roleplay 🎭',
 
     onboardingStep1Title: 'Google Account & Secret Alias',
     onboardingStep1Sub: 'Sign in with your Google account for 1-to-1 unique identity, and choose an anonymous sexy nickname.',
@@ -230,6 +240,11 @@ export const translations: Record<Language, TranslationDictionary> = {
     tabMatches: 'התאמות',
     tabChallenges: 'אתגרים',
     tabAria: 'אריאל AI',
+    tabHeatmap: 'מפת חושים 💋',
+    tabLiveMode: 'חדר שינה 🎲',
+    tabContract: 'חוזה שליטה 📜',
+    tabBeacon: 'משדר תשוקה 🔥',
+    tabRoleplay: 'במאי AI 🎭',
 
     onboardingStep1Title: 'חשבון Google וכינוי סקסי',
     onboardingStep1Sub: 'התחברו עם חשבון גוגל לזיהוי חד-ערכי ייחודי, ובחרו כינוי אנונימי שיוצג לבן/בת הזוג.',

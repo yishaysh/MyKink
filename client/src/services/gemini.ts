@@ -382,3 +382,169 @@ export async function generateAIDare(
     description: lang === 'he' ? 'לחישת פנטזיה סודית תוך שמירה על קשר עין ללא מגע במשך 3 דקות.' : 'Whispering a secret fantasy while maintaining eye contact.'
   };
 }
+
+export interface RoleplayScript {
+  title: string;
+  tagline: string;
+  ambiance: {
+    music: string;
+    lighting: string;
+    props: string[];
+    attire: string;
+  };
+  act1: {
+    title: string;
+    dialogue: string;
+    stageDirection: string;
+  };
+  act2: {
+    title: string;
+    sensoryAction: string;
+    escalation: string;
+  };
+  act3: {
+    title: string;
+    climax: string;
+    aftercare: string;
+  };
+}
+
+export async function generateEroticRoleplayScript(
+  themes: string[],
+  dynamic: string,
+  lang: 'en' | 'he'
+): Promise<RoleplayScript> {
+  const themeSummary = themes.length > 0 ? themes.join(', ') : 'Hotel Strangers, Blindfolds, Tease';
+
+  try {
+    const prompt = lang === 'he'
+      ? `את/ה במאי/ת אינטימיות ומשחקי תפקידים ברמה הגבוהה ביותר עבור זוגות. 
+צור תסריט משחק תפקידים אירוטי, מפתה, סקסי ומלוטש על בסיס הנושאים הבאים: "${themeSummary}" בדינמיקה של "${dynamic}".
+החזר אך ורק JSON תקין לפי המבנה המדויק הבא:
+{
+  "title": "שם הסצנה המפתה",
+  "tagline": "משפט השראה קצר ועוצמתי",
+  "ambiance": {
+    "music": "סגנון מוזיקה מומלץ (למשל: Deep Lounge Jazz / Slow Beats)",
+    "lighting": "הנחיות תאורה (למשל: נרות בלבד, עמעום אורות)",
+    "props": ["פריט 1", "פריט 2", "פריט 3"],
+    "attire": "קוד לבוש סקסי מומלץ"
+  },
+  "act1": {
+    "title": "מערכה 1: המפגש הראשוני ושורת הפתיחה",
+    "dialogue": "שורת הפתיחה המדויקת שמי שיוזם אומר",
+    "stageDirection": "הוראות מיקום וגוף לשני בני הזוג"
+  },
+  "act2": {
+    "title": "מערכה 2: הסלמת המגע והמתח",
+    "sensoryAction": "פעולת מגע וחושים מרכזית (כיסוי עיניים, קרח, נשיכות עדינות)",
+    "escalation": "איך המתח נבנה עד לשיא"
+  },
+  "act3": {
+    "title": "מערכה 3: שיא הסצנה ו-Aftercare",
+    "climax": "רגע ההתמסרות והחיבור המלא",
+    "aftercare": "הנחיית התכרבלות, שתיית מים וחיבוק מרגיע בסיום"
+  }
+}`
+      : `You are an elite intimacy & erotic roleplay director for couples. 
+Create a luxurious, seductive, sophisticated 2-minute roleplay scenario for the themes: "${themeSummary}" with dynamic "${dynamic}".
+Return strictly valid JSON matching the exact schema:
+{
+  "title": "Scene Name",
+  "tagline": "Inspiring provocative tagline",
+  "ambiance": {
+    "music": "Suggested soundtrack mood",
+    "lighting": "Lighting instructions",
+    "props": ["Prop 1", "Prop 2"],
+    "attire": "Recommended dress code"
+  },
+  "act1": {
+    "title": "Act 1: The Initial Encounter & Opening Line",
+    "dialogue": "Exact provocative opening line to start the scene",
+    "stageDirection": "Staging and physical placement instructions"
+  },
+  "act2": {
+    "title": "Act 2: Sensory Escalation & Tease",
+    "sensoryAction": "Specific touch/sensory element",
+    "escalation": "How the intensity escalates"
+  },
+  "act3": {
+    "title": "Act 3: The Climax & Gentle Aftercare",
+    "climax": "The surrender/climax moment",
+    "aftercare": "Warm loving aftercare guidance"
+  }
+}`;
+
+    const payload = {
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: { responseMimeType: 'application/json' }
+    };
+
+    const data = await callGeminiApi(payload);
+    const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (rawText) {
+      const parsed = JSON.parse(rawText);
+      if (parsed.title && parsed.act1 && parsed.act2 && parsed.act3) {
+        return parsed;
+      }
+    }
+  } catch (e) {
+    console.warn('Gemini Roleplay Script Error:', e);
+  }
+
+  // High-taste fallback script
+  if (lang === 'he') {
+    return {
+      title: 'זרים בבר של מלון יוקרה (Midnight Rendezvous)',
+      tagline: 'שני זרים שלא מכירים, כוס משקה אחת ומתח חשמלי באוויר.',
+      ambiance: {
+        music: 'Slow Jazz & Deep Ambient Lounge',
+        lighting: 'תאורה מעומעמת ונרות בלבד על השידה',
+        props: ['כוס יין או קוקטייל', 'כיסוי עיניים משי', 'שפתון עמוק'],
+        attire: 'שמלה שחורה מחמיאה או חולצה מכופתרת פתוחה קלות'
+      },
+      act1: {
+        title: 'מערכה 1: המפגש הראשוני ושורת הפתיחה',
+        dialogue: 'סליחה, הכיסא לידך תפוס, או שאפשר להצטרף למישהי/ו שנראה/ית מסוכן/ת כמוך?',
+        stageDirection: 'בן/בת הזוג יושבים על הכורסה עם הגב לכניסה. היוזם/ת ניגש/ת מאחור, נוגע/ת קלות בכתף ולוחש/ת באוזן.'
+      },
+      act2: {
+        title: 'מערכה 2: הסלמת המגע והחושים',
+        sensoryAction: 'הנחת כיסוי עיניים משי תוך לחישת 3 פקודות סודיות',
+        escalation: 'מגע אצבעות איטי לאורך הצוואר ופנים הירך תוך איסור נגיעה עצמית ללא בקשת אישור.'
+      },
+      act3: {
+        title: 'מערכה 3: השיא ו-Aftercare חם',
+        climax: 'התמסרות מלאה לקצב משותף ושיא תשוקתי ללא מסכות.',
+        aftercare: 'הורדת כיסוי העיניים, נשיקה חמה על המצח, כוס מים קרים והתכרבלות רכה של 10 דקות.'
+      }
+    };
+  }
+
+  return {
+    title: 'Midnight Hotel Bar Encounter',
+    tagline: 'Two strangers, zero boundaries, and high-voltage chemistry.',
+    ambiance: {
+      music: 'Sensual Deep Lounge & Slow Beats',
+      lighting: 'Dim candlelight only',
+      props: ['Silk blindfold', 'Cocktail glass'],
+      attire: 'Sleek black attire'
+    },
+    act1: {
+      title: 'Act 1: The Seductive Opening Line',
+      dialogue: 'Excuse me, is this seat taken, or can I join someone who looks this dangerous tonight?',
+      stageDirection: 'Sit facing away, partner approaches from behind and whispers into ear.'
+    },
+    act2: {
+      title: 'Act 2: Sensory Touch & Tease',
+      sensoryAction: 'Silk blindfold placement and slow collarbone kisses',
+      escalation: 'Firm touch on inner thighs with strict command to breathe slowly.'
+    },
+    act3: {
+      title: 'Act 3: Complete Surrender & Aftercare',
+      climax: 'Unrestrained mutual climax under heavy breathing.',
+      aftercare: 'Warm embrace, hydration, and 10 minutes of silent tender cuddling.'
+    }
+  };
+}
+

@@ -9,8 +9,9 @@
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\""
   },
   "devDependencies": {
+    "@prisma/client": "^5.14.0",
     "concurrently": "^8.2.2",
     "prisma": "^5.14.0",
-    "@prisma/client": "^5.14.0"
+    "puppeteer-core": "^25.7.0"
   }
 }
