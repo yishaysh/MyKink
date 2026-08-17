@@ -23,20 +23,20 @@
 
 ### 1. `ayala-simply-delicious`
 ```text
-postgresql://neondb_owner:npg_iOwVnz8UfH3B@ep-damp-block-b2ooonn8.c-6.eu-central-1.aws.neon.tech/neondb?sslmode=require
+postgresql://neondb_owner:[PASSWORD]@ep-damp-block-b2ooonn8.c-6.eu-central-1.aws.neon.tech/neondb?sslmode=require
 ```
 
 ### 2. `YuvalStudio`
 ```text
-postgresql://neondb_owner:npg_vS4dZ5qhHtiF@ep-winter-sound-b129wwdq-pooler.c-5.eu-central-1.aws.neon.tech/neondb?sslmode=require
+postgresql://neondb_owner:[PASSWORD]@ep-winter-sound-b129wwdq-pooler.c-5.eu-central-1.aws.neon.tech/neondb?sslmode=require
 ```
 
 ### 3. `MyKink`
 * **DATABASE_URL (Pooler):**
   ```text
-  postgresql://neondb_owner:npg_ATmWJaCu39NE@ep-misty-butterfly-b25pmmnf-pooler.c-6.eu-central-1.aws.neon.tech/neondb?sslmode=require
+  postgresql://neondb_owner:[PASSWORD]@ep-misty-butterfly-b25pmmnf-pooler.c-6.eu-central-1.aws.neon.tech/neondb?sslmode=require
   ```
 * **DIRECT_URL:**
   ```text
-  postgresql://neondb_owner:npg_ATmWJaCu39NE@ep-misty-butterfly-b25pmmnf.c-6.eu-central-1.aws.neon.tech/neondb?sslmode=require
+  postgresql://neondb_owner:[PASSWORD]@ep-misty-butterfly-b25pmmnf.c-6.eu-central-1.aws.neon.tech/neondb?sslmode=require
   ```
