@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>לוח מעקב והגירה מקיף ל-Neon.tech • 5 הפרויקטים שלך</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0c12;
+      --card-bg: #131722;
+      --card-inner: #0d101a;
+      --card-border: #22293d;
+      --text: #e2e8f0;
+      --text-muted: #94a3b8;
+      --accent: #00e599; /* Neon green */
+      --accent-glow: rgba(0, 229, 153, 0.25);
+      --accent-purple: #a855f7;
+      --amber: #f59e0b;
+      --danger: #ef4444;
+      --blue: #38bdf8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Heebo', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 24px 16px;
+      direction: rtl;
+    }
+
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, #182033 0%, #0d101a 100%);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .badge-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .badge-green {
+      background: rgba(0, 229, 153, 0.12);
+      border: 1px solid rgba(0, 229, 153, 0.3);
+      color: var(--accent);
+    }
+
+    .badge-blue {
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: var(--blue);
+    }
+
+    h1 {
+      font-size: 24px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 6px;
+    }
+
+    p.subtitle {
+      color: var(--text-muted);
+      font-size: 13.5px;
+      line-height: 1.5;
+    }
+
+    /* Global Progress */
+    .global-progress-box {
+      margin-top: 18px;
+      background: rgba(10, 12, 18, 0.6);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 14px 18px;
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .progress-bar-bg {
+      width: 100%;
+      height: 12px;
+      background: #232a3d;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #a855f7 0%, #00e599 100%);
+      width: 0%;
+      transition: width 0.4s ease;
+      border-radius: 10px;
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+
+    /* Quick Links */
+    .quick-links {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    .btn-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #1e2638;
+      border: 1px solid var(--card-border);
+      color: #ffffff;
+      text-decoration: none;
+      padding: 7px 14px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .btn-link:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: #252e44;
+    }
+
+    /* Project Cards */
+    .project-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 22px;
+      margin-bottom: 24px;
+      transition: all 0.2s;
+    }
+
+    .project-card.completed {
+      border-color: rgba(0, 229, 153, 0.4);
+      background: linear-gradient(180deg, rgba(19, 23, 34, 0.95) 0%, rgba(11, 26, 22, 0.8) 100%);
+    }
+
+    .project-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .project-title-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .project-icon {
+      width: 42px;
+      height: 42px;
+      background: #1b2133;
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .project-name {
+      font-size: 18px;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .project-path {
+      font-size: 11px;
+      color: var(--text-muted);
+      direction: ltr;
+      text-align: right;
+      font-family: monospace;
+      margin-top: 2px;
+    }
+
+    .project-status-badge {
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 14px;
+      background: #1b2133;
+      color: var(--text-muted);
+      border: 1px solid var(--card-border);
+    }
+
+    .project-status-badge.done {
+      background: rgba(0, 229, 153, 0.15);
+      color: var(--accent);
+      border-color: rgba(0, 229, 153, 0.4);
+    }
+
+    /* Checklist Items */
+    .checklist {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .check-item {
+      background: var(--card-inner);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 14px 16px;
+      transition: all 0.15s;
+    }
+
+    .check-item.checked {
+      background: rgba(0, 229, 153, 0.04);
+      border-color: rgba(0, 229, 153, 0.25);
+    }
+
+    .item-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .item-header input[type="checkbox"] {
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border: 2px solid #475569;
+      border-radius: 7px;
+      outline: none;
+      cursor: pointer;
+      display: grid;
+      place-content: center;
+      margin-top: 2px;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+
+    .item-header input[type="checkbox"]:checked {
+      background-color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .item-header input[type="checkbox"]:checked::before {
+      content: '✓';
+      color: #0a0c12;
+      font-size: 15px;
+      font-weight: 900;
+    }
+
+    .item-title-box {
+      flex: 1;
+    }
+
+    .check-label {
+      font-size: 14px;
+      font-weight: 700;
+      color: #f8fafc;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .check-item.checked .check-label {
+      text-decoration: line-through;
+      color: var(--text-muted);
+    }
+
+    .stage-pill {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 8px;
+    }
+
+    .stage-pill.now {
+      background: rgba(0, 229, 153, 0.15);
+      color: var(--accent);
+      border: 1px solid rgba(0, 229, 153, 0.3);
+    }
+
+    .check-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Instruction / Code Box */
+    .instruction-box {
+      margin-top: 10px;
+      background: #080a10;
+      border: 1px solid #1f273b;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 12.5px;
+    }
+
+    .instruction-step {
+      margin-bottom: 8px;
+    }
+
+    .instruction-step:last-child {
+      margin-bottom: 0;
+    }
+
+    .code-block {
+      direction: ltr;
+      text-align: left;
+      font-family: 'Consolas', 'Courier New', monospace;
+      background: #05060a;
+      border: 1px solid #232b40;
+      color: #38bdf8;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      margin-top: 6px;
+      position: relative;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      background: #1e2638;
+      border: 1px solid #334155;
+      color: #cbd5e1;
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Heebo', sans-serif;
+    }
+
+    .copy-btn:hover {
+      background: var(--accent);
+      color: #0a0c12;
+      border-color: var(--accent);
+    }
+
+    .copy-btn.copied {
+      background: var(--accent);
+      color: #0a0c12;
+    }
+
+    .file-path-tag {
+      direction: ltr;
+      display: inline-block;
+      font-family: monospace;
+      background: #172033;
+      color: #93c5fd;
+      padding: 1px 6px;
+      border-radius: 4px;
+      border: 1px solid #253352;
+      font-size: 11.5px;
+    }
+
+    /* Footer Controls */
+    .reset-btn {
+      background: transparent;
+      border: 1px solid #334155;
+      color: var(--text-muted);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 12px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: all 0.2s;
+    }
+
+    .reset-btn:hover {
+      border-color: var(--danger);
+      color: var(--danger);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- Header & Summary -->
+    <div class="header">
+      <div class="badge-bar">
+        <span class="badge badge-green">⚡ NEON.TECH COMPLETE PLAYBOOK</span>
+        <span class="badge badge-blue">💻 100% EXECUTABLE FROM LOCAL CODE</span>
+      </div>
+      
+      <h1>לוח מעקב והגירה: פקודות והנחיות מדויקות ל-5 הפרויקטים</h1>
+      <p class="subtitle">
+        כל פרויקט כולל את <strong>הנתיב המדויק שלו, פקודות הטרמינל עם כפתור העתקה בלחיצה אחת, קובצי ה-SQL המקוריים שלו, והנחיות ה-Vercel.</strong>
+      </p>
+
+      <div class="global-progress-box">
+        <div class="progress-header">
+          <span>התקדמות כוללת (כל 5 הפרויקטים):</span>
+          <span id="global-percent">0%</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="global-progress-fill"></div>
+        </div>
+      </div>
+
+      <div class="quick-links">
+        <a href="https://console.neon.tech" target="_blank" class="btn-link">⚡ פתח את Neon Console (הקמת DB חינם)</a>
+        <a href="https://vercel.com/dashboard" target="_blank" class="btn-link">▲ פתח את Vercel Dashboard</a>
+      </div>
+    </div>
+
+    <!-- ==================== PROJECT 1: MyKink ==================== -->
+    <div class="project-card" id="card-mykink">
+      <div class="project-header">
+        <div class="project-title-group">
+          <div class="project-icon">🔥</div>
+          <div>
+            <div class="project-name">1. MyKink (Prisma & Express)</div>
+            <div class="project-path">C:\Users\yishay.shavlev\Desktop\Private Projects\MyKink</div>
+          </div>
+        </div>
+        <div class="project-status-badge" id="badge-mykink">0 / 4 הושלם</div>
+      </div>
+
+      <ul class="checklist" data-project="mykink">
+        
+        <!-- Step 1 -->
+        <li class="check-item" id="item-mykink-1">
+          <div class="item-header" onclick="toggleCheckbox('mykink-1')">
+            <input type="checkbox" id="mykink-1">
+            <div class="item-title-box">
+              <div class="check-label">
+                <span>שלב 1: יצירת פרויקט חדש ב-Neon.tech</span>
+                <span class="stage-pill now">🟢 שלב ראשון</span>
+              </div>
+              <div class="check-desc">הקמת בסיס נתונים PostgreSQL חינמי בענן של Neon.</div>
+            </div>
+          </div>
+          <div class="instruction-box">
+            <div class="instruction-step">1. היכנס ל-<a href="https://console.neon.tech" target="_blank" style="color:var(--accent);">Neon Console</a> ולחץ <strong>"New Project"</strong>.</div>
+            <div class="instruction-step">2. שם פרויקט מומלץ: <code>MyKink</code> | אזור שרת: <strong>Frankfurt (eu-central-1)</strong> | גרסה: <strong>Postgres 16</strong>.</div>
+            <div class="instruction-step">3. לחץ <strong>"Create Project"</strong>.</div>
+          </div>
+        </li>
+
+        <!-- Step 2 -->
+        <li class="check-item" id="item-mykink-2">
+          <div class="item-header" onclick="toggleCheckbox('mykink-2')">
+            <input type="checkbox" id="mykink-2">
+            <div class="item-title-box">
+              <div class="check-label">
+                <span>שלב 2: העתקת ה-Connection Strings לקובץ `.env` המקומי</span>
+                <span class="stage-pill now">🟢 הגדרות מקומיות</span>
+              </div>
+              <div class="check-desc">עדכון קובץ ה-`.env` בתיקיית ה-server המקומית.</div>
+            </div>
+          </div>
+          <div class="instruction-box">
+            <div>פתח את הקובץ: <span class="file-path-tag">server/.env</span> והדבק את המחרוזות שקיבלת מ-Neon:</div>
+            <div class="code-block">
+              <button class="copy-btn" onclick="copyCode(this)">📋 העתק תבנית</button>
+DATABASE_URL="postgres://[USER]:[PASSWORD]@[HOST]-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require"
+DIRECT_URL="postgres://[USER]:[PASSWORD]@[HOST].eu-central-1.aws.neon.tech/neondb?sslmode=require"</div>
+          </div>
+        </li>
+
+        <!-- Step 3 -->
+        <li class="check-item" id="item-mykink-3">
+          <div class="item-header" onclick="toggleCheckbox('mykink-3')">
+            <input type="checkbox" id="mykink-3">
+            <div class="item-title-box">
+              <div class="check-label">
+                <span>שלב 3: דחיפת סכמת ה-Prisma ל-Neon (מהמחשב המקומי)</span>
+                <span class="stage-pill now">🟢 טרמינל מקומי</span>
+              </div>
+              <div class="check-desc">הרצת פקודת Prisma בטרמינל לבניית כל הטבלאות, האינדקסים והקשרים ב-Neon.</div>
+            </div>
+          </div>
+          <div class="instruction-box">
+            <div>הרץ ב-PowerShell / Terminal:</div>
+            <div class="code-block">
+              <button class="copy-btn" onclick="copyCode(this)">📋 העתק פקודות</button>
+cd "C:\Users\yishay.shavlev\Desktop\Private Projects\MyKink\server"
+npx prisma db push
+npx prisma generate</div>
+          </div>
+        </li>
+
+        <!-- Step 4 -->
+        <li class="check-item" id="item-mykink-4">
+          <div class="item-header" onclick="toggleCheckbox('mykink-4')">
+            <input type="checkbox" id="mykink-4">
+            <div class="item-title-box">
+              <div class="check-label">
+                <span>שלב 4: עדכון משתני הסביבה ב-Vercel ו-Redeploy</span>
+                <span class="stage-pill now">🟢 פרודקשן</span>
+              </div>
+              <div class="check-desc">חיבור השרת בענן ל-Neon DB החדש.</div>
+            </div>
+          </div>
+          <div class="instruction-box">
+            <div class="instruction-step">1. היכנס לפרויקט ב-Vercel ➔ <strong>Settings</strong> ➔ <strong>Environment Variables</strong>.</div>
+            <div class="instruction-step">2. עדכן את <code>DATABASE_URL</code> בערך ה-Pooler מ-Neon.</div>
+            <div class="instruction-step">3. עבור ללשונית <strong>Deployments</strong> ולחץ <strong>Redeploy</strong>.</div>
+          </div>
+        </li>
+
+      </ul>
+    </div>
+
+    <!-- ==================== PROJECT 2: Ayala Simply Delicious ==================== -->
+    <div class="project-card" id="card-ayala">
+      <div class="project-header">
+        <div class="project-title-group">
+          <div class="project-icon">🍰</div>
+          <div>
+            <div class="project-name">2. Ayala Simply Delicious (Vite + SQL)</div>
+            <div class="project-path">C:\Users\yishay.shavlev\Desktop\Private Projects\ayala-simply-delicious</div>
+          </div>
+        </div>
+        <div class="project-status-badge" id="badge-ayala">0 / 4 הושלם</div>
+      </div>
+
+      <ul class="checklist" data-project="ayala">
+        
+        <!-- Step 1 -->
+        <li class="check-item" id="item-ayala-1">
+          <div class="item-header" onclick="toggleCheckbox('ayala-1')">
+            <input type="checkbox" id="ayala-1">
+            <div class="item-title-box">
+              <div class="check-label">
+                <span>שלב 1: יצירת פרויקט חדש ב-Neon (שם: ayala-simply-delicious)</span>
+                <span class="stage-pill now">🟢 שלב ראשון</span>
+              </div>
+              <div class="check-desc">הקמת בסיס נתונים ב-Neon (Region: Frankfurt).</div>
+            </div>
+          </div>
+        </li>
+
+        <!-- Step 2 -->
+        <li class="check-item" id="item-ayala-2">
+          <div class="item-header" onclick="toggleCheckbox('ayala-2')">
+            <input type="checkbox" id="ayala-2">
+            <div class="item-title-box">
+              <div class="check-label">
+                <span>שלב 2: הרצת קובץ הסכמה המקומי `supabase_schema.sql` ב-Neon</span>
+                <span class="stage-pill now">🟢 טעינת SQL</span>
+              </div>
+              <div class="check-desc">הקובץ קיים מקומית בפרויקט שלך ומוכן להרצה מיידית!</div>
+            </div>
+          </div>
+          <div class="instruction-box">
+            <div>נתיב הקובץ המקומי: <span class="file-path-tag">ayala-simply-delicious/supabase_schema.sql</span></div>
+            <div class="instruction-step" style="margin-top:8px;">
+              <strong>איך מריצים ב-2 שניות:</strong><br>
+              1. פתח את הקובץ <code>supabase_schema.sql</code> בעורך והעתק את תוכנו.<br>
+              2. ב-Neon Console, עבור לתפריט <strong>SQL Editor</strong> בצד שמאל, הדבק את הקוד ולחץ <strong>Run</strong> (או Ctrl+Enter).
+            </div>
+          </div>
+        </li>
+
+        <!-- Step 3 -->
+        <li class="check-item" id="item-ayala-3">
+          <div class="item-header" onclick="toggleCheckbox('ayala-3')">
+            <input type="checkbox" id="ayala-3">
+            <div class="item-title-box">
+              <div class="check-label">
+                <span>שלב 3: עדכון קובץ `.env.local` המקומי</span>
+                <span class="stage-pill now">🟢 הגדרות</span>
+              </div>
+              <div class="check-desc">עדכון מחרוזת החיבור מ-Neon בקובץ ההגדרות המקומי.</div>
+            </div>
+          </div>
+          <div class="instruction-box">
+            <div>ערוך את הקובץ: <span class="file-path-tag">.env.local</span></div>
+            <div class="code-block">
+              <button class="copy-btn" onclick="copyCode(this)">📋 העתק תבנית</button>
+DATABASE_URL="postgres://[USER]:[PASSWORD]@[HOST]-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require"</div>
+          </div>
+        </li>
+
+        <!-- Step 4 -->
+        <li class="check-item" id="item-ayala-4">
+          <div class="item-header" onclick="toggleCheckbox('ayala-4')">
+            <input type="checkbox" id="ayala-4">
+            <div class="item-title-box">
+              <div class="check-label">
+                <span>שלב 4: עדכון משתנים ב-Vercel וביצוע Redeploy</span>
+                <span class="stage-pill now">🟢 פרודקשן</span>
+              </div>
+              <div class="check-desc">עדכון משתנה ה-DATABASE_URL ב-Vercel Settings.</div>
+            </div>
+          </div>
+        </li>
+
+      </ul>
+    </div>
+
+    <!-- ==================== PROJECT 3: RivkaLapid ==================== -->
+    <div class="project-card" id="card-rivka">
+      <div class="project-header">
+        <div class="project-title-group">
+          <div class="project-icon">✨</div>
+          <div>
+            <div class="project-name">3. RivkaLapid (React & SQL)</div>
+            <div class="project-path">C:\Users\yishay.shavlev\Desktop\Private Projects\RivkaLapid</div>
+          </div>
+        </div>
+        <div class="project-status-badge" id="badge-rivka">0 / 4 הושלם</div>
+      </div>
+
+      <ul class="checklist" data-project="rivka">
+        
+        <!-- Step 1 -->
+        <li class="check-item" id="item-rivka-1">
+          <div class="item-header" onclick="toggleCheckbox('rivka-1')">
+            <input type="checkbox" id="rivka-1">
+            <div class="item-title-box">
+              <div class="check-label">
+                <span>שלב 1: יצירת פרויקט חדש ב-Neon (שם: RivkaLapid)</span>
+                <span class="stage-pill now">🟢 שלב ראשון</span>
+              </div>
+              <div class="check-desc">הקמת בסיס נתונים ב-Neon (Region: Frankfurt).</div>
+            </div>
+          </div>
+        </li>
+
+        <!-- Step 2 -->
+        <li class="check-item" id="item-rivka-2">
+          <div class="item-header" onclick="toggleCheckbox('rivka-2')">
+            <input type="checkbox" id="rivka-2">
+            <div class="item-title-box">
+              <div class="check-label">
+                <span>שלב 2: הרצת קובצי ה-SQL המקומיים ב-Neon SQL Editor</span>
+                <span class="stage-pill now">🟢 טעינת SQL</span>
+              </div>
+              <div class="check-desc">בפרויקט קיימים קובצי סכמה ונתוני הדגמה מוכנים מראש.</div>
+            </div>
+          </div>
+          <div class="instruction-box">
+            <div>פתח ב-Neon SQL Editor והרץ לפי הסדר:</div>
+            <div class="instruction-step" style="margin-top:6px;">1. <span class="file-path-tag">RivkaLapid/supabase-schema.sql</span> (סכמת הטבלאות)</div>
+            <div class="instruction-step">2. <span class="file-path-tag">RivkaLapid/supabase-upgrade.sql</span> (שדרוגי עמודות ואינדקסים)</div>
+            <div class="instruction-step">3. <span class="file-path-tag">RivkaLapid/seed-demo-data.sql</span> (אופציונלי - נתוני הדגמה)</div>
+          </div>
+        </li>
+
+        <!-- Step 3 -->
+        <li class="check-item" id="item-rivka-3">
+          <div class="item-header" onclick="toggleCheckbox('rivka-3')">
+            <input type="checkbox" id="rivka-3">
+            <div class="item-title-box">
+              <div class="check-label">
+                <span>שלב 3: עדכון קובץ `.env` המקומי</span>
+                <span class="stage-pill now">🟢 הגדרות</span>
+              </div>
+              <div class="check-desc">החלפת ה-DATABASE_URL בקובץ `.env`.</div>
+            </div>
+          </div>
+          <div class="instruction-box">
+            <div>ערוך את: <span class="file-path-tag">RivkaLapid/.env</span></div>
+            <div class="code-block">
+              <button class="copy-btn" onclick="copyCode(this)">📋 העתק תבנית</button>
+DATABASE_URL="postgres://[USER]:[PASSWORD]@[HOST]-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require"</div>
+          </div>
+        </li>
+
+        <!-- Step 4 -->
+        <li class="check-item" id="item-rivka-4">
+          <div class="item-header" onclick="toggleCheckbox('rivka-4')">
+            <input type="checkbox" id="rivka-4">
+            <div class="item-title-box">
+              <div class="check-label">
+                <span>שלב 4: עדכון משתנים ב-Vercel ו-Redeploy</span>
+                <span class="stage-pill now">🟢 פרודקשן</span>
+              </div>
+              <div class="check-desc">האתר יעלה לאוויר מחובר ל-Neon.</div>
+            </div>
+          </div>
+        </li>
+
+      </ul>
+    </div>
+
+    <!-- ==================== PROJECT 4: YuvalStudio ==================== -->
+    <div class="project-card" id="card-yuval">
+      <div class="project-header">
+        <div class="project-title-group">
+          <div class="project-icon">🎨</div>
+          <div>
+            <div class="project-name">4. YuvalStudio (Full SQL Migration)</div>
+            <div class="project-path">C:\Users\yishay.shavlev\Desktop\Private Projects\YuvalStudio</div>
+          </div>
+        </div>
+        <div class="project-status-badge" id="badge-yuval">0 / 4 הושלם</div>
+      </div>
+
+      <ul class="checklist" data-project="yuval">
+        
+        <!-- Step 1 -->
+        <li class="check-item" id="item-yuval-1">
+          <div class="item-header" onclick="toggleCheckbox('yuval-1')">
+            <input type="checkbox" id="yuval-1">
+            <div class="item-title-box">
+              <div class="check-label">
+                <span>שלב 1: יצירת פרויקט חדש ב-Neon (שם: YuvalStudio)</span>
+                <span class="stage-pill now">🟢 שלב ראשון</span>
+              </div>
+              <div class="check-desc">הקמת בסיס נתונים ב-Neon.</div>
+            </div>
+          </div>
+        </li>
+
+        <!-- Step 2 -->
+        <li class="check-item" id="item-yuval-2">
+          <div class="item-header" onclick="toggleCheckbox('yuval-2')">
+            <input type="checkbox" id="yuval-2">
+            <div class="item-title-box">
+              <div class="check-label">
+                <span>שלב 2: הרצת קובץ הסכמה המלא `db_full_migration_safe.sql`</span>
+                <span class="stage-pill now">🟢 טעינת SQL</span>
+              </div>
+              <div class="check-desc">הפרויקט כולל קובץ מיגרציה מלא ובטוח של כל מבנה הנתונים!</div>
+            </div>
+          </div>
+          <div class="instruction-box">
+            <div>נתיב הקובץ: <span class="file-path-tag">YuvalStudio/db_full_migration_safe.sql</span></div>
+            <div class="instruction-step" style="margin-top:8px;">
+              פתח את <code>db_full_migration_safe.sql</code>, העתק את כל תוכנו, הדבק ב-Neon SQL Editor ולחץ <strong>Run</strong>.
+            </div>
+          </div>
+        </li>
+
+        <!-- Step 3 -->
+        <li class="check-item" id="item-yuval-3">
+          <div class="item-header" onclick="toggleCheckbox('yuval-3')">
+            <input type="checkbox" id="yuval-3">
+            <div class="item-title-box">
+              <div class="check-label">
+                <span>שלב 3: עדכון קובץ `.env` המקומי</span>
+                <span class="stage-pill now">🟢 הגדרות</span>
+              </div>
+              <div class="check-desc">עדכון ה-`DATABASE_URL` החדש.</div>
+            </div>
+          </div>
+          <div class="instruction-box">
+            <div>ערוך את: <span class="file-path-tag">YuvalStudio/.env</span></div>
+            <div class="code-block">
+              <button class="copy-btn" onclick="copyCode(this)">📋 העתק תבנית</button>
+DATABASE_URL="postgres://[USER]:[PASSWORD]@[HOST]-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require"</div>
+          </div>
+        </li>
+
+        <!-- Step 4 -->
+        <li class="check-item" id="item-yuval-4">
+          <div class="item-header" onclick="toggleCheckbox('yuval-4')">
+            <input type="checkbox" id="yuval-4">
+            <div class="item-title-box">
+              <div class="check-label">
+                <span>שלב 4: עדכון משתני Vercel ו-Redeploy</span>
+                <span class="stage-pill now">🟢 פרודקשן</span>
+              </div>
+              <div class="check-desc">בדיקת תורים וטפסי קביעת פגישות באתר.</div>
+            </div>
+          </div>
+        </li>
+
+      </ul>
+    </div>
+
+    <!-- ==================== PROJECT 5: AI Research App ==================== -->
+    <div class="project-card" id="card-ai-app">
+      <div class="project-header">
+        <div class="project-title-group">
+          <div class="project-icon">🧠</div>
+          <div>
+            <div class="project-name">5. AI Research App</div>
+            <div class="project-path">C:\PrivateProjects\ai-research-app</div>
+          </div>
+        </div>
+        <div class="project-status-badge" id="badge-ai-app">0 / 4 הושלם</div>
+      </div>
+
+      <ul class="checklist" data-project="ai-app">
+        
+        <!-- Step 1 -->
+        <li class="check-item" id="item-ai-app-1">
+          <div class="item-header" onclick="toggleCheckbox('ai-app-1')">
+            <input type="checkbox" id="ai-app-1">
+            <div class="item-title-box">
+              <div class="check-label">
+                <span>שלב 1: יצירת פרויקט חדש ב-Neon (שם: ai-research-app)</span>
+                <span class="stage-pill now">🟢 שלב ראשון</span>
+              </div>
+              <div class="check-desc">הקמת בסיס נתונים ב-Neon (Region: Frankfurt).</div>
+            </div>
+          </div>
+        </li>
+
+        <!-- Step 2 -->
+        <li class="check-item" id="item-ai-app-2">
+          <div class="item-header" onclick="toggleCheckbox('ai-app-2')">
+            <input type="checkbox" id="ai-app-2">
+            <div class="item-title-box">
+              <div class="check-label">
+                <span>שלב 2: עדכון מחרוזת החיבור בקובץ `.env` המקומי</span>
+                <span class="stage-pill now">🟢 הגדרות</span>
+              </div>
+              <div class="check-desc">החלפת ה-DATABASE_URL במחרוזת החדשה מ-Neon.</div>
+            </div>
+          </div>
+          <div class="instruction-box">
+            <div>ערוך את: <span class="file-path-tag">C:\PrivateProjects\ai-research-app\.env</span></div>
+            <div class="code-block">
+              <button class="copy-btn" onclick="copyCode(this)">📋 העתק תבנית</button>
+DATABASE_URL="postgres://[USER]:[PASSWORD]@[HOST]-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require"</div>
+          </div>
+        </li>
+
+        <!-- Step 3 -->
+        <li class="check-item" id="item-ai-app-3">
+          <div class="item-header" onclick="toggleCheckbox('ai-app-3')">
+            <input type="checkbox" id="ai-app-3">
+            <div class="item-title-box">
+              <div class="check-label">
+                <span>שלב 3: סנכרון סכמת הנתונים בטרמינל (Prisma / SQL)</span>
+                <span class="stage-pill now">🟢 טרמינל מקומי</span>
+              </div>
+              <div class="check-desc">הרצת פקודת המיגרציה מהנתיב המקומי.</div>
+            </div>
+          </div>
+          <div class="instruction-box">
+            <div>הרץ בטרמינל:</div>
+            <div class="code-block">
+              <button class="copy-btn" onclick="copyCode(this)">📋 העתק פקודות</button>
+cd "C:\PrivateProjects\ai-research-app"
+npx prisma db push
+npx prisma generate</div>
+          </div>
+        </li>
+
+        <!-- Step 4 -->
+        <li class="check-item" id="item-ai-app-4">
+          <div class="item-header" onclick="toggleCheckbox('ai-app-4')">
+            <input type="checkbox" id="ai-app-4">
+            <div class="item-title-box">
+              <div class="check-label">
+                <span>שלב 4: עדכון משתני פרודקשן ו-Redeploy</span>
+                <span class="stage-pill now">🟢 פרודקשן</span>
+              </div>
+              <div class="check-desc">וידוא שמירת מחקרים, מודלים ופרומפטים באפליקציה.</div>
+            </div>
+          </div>
+        </li>
+
+      </ul>
+    </div>
+
+    <!-- Reset Data Button -->
+    <div style="text-align: center; margin-top: 24px;">
+      <button class="reset-btn" onclick="resetAllProgress()">איפוס כל הסימונים בלוח המעקב</button>
+    </div>
+
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'neon_migration_playbook_v3';
+
+    function loadState() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        return saved ? JSON.parse(saved) : {};
+      } catch {
+        return {};
+      }
+    }
+
+    function saveState(state) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (e) {
+        console.warn('Failed to save state', e);
+      }
+    }
+
+    function toggleCheckbox(checkboxId) {
+      const checkbox = document.getElementById(checkboxId);
+      if (!checkbox) return;
+      
+      // If triggered by clicking outside the direct checkbox input
+      if (event.target !== checkbox) {
+        checkbox.checked = !checkbox.checked;
+      }
+      
+      const state = loadState();
+      state[checkboxId] = checkbox.checked;
+      saveState(state);
+
+      updateUI();
+    }
+
+    function updateUI() {
+      const state = loadState();
+      const allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
+      let totalChecked = 0;
+
+      allCheckboxes.forEach(cb => {
+        const isChecked = !!state[cb.id];
+        cb.checked = isChecked;
+        const parentItem = cb.closest('.check-item');
+        if (parentItem) {
+          if (isChecked) {
+            parentItem.classList.add('checked');
+            totalChecked++;
+          } else {
+            parentItem.classList.remove('checked');
+          }
+        }
+      });
+
+      // Update Project Badges and Cards
+      const projects = ['mykink', 'ayala', 'rivka', 'yuval', 'ai-app'];
+      projects.forEach(p => {
+        const projectCheckboxes = document.querySelectorAll(`ul[data-project="${p}"] input[type="checkbox"]`);
+        const checkedCount = Array.from(projectCheckboxes).filter(cb => cb.checked).length;
+        const total = projectCheckboxes.length;
+        
+        const badge = document.getElementById(`badge-${p}`);
+        const card = document.getElementById(`card-${p}`);
+
+        if (badge) {
+          badge.textContent = `${checkedCount} / ${total} הושלם`;
+          if (checkedCount === total && total > 0) {
+            badge.classList.add('done');
+            card.classList.add('completed');
+          } else {
+            badge.classList.remove('done');
+            card.classList.remove('completed');
+          }
+        }
+      });
+
+      // Global Progress
+      const totalPossible = allCheckboxes.length;
+      const percent = totalPossible > 0 ? Math.round((totalChecked / totalPossible) * 100) : 0;
+      document.getElementById('global-percent').textContent = `${percent}% (${totalChecked}/${totalPossible} משימות)`;
+      document.getElementById('global-progress-fill').style.width = `${percent}%`;
+    }
+
+    function copyCode(btn) {
+      const codeBlock = btn.parentElement;
+      const textToCopy = codeBlock.innerText.replace('📋 העתק תבנית', '').replace('📋 העתק פקודות', '').trim();
+      
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        const originalText = btn.textContent;
+        btn.textContent = '✓ הועתק!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = originalText;
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+
+    function resetAllProgress() {
+      if (confirm('האם לאפס את כל הסימונים בלוח המעקב?')) {
+        localStorage.removeItem(STORAGE_KEY);
+        updateUI();
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      updateUI();
+    });
+  </script>
+</body>
+</html>
