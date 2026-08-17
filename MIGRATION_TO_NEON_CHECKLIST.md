@@ -1,95 +1,42 @@
-# 🐘 מדריך וצ'קליסט מעבר מ-Supabase ל-Neon.tech (5 הפרויקטים שלך)
+# 🐘 סיכום סטטוס מעבר מסדי נתונים (5 הפרויקטים שלך)
 
-מדריך זה מרכז את כל השלבים, קובצי ה-SQL המקוריים, ופקודות הטרמינל המדויקות להעברת 5 הפרויקטים שלך ל-**[Neon.tech](https://neon.tech)**.
+מדריך ולוח מעקב מעודכן עבור כל 5 הפרויקטים.
 
 > 🌐 **לוח מעקב אינטראקטיבי בדפדפן:**  
-> מומלץ לפתוח ישירות בדפדפן את [`Migration_Dashboard.html`](file:///c:/Users/yishay.shavlev/Desktop/Private%20Projects/MyKink/Migration_Dashboard.html) – כולל כפתורי "העתק פקודה" בלחיצה אחת וסרגלי התקדמות חיים שנשמרים אוטומטית!
+> פתח ישירות בדפדפן את [`Migration_Dashboard.html`](file:///c:/Users/yishay.shavlev/Desktop/Private%20Projects/MyKink/Migration_Dashboard.html) – כולל כפתורי העתקה ומעקב חי.
 
 ---
 
-## 📋 שלב 0: הקמת חשבון כללי ב-Neon.tech (חד-פעמי)
-- [ ] כניסה ל-[Neon.tech](https://neon.tech) והרשמה מהירה באמצעות GitHub.
-- [ ] וידוא שהחשבון מוגדר במסלול ה-Free (כולל Connection Pooling חינמי ו-Scale to Zero).
+## 📊 סטטוס הפרויקטים:
+
+| # | פרויקט | מסד נתונים נוכחי | סטטוס | פעולות שבוצעו |
+|---|--------|-------------------|--------|----------------|
+| 1 | **`ayala-simply-delicious`** | **Neon.tech (PostgreSQL 18)** | ✅ **הושלם ופעיל** | הותקן מתאם Neon, סכמה נוצרה, נבדק Build, נדחף ל-Git |
+| 2 | **`YuvalStudio`** | **Neon.tech (PostgreSQL 18)** | ✅ **הושלם ופעיל** | הותקן מתאם Neon, נוצר `neon_schema_yuval.sql`, נבדק Build, נדחף ל-Git |
+| 3 | **`MyKink`** | **Neon.tech (PostgreSQL 18)** | ✅ **הושלם ופעיל** | בוצע `prisma db push`, נטענו 34 שאלות Seed, נבדקו Client & Server, נדחף ל-Git |
+| 4 | **`RivkaLapid`** | **Supabase (חשבון חינמי פעיל של רבקה)** | 🔒 **נשאר ב-Supabase** | החשבון חינמי ופעיל, הוחזר לקוד Supabase המקורי |
+| 5 | **`ai-research-app`** | **Supabase (חשבון חינמי פעיל של איילה)** | 🔒 **נשאר ב-Supabase** | החשבון חינמי ופעיל, נשאר ללא שינוי |
 
 ---
 
-## 🎯 1. פרויקט: `MyKink`
-📁 נתיב: `C:\Users\yishay.shavlev\Desktop\Private Projects\MyKink`
+## 🎯 ריכוז Connection Strings שהוגדרו:
 
-- [ ] **1. יצירת DB ב-Neon:** פתח פרויקט בשם `MyKink` (Region: `Frankfurt eu-central-1`, Postgres 16).
-- [ ] **2. שמירת ה-Connection Strings:** עדכן את `server/.env`:
-  ```env
-  DATABASE_URL="postgres://[USER]:[PASSWORD]@[HOST]-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require"
-  DIRECT_URL="postgres://[USER]:[PASSWORD]@[HOST].eu-central-1.aws.neon.tech/neondb?sslmode=require"
+### 1. `ayala-simply-delicious`
+```text
+postgresql://neondb_owner:npg_iOwVnz8UfH3B@ep-damp-block-b2ooonn8.c-6.eu-central-1.aws.neon.tech/neondb?sslmode=require
+```
+
+### 2. `YuvalStudio`
+```text
+postgresql://neondb_owner:npg_vS4dZ5qhHtiF@ep-winter-sound-b129wwdq-pooler.c-5.eu-central-1.aws.neon.tech/neondb?sslmode=require
+```
+
+### 3. `MyKink`
+* **DATABASE_URL (Pooler):**
+  ```text
+  postgresql://neondb_owner:npg_ATmWJaCu39NE@ep-misty-butterfly-b25pmmnf-pooler.c-6.eu-central-1.aws.neon.tech/neondb?sslmode=require
   ```
-- [ ] **3. דחיפת סכמת ה-Prisma בטרמינל:**
-  ```powershell
-  cd "C:\Users\yishay.shavlev\Desktop\Private Projects\MyKink\server"
-  npx prisma db push
-  npx prisma generate
+* **DIRECT_URL:**
+  ```text
+  postgresql://neondb_owner:npg_ATmWJaCu39NE@ep-misty-butterfly-b25pmmnf.c-6.eu-central-1.aws.neon.tech/neondb?sslmode=require
   ```
-- [ ] **4. עדכון משתנים ב-Vercel ו-Redeploy:** עדכן את `DATABASE_URL` ב-Vercel Settings ובצע Redeploy.
-
----
-
-## 🎯 2. פרויקט: `ayala-simply-delicious`
-📁 נתיב: `C:\Users\yishay.shavlev\Desktop\Private Projects\ayala-simply-delicious`
-
-- [ ] **1. יצירת DB ב-Neon:** פתח פרויקט בשם `ayala-simply-delicious` ב-Neon.
-- [ ] **2. הרצת קובץ הסכמה המקומי `supabase_schema.sql`:**
-  * פתח את הקובץ: `ayala-simply-delicious\supabase_schema.sql`
-  * העתק את כל תוכנו והדבק ב-**Neon SQL Editor** ➔ לחץ **Run**.
-- [ ] **3. עדכון קובץ `.env.local` המקומי:**
-  ```env
-  DATABASE_URL="postgres://[USER]:[PASSWORD]@[HOST]-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require"
-  ```
-- [ ] **4. עדכון משתנים ב-Vercel ו-Redeploy:** עדכן את `DATABASE_URL` ב-Vercel Settings.
-
----
-
-## 🎯 3. פרויקט: `RivkaLapid`
-📁 נתיב: `C:\Users\yishay.shavlev\Desktop\Private Projects\RivkaLapid`
-
-- [ ] **1. יצירת DB ב-Neon:** פתח פרויקט בשם `RivkaLapid` ב-Neon.
-- [ ] **2. הרצת קובצי ה-SQL המקומיים ב-Neon SQL Editor לפי הסדר:**
-  1. `RivkaLapid\supabase-schema.sql` (מבנה הטבלאות)
-  2. `RivkaLapid\supabase-upgrade.sql` (שדרוגי עמודות ואינדקסים)
-  3. `RivkaLapid\seed-demo-data.sql` (אופציונלי - נתוני הדגמה)
-- [ ] **3. עדכון קובץ `.env` המקומי:**
-  ```env
-  DATABASE_URL="postgres://[USER]:[PASSWORD]@[HOST]-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require"
-  ```
-- [ ] **4. עדכון משתנים ב-Vercel ו-Redeploy:** עדכן את משתנה הסביבה ב-Vercel ובדוק את האתר.
-
----
-
-## 🎯 4. פרויקט: `YuvalStudio`
-📁 נתיב: `C:\Users\yishay.shavlev\Desktop\Private Projects\YuvalStudio`
-
-- [ ] **1. יצירת DB ב-Neon:** פתח פרויקט בשם `YuvalStudio` ב-Neon.
-- [ ] **2. הרצת קובץ המיגרציה המלא `db_full_migration_safe.sql`:**
-  * פתח את הקובץ: `YuvalStudio\db_full_migration_safe.sql`
-  * העתק את כל תוכנו והדבק ב-**Neon SQL Editor** ➔ לחץ **Run**.
-- [ ] **3. עדכון קובץ `.env` המקומי:**
-  ```env
-  DATABASE_URL="postgres://[USER]:[PASSWORD]@[HOST]-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require"
-  ```
-- [ ] **4. עדכון משתנים ב-Vercel ו-Redeploy:** ביצוע Redeploy ב-Vercel ווידוא פעילות האתר.
-
----
-
-## 🎯 5. פרויקט: `ai-research-app`
-📁 נתיב: `C:\PrivateProjects\ai-research-app`
-
-- [ ] **1. יצירת DB ב-Neon:** פתח פרויקט בשם `ai-research-app` ב-Neon.
-- [ ] **2. עדכון קובץ `.env` המקומי:**
-  ```env
-  DATABASE_URL="postgres://[USER]:[PASSWORD]@[HOST]-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require"
-  ```
-- [ ] **3. סנכרון סכמת הנתונים בטרמינל:**
-  ```powershell
-  cd "C:\PrivateProjects\ai-research-app"
-  npx prisma db push
-  npx prisma generate
-  ```
-- [ ] **4. עדכון משתני פרודקשן ב-Vercel ו-Redeploy.**
